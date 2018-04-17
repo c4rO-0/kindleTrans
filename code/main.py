@@ -21,23 +21,14 @@ import flask
 #     setting app
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
+#----------------------------------------------------
+#  设置上传文件根目录
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #----------------------------------------------------
 #     set language
 from flask.ext.babel import Babel
 babel = Babel(app)
-
-
-#----------------------------------------------------
-#     render Bootstrap
-
-# from flask.ext.bootstrap import Bootstrap
-from flask_bootstrap import Bootstrap
-Bootstrap(app)
-# yhh:这里可能不需要了，我直接用的bootstrap的文件，没有通过flask
-
-
-
 
 #----------------------------------------------------
 #  append all the components
