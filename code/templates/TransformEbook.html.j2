@@ -1,22 +1,30 @@
 {%extends 'NavBar.html.j2'%}
 
 {%block head%}
-# <link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet" type="text/css">
 
 <title>{{ gettext("在线转化txt为mobi") }}</title>
+<script src="{{ url_for('static', filename='Scripts/TransformEbook.js') }}"></script>
 {%endblock%}
 
 {%block body%}
 
-
-<form class="form-signin" action="" method="post">
-
-    <h1 class="h3 mb-3 font-weight-normal"> {{ gettext("上传") }}</h1>
-
-
-
-    {# 提交按钮 #}
-    <button class="btn btn-lg btn-primary btn-block" type="submit">{{ gettext("上传") }} </button>
-
+<form method="POST" enctype="multipart/form-data">
+<h1>{{ gettext( "上传" ) }}</h1>
+{{ form.hidden_tag() }}
+{{ form.file }}
+{# 提交按钮 #}
+<input class="btn btn-lg btn-primary btn-block" type="submit"> 
+{# 输出错误 #}
+{% for error in form.file.errors %}
+<div class="alert alert-danger" role="alert">
+    [{{error}}]
+</div>
+{% endfor %}
 </form>
+<div class="progress" style="display: none;">
+    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+        0% 
+    </div> 
+</div>
+
 {%endblock%}
