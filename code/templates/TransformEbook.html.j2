@@ -1,0 +1,22 @@
+{%extends 'NavBar.html.j2'%}
+
+{%block head%}
+# <link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet" type="text/css">
+
+<title>{{ gettext("在线转化txt为mobi") }}</title>
+{%endblock%}
+
+{%block body%}
+
+
+<form class="form-signin" action="" method="post">
+
+    <h1 class="h3 mb-3 font-weight-normal"> {{ gettext("上传") }}</h1>
+
+
+
+    {# 提交按钮 #}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">{{ gettext("上传") }} </button>
+
+</form>
+{%endblock%}
