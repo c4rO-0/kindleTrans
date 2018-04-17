@@ -12,6 +12,8 @@ from wtforms import SubmitField
 from werkzeug.utils import secure_filename
 
 from wtforms.validators import ValidationError
+
+import time;  # 引入time模块
 #=================================
 
 class UploadForm(FlaskForm):
@@ -34,10 +36,13 @@ def TransformEbook():
     form = UploadForm()
 
     if form.validate_on_submit():
-        filename = secure_filename(form.file.data.filename)
+        filename = form.file.data.filename
+        secureFilename = secure_filename(filename)
+        saveFileName = str(time.time()) + '-' + request.environ['REMOTE_ADDR']+'-'+secureFilename
         # print("-------------------------------")
         # print("file name : " + filename)
-        form.file.data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        form.file.data.save(os.path.join(app.config['UPLOAD_FOLDER'], saveFileName))
         return redirect(url_for('TransformEbook'))
 
 
