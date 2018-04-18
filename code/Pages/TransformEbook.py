@@ -39,10 +39,15 @@ def TransformEbook():
         filename = form.file.data.filename
         secureFilename = secure_filename(filename)
         saveFileName = str(time.time()) + '-' + request.environ['REMOTE_ADDR']+'-'+secureFilename
+        filePath = os.path.join(app.config['UPLOAD_FOLDER'],saveFileName)
         # print("-------------------------------")
         # print("file name : " + filename)
 
-        form.file.data.save(os.path.join(app.config['UPLOAD_FOLDER'], saveFileName))
+        # 储存
+        if (not os.path.exists(filePath) ):
+            os.makedirs(filePath) 
+        form.file.data.save(os.path.join(filePath , saveFileName))
+        # 准备转化
         return redirect(url_for('TransformEbook'))
 
 
