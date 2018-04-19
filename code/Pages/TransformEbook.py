@@ -20,7 +20,8 @@ from utilities import init_project
 
 class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
-    submit = SubmitField('upload')
+    upload = SubmitField('upload')
+
 
     def validate_file(self, field):
 
@@ -29,32 +30,39 @@ class UploadForm(FlaskForm):
            str_filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
            raise ValidationError(gettext('文件格式不对'))
 
-
+class TransformForm(FlaskForm):
+    transform = SubmitField('transform')
 
 @app.route('/TransformEbook' , methods = ['GET', 'POST']  )
 def TransformEbook():
     #....
 
     form = UploadForm()
+    formTran = TransformForm()
 
     if form.validate_on_submit():
-        filename = form.file.data.filename
-        # secureFilename = secure_filename(filename)
-        saveFileName = str(time.time()) + '-' + request.environ['REMOTE_ADDR']+'.txt'
-        filePath = os.path.join(app.config['UPLOAD_FOLDER'],saveFileName)
-        # print("-------------------------------")
-        # print("file name : " + filename)
+        if(form.upload.data):
+            filename = form.file.data.filename
+            # secureFilename = secure_filename(filename)
+            saveFileName = str(time.time()) + '-' + request.environ['REMOTE_ADDR']+'.txt'
+            filePath = os.path.join(app.config['UPLOAD_FOLDER'],saveFileName)
+            # print("-------------------------------")
+            # print("file name : " + filename)
 
-        # 储存
-        if (not os.path.exists(filePath) ):
-            os.makedirs(filePath) 
-        form.file.data.save(os.path.join(filePath , saveFileName))
-        # 准备转化
-        print("-------------------------")
-        print(filename)
+            # 储存
+            if (not os.path.exists(filePath) ):
+                os.makedirs(filePath) 
+            form.file.data.save(os.path.join(filePath , saveFileName))
+            # 准备转化
+            print("-------------------------")
+            print(filename)
+        else:
+            print("unknown submit")
+    
+    if formTran.validate_on_submit():
+        if(formTran.transform.data):
+            print("转化")
+        # return redirect(url_for('TransformEbook'))
 
-        return redirect(url_for('TransformEbook'))
-
-
-    return render_template('TransformEbook.html.j2', app = app, form=form)
+    return render_template('TransformEbook.html.j2', app = app, form=form, formTran=formTran)
 

@@ -8,12 +8,12 @@
 
 {%block body%}
 
-<form method="POST" enctype="multipart/form-data">
+<form id="formUpload" method="POST" enctype="multipart/form-data">
 <h1>{{ gettext( "上传" ) }}</h1>
 {{ form.hidden_tag() }}
 {{ form.file }}
 {# 提交按钮 #}
-<input class="btn btn-lg btn-primary btn-block" type="submit"> 
+{{ form.upload }}
 {# 输出错误 #}
 {% for error in form.file.errors %}
 <div class="alert alert-danger" role="alert">
@@ -21,6 +21,13 @@
 </div>
 {% endfor %}
 </form>
+
+<form id="formTran" method="POST" enctype="multipart/form-data">
+{{ formTran.hidden_tag() }}
+{# 提交按钮 #}
+{{ formTran.transform }}
+</form>
+
 <div class="progress" style="display: none;">
     <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
         0% 
