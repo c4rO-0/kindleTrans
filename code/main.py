@@ -9,10 +9,12 @@ Project_path = os.path.dirname(__file__)
 PagesPath = os.path.join(Project_path, "Pages")
 ServerPath = os.path.join(Project_path, "serverside")
 Txt2mobiPath = os.path.abspath(os.path.join(Project_path,os.path.pardir, "txt2mobi"))
+Txt2mobiPythonPath = os.path.abspath(os.path.join(Project_path,os.path.pardir, "txt2mobi", "txt2mobi"))
 #---------------------------------------
 sys.path.insert(0, PagesPath)
 sys.path.insert(0, ServerPath)
 sys.path.insert(0, Txt2mobiPath)
+sys.path.insert(0, Txt2mobiPythonPath)
 
 # from flask import Flask , request
 import flask
