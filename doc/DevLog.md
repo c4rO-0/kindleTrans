@@ -36,3 +36,12 @@ $ enca -L zh_CN -x UTF-8 file1 file2 如果不想覆盖原文件可以这样
 
 目录文件 http://blog.sina.com.cn/s/blog_5c0175790100bdg5.html
 
+
+
+---
+
+flask 给前台发消息
+
+https://stackoverflow.com/questions/42988907/how-do-you-send-messages-from-flask-server-python-to-html-client
+
+[中文文档](http://www.hi-roy.com/2015/12/29/flask-socketio%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/)
