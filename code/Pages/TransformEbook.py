@@ -16,10 +16,14 @@ from wtforms.validators import ValidationError
 import time;  # 引入time模块
 
 from utilities import init_project 
+from scaffold import generate_project
 
 #--------------------------------
 # 引入session
 from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, sessionDelFileUpload
+#--------------------------------
+# 运行shell
+# import commands
 #=================================
 
 class UploadForm(FlaskForm):
@@ -78,9 +82,21 @@ def TransformEbook():
                 print("储存文件错误 : ", info)
                 return redirect("/TransformEbook")
             else:
+                
                 #==================
+                #-----------------
+                # 统一文件编码
+                info_o = os.system('cd ' + filePath + ';' + 'enca -x UTF-8 ' + saveFileName)
+                if(info_o !=0):
+                    #转换失败
+                    return redirect("/404")
+                #-----------------              
                 # 初始化图书
                 init_project(filePath, filename)
+
+                #-----------------
+                # 生成项目文件
+                generate_project(None,filePath , saveFileName)
         else:
             print("unknown submit")
         return redirect("/TransformEbook")
