@@ -16,6 +16,10 @@ from wtforms.validators import ValidationError
 import time;  # 引入time模块
 
 from utilities import init_project 
+
+#--------------------------------
+# 引入session
+from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, sessionDelFileUpload
 #=================================
 
 class UploadForm(FlaskForm):
@@ -32,33 +36,29 @@ class UploadForm(FlaskForm):
            raise ValidationError(gettext('文件格式不对'))
 
 class TransformForm(FlaskForm):
-    filename = ""
-    saveFileName = ""
-    filePath = ""
 
-    transform = SubmitField('transform')
+    createTOC = SubmitField('确认目录')
+    transform = SubmitField('转化')
 
-    # def validate_transform(self, field):
-    #     if(self.filename =="" or self.saveFileName =="" or self.filePath == ""):
-    #         raise ValidationError(gettext('请先上传文件'))
+
+
+    def validate_createTOC(self, field):
+        if(sessionQueryFileUpload() == None):
+            raise ValidationError(gettext('错误 : 没有检测到上传文件'))
 
 @app.route('/TransformEbook' , methods = ['GET', 'POST']  )
 def TransformEbook():
     #....
 
-    
     form = UploadForm()
-
-
 
     formTran = TransformForm()
  
-        
 
     if form.validate_on_submit():
         print("-------------------------")
         if(form.upload.data):
-            print("-------------------------")
+            
 
             filename = form.file.data.filename
             # secureFilename = secure_filename(filename)
@@ -71,20 +71,30 @@ def TransformEbook():
             if (not os.path.exists(filePath) ):
                 os.makedirs(filePath) 
             form.file.data.save(os.path.join(filePath , saveFileName))
-            # 准备转化
-            formTran.filename = filename
-            formTran.saveFileName = saveFileName
-            formTran.filePath = filePath
+            # 保存session
+            sessionDelFileUpload()
+            info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath} )
+            if info != 0:
+                print("储存文件错误 : ", info)
+                return redirect("/TransformEbook")
+            else:
+                #==================
+                # 初始化图书
+                init_project(filePath, filename)
         else:
             print("unknown submit")
-        
+        return redirect("/TransformEbook")
     
     if formTran.validate_on_submit():
-        if(formTran.transform.data):
-            print("转化")
-            print(formTran.filePath)
-            init_project(formTran.filePath, formTran.filename)
-        # return redirect(url_for('TransformEbook'))
+        if(formTran.createTOC.data):
+            print("确认目录")
+            fileDict = sessionQueryFileUpload()
+
+            print(fileDict['filename'])
+
+
+            # init_project(formTran.filePath, formTran.filename)
+        return redirect("/TransformEbook")
 
     return render_template('TransformEbook.html.j2', app = app, form=form, formTran=formTran)
 

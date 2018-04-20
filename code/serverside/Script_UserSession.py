@@ -25,8 +25,6 @@ from flask import session
 #       del     : 删除
 # 3. 名词作为第三个单词, 表示被操作物
 #       language
-#       status
-#       user
 # 4. 之后为形容词/名词, 以区分不同操作对象
 #       language    ->  Used
 #       status      ->  Logged
@@ -36,87 +34,58 @@ from flask import session
 #
 #══════════════════════════════════════════════════════════════════════════════════════════════════════════════════    
 
-#<------------语言相关----------->
+#<------------上传----------->
 
-def sessionQueryLangurageUsed():
+def sessionQueryFileUpload():
     """
-    查询用户所用语言
+    查询上传文件信息
 
     out :
-        _   str 语言码. 用户未指定,返回默认语言
+        _   dict    {
+                    filename        : str
+                    saveFileName    : str
+                    filePath        : str
+                    }
     """
 
-    from config import default_lang
-    return session.get('lang', default_lang)
+    return session.get('fileUpload', None)
 
-def sessionSaveLanguageUsed(lang):
+def sessionSaveFileUpload(fileUpload):
     """
-    保存用户指定语言.(该函数不会检查语言合法性)
-    
+    保存上传文件信息
+
     in :
-        lang    str 语言码
-    """
-
-    session['lang'] = lang
-
-
-
-#<------------登录信息----------->
-
-def sessionQueryStatusLogged():
-    """
-    查询用户登录状态
-
+        fileUpload   dict   {
+                            filename        : str
+                            saveFileName    : str
+                            filePath        : str
+                            }
     out :
-        _  bool 是否登录
+        _   int 0 成功
+                1 变量已经含有
+                2 value 为空
+                3 key 不对
     """
 
-    return session.get('logStatus')
+    for value in fileUpload.values():
+        if(value == "" or value == None):
+            return 2
 
+    for key in fileUpload.keys():
+        if( not (key in ['filename', 'saveFileName', 'filePath'])):
+            return 3
 
-def sessionSaveStatusLogged():
+    if sessionQueryFileUpload == None:
+        return 1
+    else:
+        session['fileUpload'] = fileUpload
+        return 0
+
+def sessionDelFileUpload():
     """
-    保存登录状态
+    删除上传文件信息
     """
-    session['logStatus'] = True
-
-
-def sessionDelStatusLogged():
-    """
-    删除登录状态. 登出
-    """
-    session['logStatus'] = False   
-    session.pop('logStatus', None)
-
-
-def sessionQueryUserNameCurrent():
-    """
-    查询当前登录的用户名. Current : 当前登录的 Remember : 曾经登录记住的
-
-    out :
-        _   str/None 如果用户名被保存过返回用户名, 否则返回None
-    """
-    return session.get('usernameCurrent', None)
-
-def sessionSaveUserNameCurrent(usernameCurrent, rememberMe = False):
-    """
-    储存当前登录的用户名. Current : 当前登录的 Remember : 曾经登录记住的
-
-    in  :
-        usernameCurrent str 登录的用户名
-        rememberMe      bool    是否记住当前用户
-    """
-
-    session['usernameCurrent'] = usernameCurrent
-
-    # rememberMe未完...
-
-def sessionDelUserNameCurrent():
-    """
-    删除当前登录用户名
-    """
-
-    session.pop("usernameCurrent", None)
+    session.pop('fileUpload', None)
 
 
 #==============================
@@ -130,26 +99,22 @@ from main import app
 
 #-------------context_processor-----------------
 @app.context_processor
-
 def sessionUtilityProcessor():
-    # 返回登录状态
-    def J2SessionQueryStatusLogged():
+#     # 返回登录状态
+    def J2SessionQueryFileUpload():
         """
-        查询用户登录状态
+            查询上传文件信息
 
-        out :
-            _  bool 是否登录
-        """        
-        return sessionQueryStatusLogged()
-    def J2SessionQueryUserNameCurrent():
+            out :
+                _   dict    {
+                            filename        : str
+                            saveFileName    : str
+                            filePath        : str
+                            }
         """
-        查询当前登录的用户名. Current : 当前登录的 Remember : 曾经登录记住的
+        return sessionQueryFileUpload()
 
-        out :
-            _   str/None 如果用户名被保存过返回用户名, 否则返回None
-        """        
-        return sessionQueryUserNameCurrent()
  
     return dict(\
-    J2SessionQueryStatusLogged=J2SessionQueryStatusLogged, \
-    J2SessionQueryUserNameCurrent=J2SessionQueryUserNameCurrent)
+    J2SessionQueryFileUpload=J2SessionQueryFileUpload \
+    )

@@ -8,8 +8,9 @@
 
 {%block body%}
 
-
-{% if not formTran.filename  %}
+{# 得到file #}
+{% set fileDict = J2SessionQueryFileUpload()  %}
+{% if fileDict == None %}
 <form id="formUpload" method="POST" enctype="multipart/form-data">
 <h1>{{ gettext( "上传" ) }}</h1>
     {{ form.hidden_tag() }}
@@ -39,14 +40,14 @@
 </form>
 
 <h1>{{  gettext( "书名" ) }}</h1>
-<p> {{ formTran.filename }} </p>
-<p> {{ formTran.filePath }} </p>
+<p>  {{ fileDict['filename'] }}</p>
+
 
 <form id="formTran" method="POST" enctype="multipart/form-data">
 {{ formTran.hidden_tag() }}
-{# 提交按钮 #}
-{{ formTran.transform }}
-{% for error in formTran.transform.errors %}
+{# 生成目录 #}
+{{ formTran.createTOC }}
+{% for error in formTran.createTOC.errors %}
 <div class="alert alert-danger" role="alert">
     [{{error}}]
 </div>
