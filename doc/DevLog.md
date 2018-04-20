@@ -29,3 +29,10 @@ $ enca -L zh_CN -x UTF-8 file1 file2 如果不想覆盖原文件可以这样
 可以不指定语言
 
 [来源](https://blog.csdn.net/a280606790/article/details/8504133)
+
+
+
+---
+
+目录文件 http://blog.sina.com.cn/s/blog_5c0175790100bdg5.html
+
