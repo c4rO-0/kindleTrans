@@ -1,5 +1,5 @@
 from flask import session
-
+# from txt2html import Book
 
 # 对session操作
 #──────────────────────────
@@ -119,6 +119,26 @@ def sessionQueryTOC():
 
     return session.get('TOC', None)
 
+
+# def sessionSaveBook(book):
+#     """
+#     储存目录
+#     in  :
+#         Book book
+#     out :
+#     """
+
+#     session['book'] = book
+
+
+# def sessionQueryBook():
+#     """
+#     查询目录
+#     out  :
+#         book
+#     """
+
+#     return session.get('book', None)    
 
 #==============================
 #         jinja 函数

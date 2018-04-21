@@ -51,7 +51,7 @@ $(document).ready(function () {
 
     // 
     // console.log($("p#TOC").text())
-
+    // console.log($( "#confirmTOC" ).val())
     // 检测删除TOC
     $('div#TOC p').
         on('click', function() {
@@ -65,23 +65,20 @@ $(document).ready(function () {
                 $(this).attr("del","")
              
             }
+           
 
-            
-            $("#TOClistidx").empty()
+        })
+
+        $('#confirmTOCTransfer').
+        on('click', function() {
+
+
+        
             $("#TOClistindex").empty()
             $("#TOC p").each((index, element) =>{
                 
                 if($(element).attr("del") == "selected"){
-                    
-                    $("#TOClistidx").append(
-                    "<li><label for=\"TOClistidx-" 
-                    + index + "\">Toclistidx-" 
-                    + index + "</label> <input id=\"TOClistidx-" 
-                    + index + "\" name=\"TOClistidx-" 
-                    + index + "\" value=" 
-                    + $(element).attr("idx") +
-                    " type=\"text\"></li>"
-                    )
+
                     $("#TOClistindex").append(
                         "<li><label for=\"TOClistindex-" 
                         + index + "\">Toclistindex-" 
@@ -94,7 +91,8 @@ $(document).ready(function () {
                 }              
 
             })            
-
+            $('#formTran').submit()
         })
+
 
 })

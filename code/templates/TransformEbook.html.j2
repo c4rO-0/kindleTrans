@@ -35,11 +35,8 @@
 {% if TOC != None %}
     <div id='TOC'>
         {% for slide in TOC %}
-            {% if slide[1] == 0 %}
-                <h2> 第 {{ slide[0] }} 本书</h2>
-            {% endif %}
-        <p idx={{ slide[0] }} index ={{ slide[1] }} del="" > 
-            {{ slide[2] }} 
+        <p index ={{ slide[0] }} del="" > 
+            {{ slide[1] }} 
         </p>
         {% endfor %}
     </div>
@@ -51,11 +48,11 @@
 {{ formTran.hidden_tag() }}
 
 {# 生成目录 目录不需要显示 #}
-{{ formTran.TOClistidx }}
-
 {{ formTran.TOClistindex }}
 
-{{ formTran.confirmTOC }}
+{# 因为在提交之前要做一些处理, 用confirmTOCTransfer替代#}
+<button id="confirmTOCTransfer">确定目录</button>
+{{ formTran.confirmTOC(style="display: none;") }}
 
 {% for error in formTran.confirmTOC.errors %}
 <div class="alert alert-danger" role="alert">

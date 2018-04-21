@@ -16,7 +16,7 @@ from wtforms.validators import ValidationError
 import time;  # 引入time模块
 
 from utilities import init_project 
-from scaffold import generate_project, test_project, genTOC
+from scaffold import generate_project, test_project, genTOC, gen_project
 from txt2html import Book, Chapter
 
 #--------------------------------
@@ -47,14 +47,11 @@ class UploadForm(FlaskForm):
 
 class TransformForm(FlaskForm):
 
-    TOClistidx = FieldList( IntegerField())
     TOClistindex = FieldList( IntegerField())
     confirmTOC = SubmitField('确认目录')
-    transform = SubmitField('转化')
 
 
-
-    def validate_createTOC(self, field):
+    def validate_confirmTOC(self, field):
         if(sessionQueryFileUpload() == None):
             raise ValidationError(gettext('错误 : 没有检测到上传文件'))
 
@@ -106,6 +103,7 @@ def TransformEbook():
                 book , TOC = genTOC(None, filePath, saveFileName)
                 if(book is not None):
                     sessionSaveTOC(TOC)
+                    # sessionSaveBook(book)
 
         else:
             print("unknown submit")
@@ -124,11 +122,22 @@ def ConfirmTransformEbook():
     print("----formTran----")
     if formTran.validate_on_submit():
         print("----submit----")
-        if(formTran.confirmTOC.data):
-            print("确认目录")
-            fileDict = sessionQueryFileUpload()
-            print('---------index----------')
-            print(formTran.TOClistidx.data)
+        # print(formTran.confirmTOC.data)
+        # if(formTran.confirmTOC.data):
+        print("确认目录")
+        fileDict = sessionQueryFileUpload()
+        print('---------index----------')
+        print(formTran.TOClistindex.data)
+        book , TOC = genTOC(None, fileDict['filePath'], fileDict['saveFileName'])
+        if(book == None):
+            print("没有检测到上传的书")
+            return redirect("/TransformEbook")
+            
+        #-----------------
+        # 删除目录
+        if(len(formTran.TOClistindex.data) >0 ):
+            book.combineChapter(formTran.TOClistindex.data)
+            gen_project(book, None, fileDict['filePath'], fileDict['saveFileName'])
             #-----------------
             # 生成项目文件
             # if (fileDict is not None):
