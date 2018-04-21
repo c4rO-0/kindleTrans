@@ -11,7 +11,6 @@
 
 {# 得到file #}
 {% set fileDict = J2SessionQueryFileUpload()  %}
-{% if fileDict == None %}
 <form id="formUpload" method="POST" enctype="multipart/form-data">
 <h1>{{ gettext( "上传" ) }}</h1>
     {{ form.hidden_tag() }}
@@ -25,42 +24,7 @@
     </div>
     {% endfor %}
 </form>
-{% else %}
 
-<h1>{{  gettext( "书名" ) }}</h1>
-<p>  {{ fileDict['filename'] }}</p>
-
-<h1>{{  gettext( "目录" ) }}</h1>
-{% set TOC = J2SessionQueryTOC() %}
-{% if TOC != None %}
-    <div id='TOC'>
-        {% for slide in TOC %}
-        <p index ={{ slide[0] }} del="" > 
-            {{ slide[1] }} 
-        </p>
-        {% endfor %}
-    </div>
-    
-{% endif %}
-
-
-<form id="formTran" method="POST" enctype="multipart/form-data">
-{{ formTran.hidden_tag() }}
-
-{# 生成目录 目录不需要显示 #}
-{{ formTran.TOClistindex }}
-
-{# 因为在提交之前要做一些处理, 用confirmTOCTransfer替代#}
-<button id="confirmTOCTransfer">确定目录</button>
-{{ formTran.confirmTOC(style="display: none;") }}
-
-{% for error in formTran.confirmTOC.errors %}
-<div class="alert alert-danger" role="alert">
-    [{{error}}]
-</div>
-{% endfor %}
-</form>
-{% endif %}
 
 
 {#====================================

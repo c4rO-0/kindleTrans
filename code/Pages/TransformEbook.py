@@ -16,7 +16,7 @@ from wtforms.validators import ValidationError
 import time;  # 引入time模块
 
 from utilities import init_project 
-from scaffold import generate_project, test_project, genTOC, gen_project
+from scaffold import   genTOC, gen_project
 from txt2html import Book, Chapter
 
 #--------------------------------
@@ -45,15 +45,6 @@ class UploadForm(FlaskForm):
            print("格式不对")
            raise ValidationError(gettext('文件格式不对'))
 
-class TransformForm(FlaskForm):
-
-    TOClistindex = FieldList( IntegerField())
-    confirmTOC = SubmitField('确认目录')
-
-
-    def validate_confirmTOC(self, field):
-        if(sessionQueryFileUpload() == None):
-            raise ValidationError(gettext('错误 : 没有检测到上传文件'))
 
 @app.route('/TransformEbook' , methods = ['GET', 'POST']  )
 def TransformEbook():
@@ -111,39 +102,3 @@ def TransformEbook():
 
 
     return render_template('TransformEbook.html.j2', app = app, form=form)
-
-@app.route('/ConfirmTransformEbook' , methods = ['GET', 'POST']  )
-def ConfirmTransformEbook():
-    #....
-
-    # 确认转换
-    formTran = TransformForm()
-
-    print("----formTran----")
-    if formTran.validate_on_submit():
-        print("----submit----")
-        # print(formTran.confirmTOC.data)
-        # if(formTran.confirmTOC.data):
-        print("确认目录")
-        fileDict = sessionQueryFileUpload()
-        print('---------index----------')
-        print(formTran.TOClistindex.data)
-        book , TOC = genTOC(None, fileDict['filePath'], fileDict['saveFileName'])
-        if(book == None):
-            print("没有检测到上传的书")
-            return redirect("/TransformEbook")
-            
-        #-----------------
-        # 删除目录
-        if(len(formTran.TOClistindex.data) >0 ):
-            book.combineChapter(formTran.TOClistindex.data)
-            gen_project(book, None, fileDict['filePath'], fileDict['saveFileName'])
-            #-----------------
-            # 生成项目文件
-            # if (fileDict is not None):
-            #     generate_project(None,fileDict["filePath"] , fileDict["saveFileName"])
-
-            # init_project(formTran.filePath, formTran.filename)
-        return redirect("/ConfirmTransformEbook")
-
-    return render_template('TransformEbook.html.j2', app = app, formTran=formTran)
