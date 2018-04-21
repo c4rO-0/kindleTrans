@@ -44,4 +44,4 @@ flask 给前台发消息
 
 https://stackoverflow.com/questions/42988907/how-do-you-send-messages-from-flask-server-python-to-html-client
 
-[中文文档](http://www.hi-roy.com/2015/12/29/flask-socketio%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/)
+(中文文档)[http://www.hi-roy.com/2015/12/29/flask-socketio%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/]

@@ -50,6 +50,8 @@ def sessionQueryFileUpload():
 
     return session.get('fileUpload', None)
 
+
+
 def sessionSaveFileUpload(fileUpload):
     """
     保存上传文件信息
@@ -88,6 +90,36 @@ def sessionDelFileUpload():
     session.pop('fileUpload', None)
 
 
+def sessionSaveTOC(TOC):
+    """
+    储存目录
+    in  :
+        TOC [[idx, index, title]
+                ...
+            ]
+            indx 书籍标号
+            index  单个书籍里chapter的标号
+            title 目录
+    out :
+    """
+
+    session['TOC'] = TOC
+
+def sessionQueryTOC():
+    """
+    查询目录
+    out  :
+        TOC [[idx, index, title]
+                ...
+            ]
+            indx 书籍标号
+            index  单个书籍里chapter的标号
+            title 目录
+    """
+
+    return session.get('TOC', None)
+
+
 #==============================
 #         jinja 函数
 from main import app
@@ -114,7 +146,20 @@ def sessionUtilityProcessor():
         """
         return sessionQueryFileUpload()
 
- 
+    def J2SessionQueryTOC():
+        """
+        查询目录
+        out  :
+            TOC [[idx, index, title]
+                    ...
+                ]
+                indx 书籍标号
+                index  单个书籍里chapter的标号
+                title 目录
+        """
+        return sessionQueryTOC()
+
     return dict(\
-    J2SessionQueryFileUpload=J2SessionQueryFileUpload \
+    J2SessionQueryFileUpload=J2SessionQueryFileUpload, \
+    J2SessionQueryTOC=J2SessionQueryTOC \
     )

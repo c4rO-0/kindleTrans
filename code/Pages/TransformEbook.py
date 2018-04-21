@@ -8,7 +8,7 @@ from flask.ext.babel import gettext
 import os
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import SubmitField
+from wtforms import SubmitField, FieldList, IntegerField
 from werkzeug.utils import secure_filename
 
 from wtforms.validators import ValidationError
@@ -16,14 +16,20 @@ from wtforms.validators import ValidationError
 import time;  # 引入time模块
 
 from utilities import init_project 
-from scaffold import generate_project
+from scaffold import generate_project, test_project, genTOC
+from txt2html import Book, Chapter
 
 #--------------------------------
 # 引入session
-from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, sessionDelFileUpload
+from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, sessionDelFileUpload, sessionSaveTOC
 #--------------------------------
 # 运行shell
 # import commands
+#--------------------------------
+from flask_socketio import SocketIO, emit
+from Script_socketio import *
+
+import time
 #=================================
 
 class UploadForm(FlaskForm):
@@ -41,7 +47,9 @@ class UploadForm(FlaskForm):
 
 class TransformForm(FlaskForm):
 
-    createTOC = SubmitField('确认目录')
+    TOClistidx = FieldList( IntegerField())
+    TOClistindex = FieldList( IntegerField())
+    confirmTOC = SubmitField('确认目录')
     transform = SubmitField('转化')
 
 
@@ -54,10 +62,9 @@ class TransformForm(FlaskForm):
 def TransformEbook():
     #....
 
+    #上传文件
     form = UploadForm()
 
-    formTran = TransformForm()
- 
 
     if form.validate_on_submit():
         print("-------------------------")
@@ -77,12 +84,13 @@ def TransformEbook():
             form.file.data.save(os.path.join(filePath , saveFileName))
             # 保存session
             sessionDelFileUpload()
+            print(filename)
             info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath} )
             if info != 0:
                 print("储存文件错误 : ", info)
                 return redirect("/TransformEbook")
             else:
-                
+                            
                 #==================
                 #-----------------
                 # 统一文件编码
@@ -93,24 +101,40 @@ def TransformEbook():
                 #-----------------              
                 # 初始化图书
                 init_project(filePath, filename)
+                #-----------------              
+                # 生成目录
+                book , TOC = genTOC(None, filePath, saveFileName)
+                if(book is not None):
+                    sessionSaveTOC(TOC)
 
-                #-----------------
-                # 生成项目文件
-                generate_project(None,filePath , saveFileName)
         else:
             print("unknown submit")
-        return redirect("/TransformEbook")
-    
+        return redirect("/ConfirmTransformEbook")
+
+
+    return render_template('TransformEbook.html.j2', app = app, form=form)
+
+@app.route('/ConfirmTransformEbook' , methods = ['GET', 'POST']  )
+def ConfirmTransformEbook():
+    #....
+
+    # 确认转换
+    formTran = TransformForm()
+
+    print("----formTran----")
     if formTran.validate_on_submit():
-        if(formTran.createTOC.data):
+        print("----submit----")
+        if(formTran.confirmTOC.data):
             print("确认目录")
             fileDict = sessionQueryFileUpload()
-
-            print(fileDict['filename'])
-
+            print('---------index----------')
+            print(formTran.TOClistidx.data)
+            #-----------------
+            # 生成项目文件
+            # if (fileDict is not None):
+            #     generate_project(None,fileDict["filePath"] , fileDict["saveFileName"])
 
             # init_project(formTran.filePath, formTran.filename)
-        return redirect("/TransformEbook")
+        return redirect("/ConfirmTransformEbook")
 
-    return render_template('TransformEbook.html.j2', app = app, form=form, formTran=formTran)
-
+    return render_template('TransformEbook.html.j2', app = app, formTran=formTran)

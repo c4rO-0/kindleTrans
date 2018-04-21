@@ -19,12 +19,16 @@ sys.path.insert(0, Txt2mobiPythonPath)
 # from flask import Flask , request
 import flask
 
+from flask_socketio import SocketIO, emit
 
 
 #----------------------------------------------------
 #     setting app
+
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
+socketio = SocketIO(app)
+
 #----------------------------------------------------
 #  设置上传文件根目录
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -37,11 +41,14 @@ babel = Babel(app)
 #----------------------------------------------------
 #  append all the components
 from Pages import *
-
+#----------------------------------------------------
+#  import socket.io
+from Script_socketio import *
 #-----------------------------------------------------
 #    Run
 if __name__ == '__main__':
     # app.run(host='127.0.0.1', port=8081   , debug=True)
-    app.run(host='0.0.0.0', port=8081, debug=True)
+    # socketio.run(app, host='0.0.0.0', port=8081, debug=True)
+    socketio.run(app, debug=True)
 
 

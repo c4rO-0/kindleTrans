@@ -1,6 +1,11 @@
 
+let sectDelTOCidx = new Array();
+let sectDelTOCindex = new Array();
+
+
+
 $(document).ready(function () { 
-//     console.log("准备");
+    console.log("准备");
 //     $("form#formUpload").on("submit",function(event){
 //         $(".progress").css("display","block");    //显示进度条
         
@@ -34,4 +39,62 @@ $(document).ready(function () {
 // }).fail(
 // function(){ console.log( 'false' );});
 //     });
+
+    // var socket = io.connect('http://' + document.domain + ':' + location.port);
+    // socket.on('connect', function() {
+    //     console.log('connected');
+    // });
+
+    // socket.on('message', function(data) {
+    //     console.log(data);
+    // });            
+
+    // 
+    // console.log($("p#TOC").text())
+
+    // 检测删除TOC
+    $('div#TOC p').
+        on('click', function() {
+
+            if($(this).attr("del") == ""){ 
+                $(this).css("background-color", "red")
+                $(this).attr("del","selected")
+            }else{
+                // 还原回去
+                $(this).css("background-color", "white")
+                $(this).attr("del","")
+             
+            }
+
+            
+            $("#TOClistidx").empty()
+            $("#TOClistindex").empty()
+            $("#TOC p").each((index, element) =>{
+                
+                if($(element).attr("del") == "selected"){
+                    
+                    $("#TOClistidx").append(
+                    "<li><label for=\"TOClistidx-" 
+                    + index + "\">Toclistidx-" 
+                    + index + "</label> <input id=\"TOClistidx-" 
+                    + index + "\" name=\"TOClistidx-" 
+                    + index + "\" value=" 
+                    + $(element).attr("idx") +
+                    " type=\"text\"></li>"
+                    )
+                    $("#TOClistindex").append(
+                        "<li><label for=\"TOClistindex-" 
+                        + index + "\">Toclistindex-" 
+                        + index + "</label> <input id=\"TOClistindex-" 
+                        + index + "\" name=\"TOClistindex-" 
+                        + index + "\" value=" 
+                        + $(element).attr("index") +
+                        " type=\"text\"></li>"
+                        )                    
+                }              
+
+            })            
+
+        })
+
 })
