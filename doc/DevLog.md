@@ -1,5 +1,8 @@
 ## 2018April21-BS
 
+- 在example里添加测试用书
+- 针对更复杂的目录还需要进一步调式
+
 [官方文档](http://flask.pocoo.org/docs/0.12/patterns/fileuploads/)在最后提到如何做progress bar, 但是比较含混. 需要再详细调查.
 
 下载修改文件名https://stackoverflow.com/questions/24504828/downloading-file-custom-name-with-jquery

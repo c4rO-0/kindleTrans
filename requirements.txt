@@ -3,10 +3,12 @@ astroid==1.6.3
 Babel==2.5.3
 chardet==3.0.4
 click==6.7
+configparser==3.5.0
 dominate==2.3.1
 Flask==0.12.2
 Flask-Babel==0.11.2
 Flask-Bootstrap==3.3.7.1
+Flask-SocketIO==2.9.6
 Flask-WTF==0.14.2
 gunicorn==19.7.1
 isort==4.3.4
@@ -19,6 +21,8 @@ packaging==17.1
 passlib==1.7.1
 pylint==1.8.4
 pyparsing==2.2.0
+python-engineio==2.0.4
+python-socketio==1.9.0
 pytz==2018.3
 six==1.11.0
 visitor==0.1.3
