@@ -1,7 +1,7 @@
 #---------------------------------
 from config import *
 from main  import *
-from flask import Flask, render_template, request, redirect,  url_for, g
+from flask import Flask, render_template, request, redirect,  url_for, g, send_from_directory
 from flask.ext.babel import gettext
 #---------------------------------
 # 上传文件
@@ -77,9 +77,26 @@ def ConfirmTransformEbook():
         # 生成项目文件        
         gen_project(book, None, fileDict['filePath'], fileDict['saveFileName'])
 
-        # 未完
-        # 需要提供下载
+        # 用bookCount代表已经转化完book
+        fileDict['bookCount'] = book.book_count()
+        sessionDelFileUpload()
+        info = sessionSaveFileUpload(fileDict)
+        if info != 0:
+            print("储存文件错误 : ", info)
+            return redirect("/404")
         
         return redirect("/ConfirmTransformEbook")
 
     return render_template('ConfirmTransformEbook.html.j2', app = app, formTran=formTran)
+
+
+@app.route('/TransformDownloads/<filename>')
+def downloads(filename):
+    fileDict = sessionQueryFileUpload()
+    if(fileDict == None):
+        return redirect('/404')
+    elif(not ('bookCount' in fileDict.keys())):
+        return redirect('/TransformEbook')
+
+    return send_from_directory(fileDict['filePath'],
+                               filename)

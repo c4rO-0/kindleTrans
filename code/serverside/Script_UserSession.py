@@ -61,6 +61,7 @@ def sessionSaveFileUpload(fileUpload):
                             filename        : str
                             saveFileName    : str
                             filePath        : str
+                            bookCount       : int
                             }
     out :
         _   int 0 成功
@@ -74,7 +75,7 @@ def sessionSaveFileUpload(fileUpload):
             return 2
 
     for key in fileUpload.keys():
-        if( not (key in ['filename', 'saveFileName', 'filePath'])):
+        if( not (key in ['filename', 'saveFileName', 'filePath' , 'bookCount'])):
             return 3
 
     if sessionQueryFileUpload == None:
