@@ -19,5 +19,6 @@ default_lang = 'zh'
 # 上传根目录
 import os
 UPLOAD_FOLDER = os.path.dirname(__file__) + os.sep + 'uploads'
+UPLOAD_FOLDERTOC = os.path.dirname(__file__) + os.sep + 'templates' + os.sep + 'uploads'
 # 允许上传的文件类型
 ALLOWED_EXTENSIONS = set(['txt'])

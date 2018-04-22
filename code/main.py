@@ -32,6 +32,7 @@ socketio = SocketIO(app)
 #----------------------------------------------------
 #  设置上传文件根目录
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDERTOC'] = UPLOAD_FOLDERTOC
 
 #----------------------------------------------------
 #     set language
