@@ -63,7 +63,7 @@ def ConfirmTransformEbook():
         fileDict = sessionQueryFileUpload()
         print('---------index----------')
         print(formTran.TOClistindex.data)
-        book , TOC = genTOC(None, fileDict['filePath'], fileDict['saveFileName'])
+        book , TOC = genTOC(".*[第]?[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]?.*", fileDict['filePath'], fileDict['saveFileName'])
         if(book == None):
             print("没有检测到上传的书")
             sessionDelFileUpload()
@@ -75,7 +75,7 @@ def ConfirmTransformEbook():
             book.combineChapter(formTran.TOClistindex.data)
         #-----------------
         # 生成项目文件        
-        gen_project(book, None, fileDict['filePath'], fileDict['saveFileName'])
+        gen_project(book, ".*[第]?[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]?.*", fileDict['filePath'], fileDict['saveFileName'])
 
         # 用bookCount代表已经转化完book
         fileDict['bookCount'] = book.book_count()
