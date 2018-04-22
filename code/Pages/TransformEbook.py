@@ -91,11 +91,20 @@ def TransformEbook():
                 init_project(filePath, filename)
                 #-----------------              
                 # 生成目录
-                book , TOC = genTOC(".*[第]?[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]?.*", filePath, saveFileName)
-                if(book is not None):
-                    sessionSaveTOC(TOC)
+                # book , TOC = genTOC(".*[第]?[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]?.*", filePath, saveFileName)
+                book , TOC = genTOC(None, filePath, saveFileName)
+              
+                if(book is None):
+                    return redirect("/TransformEbook")
+                # 链接目录
+                # 创建目录
+                if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName) )):
+                    os.makedirs(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName)) 
+                # 连接
+                os.link(os.path.join(filePath,'project-TOC.html'), \
+                os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName),'project-TOC.html'))
+                    # sessionSaveTOC(TOC)
                     # sessionSaveBook(book)
-
         else:
             print("unknown submit")
         return redirect("/ConfirmTransformEbook")

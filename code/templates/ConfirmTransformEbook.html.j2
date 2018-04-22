@@ -29,17 +29,15 @@
     {% else %} 
     {# 没有 'bookCount' 说明还没有确认转化#}
         <h1>{{  gettext( "目录" ) }}</h1>
-        {% set TOC = J2SessionQueryTOC() %}
-        {% if TOC != None %}
-            <div id='TOC'>
-                {% for slide in TOC %}
-                <p index ={{ slide[0] }} del="" > 
-                    {{ slide[1] }} 
-                </p>
-                {% endfor %}
-            </div>
-            
-        {% endif %}
+        <div id='TOC'>
+        {% block content %}
+                {% set fileDict = J2SessionQueryFileUpload()  %}
+                {% include os.path.join('uploads', fileDict['saveFileName'], 'project-TOC.html') %}
+                 
+
+        {% endblock %}
+        </div>
+
 
 
         <form id="formTran" method="POST" enctype="multipart/form-data">

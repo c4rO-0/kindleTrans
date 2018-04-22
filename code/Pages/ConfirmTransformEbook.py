@@ -87,7 +87,8 @@ def ConfirmTransformEbook():
         
         return redirect("/ConfirmTransformEbook")
 
-    return render_template('ConfirmTransformEbook.html.j2', app = app, formTran=formTran)
+
+    return render_template('ConfirmTransformEbook.html.j2', app = app, formTran=formTran, os=os)
 
 
 @app.route('/TransformDownloads/<filename>')
