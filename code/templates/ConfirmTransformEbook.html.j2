@@ -27,6 +27,27 @@
         {% endfor %}
 
     {% else %} 
+
+    {# 修改目录规则 #}
+    <h1>{{  gettext( "修改过滤" ) }}</h1>
+    <form id="formTranTitle" method="POST" enctype="multipart/form-data">
+        {{ formTran.hidden_tag() }}
+
+        {{ formTran.titleFilter(value= J2sessionQueryTitleFilter()) }}
+
+        {{ formTran.confirmtitleFilter() }}
+
+
+        {% for error in formTran.titleFilter.errors %}
+        <div class="alert alert-danger" role="alert">
+            [{{error}}]
+        </div>
+        {% endfor %}        
+
+    </form>
+
+
+    <button id="confirmTOCTransfer">确定目录</button>
     {# 没有 'bookCount' 说明还没有确认转化#}
         <h1>{{  gettext( "目录" ) }}</h1>
         <div id='TOC'>
@@ -34,7 +55,6 @@
                 {% set fileDict = J2SessionQueryFileUpload()  %}
                 {% include os.path.join('uploads', fileDict['saveFileName'], 'project-TOC.html') %}
                  
-
         {% endblock %}
         </div>
 
@@ -47,7 +67,7 @@
         {{ formTran.TOClistindex(style="display: none;") }}
 
         {# 因为在提交之前要做一些处理, 用confirmTOCTransfer替代#}
-        <button id="confirmTOCTransfer">确定目录</button>
+
         {{ formTran.confirmTOC(style="display: none;") }}
 
             {% for error in formTran.confirmTOC.errors %}

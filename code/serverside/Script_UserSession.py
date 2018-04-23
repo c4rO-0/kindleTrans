@@ -121,6 +121,35 @@ def sessionQueryTOC():
     return session.get('TOC', None)
 
 
+def sessionQueryTitleFilter():
+    """
+    查询目录匹配字符串
+
+    out :
+        _   TitleFilter 正则表达式
+    """
+
+    return session.get('TitleFilter', None)
+
+
+
+def sessionSaveTitleFilter(TitleFilter):
+    """
+    保存目录匹配字符串
+
+    in :
+        TitleFilter 正则表达式
+    out :
+    """
+
+    session['TitleFilter'] = TitleFilter
+
+def sessionDelTitleFilter():
+    """
+    删除目录匹配字符串
+    """
+    session.pop('TitleFilter', None)
+
 # def sessionSaveBook(book):
 #     """
 #     储存目录
@@ -180,7 +209,19 @@ def sessionUtilityProcessor():
         """
         return sessionQueryTOC()
 
+    def J2sessionQueryTitleFilter():
+        """
+        查询目录匹配字符串
+
+        out :
+            _   TitleFilter 正则表达式
+        """
+
+        
+        return sessionQueryTitleFilter()
+
     return dict(\
     J2SessionQueryFileUpload=J2SessionQueryFileUpload, \
-    J2SessionQueryTOC=J2SessionQueryTOC \
+    J2SessionQueryTOC=J2SessionQueryTOC, \
+    J2sessionQueryTitleFilter=J2sessionQueryTitleFilter \
     )

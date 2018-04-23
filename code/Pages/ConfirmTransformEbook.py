@@ -3,15 +3,16 @@ from config import *
 from main  import *
 from flask import Flask, render_template, request, redirect,  url_for, g, send_from_directory
 from flask.ext.babel import gettext
+from config import DEFAULT_TITLE_FILTER
 #---------------------------------
 # 上传文件
 import os
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import SubmitField, FieldList, IntegerField
+from wtforms import SubmitField, FieldList, IntegerField, StringField , validators
 from werkzeug.utils import secure_filename
 
-from wtforms.validators import ValidationError
+from wtforms.validators import ValidationError 
 
 import time;  # 引入time模块
 
@@ -21,21 +22,22 @@ from txt2html import Book, Chapter
 
 #--------------------------------
 # 引入session
-from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, sessionDelFileUpload, sessionSaveTOC
+from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, sessionDelFileUpload, sessionSaveTOC, sessionQueryTitleFilter, sessionSaveTitleFilter
 #--------------------------------
 # 运行shell
 # import commands
 #--------------------------------
 from flask_socketio import SocketIO, emit
 from Script_socketio import *
-
-import time
 #=================================
 
 class TransformForm(FlaskForm):
 
     TOClistindex = FieldList( IntegerField())
     confirmTOC = SubmitField('确认目录')
+
+    titleFilter = StringField('过滤规则', validators=[validators.required()])
+    confirmtitleFilter = SubmitField('重新生成目录')
 
 
     def validate_confirmTOC(self, field):
@@ -56,36 +58,69 @@ def ConfirmTransformEbook():
 
     print("----formTran----")
     if formTran.validate_on_submit():
-        print("----submit----")
-        # print(formTran.confirmTOC.data)
-        # if(formTran.confirmTOC.data):
-        print("确认目录")
-        fileDict = sessionQueryFileUpload()
-        print('---------index----------')
-        print(formTran.TOClistindex.data)
-        book , TOC = genTOC(".*[第]?[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]?.*", fileDict['filePath'], fileDict['saveFileName'])
-        if(book == None):
-            print("没有检测到上传的书")
-            sessionDelFileUpload()
-            return redirect("/TransformEbook")
-            
-        #-----------------
-        # 删除目录
-        if(len(formTran.TOClistindex.data) >0 ):
-            book.combineChapter(formTran.TOClistindex.data)
-        #-----------------
-        # 生成项目文件        
-        gen_project(book, ".*[第]?[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]?.*", fileDict['filePath'], fileDict['saveFileName'])
 
-        # 用bookCount代表已经转化完book
-        fileDict['bookCount'] = book.book_count()
-        sessionDelFileUpload()
-        info = sessionSaveFileUpload(fileDict)
-        if info != 0:
-            print("储存文件错误 : ", info)
-            return redirect("/404")
-        
-        return redirect("/ConfirmTransformEbook")
+        if(formTran.confirmtitleFilter.data):
+
+            titleFilter = formTran.titleFilter.data
+
+            fileDict = sessionQueryFileUpload()
+
+            book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'])
+            sessionSaveTitleFilter(titleFilter)
+
+            # book , TOC = genTOC(None, filePath, saveFileName)
+            
+            if(book is None):
+                return redirect("/TransformEbook")
+            # 链接目录
+            # 创建目录
+            if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']) )):
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName'])) 
+            # 连接
+            # 删除之前的链接
+            os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']),'project-TOC.html'))
+            os.link(os.path.join(fileDict['filePath'],'project-TOC.html'), \
+            os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']),'project-TOC.html'))
+
+            return redirect("/ConfirmTransformEbook")
+
+        else:
+
+            print("----submit----")
+            # print(formTran.confirmTOC.data)
+            # if(formTran.confirmTOC.data):
+            print("确认目录")
+            fileDict = sessionQueryFileUpload()
+            print('---------index----------')
+            print(formTran.TOClistindex.data)
+
+            titleFilter = sessionQueryTitleFilter['TitleFilter']
+            if(titleFilter == None):
+                titleFilter = DEFAULT_TITLE_FILTER
+
+            book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'])
+            if(book == None):
+                print("没有检测到上传的书")
+                sessionDelFileUpload()
+                return redirect("/TransformEbook")
+                
+            #-----------------
+            # 删除目录
+            if(len(formTran.TOClistindex.data) >0 ):
+                book.combineChapter(formTran.TOClistindex.data)
+            #-----------------
+            # 生成项目文件        
+            gen_project(book, titleFilter, fileDict['filePath'], fileDict['saveFileName'])
+
+            # 用bookCount代表已经转化完book
+            fileDict['bookCount'] = book.book_count()
+            sessionDelFileUpload()
+            info = sessionSaveFileUpload(fileDict)
+            if info != 0:
+                print("储存文件错误 : ", info)
+                return redirect("/404")
+            
+            return redirect("/ConfirmTransformEbook")
 
 
     return render_template('ConfirmTransformEbook.html.j2', app = app, formTran=formTran, os=os)
