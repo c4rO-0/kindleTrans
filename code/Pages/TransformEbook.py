@@ -17,7 +17,7 @@ import time;  # 引入time模块
 
 from utilities import init_project 
 from scaffold import   genTOC, gen_project
-from txt2html import Book, Chapter
+from txt2html import Book, Chapter, get_encoding
 
 #--------------------------------
 # 引入session
@@ -86,12 +86,21 @@ def TransformEbook():
                 #==================
                 #-----------------
                 # 统一文件编码
+                print("--------coding---------")
                 info_o = os.system('cd ' + filePath + ';' + 'enca  -x UTF-8 ' + saveFileName)
                 if(info_o == 512):
-                    
-                    #转换失败
-                    print("转换失败. 失败码 : ", info_o)
-                    return redirect("/404")
+                    # print("----自动转码失败, 转用遍历匹配")
+                    # fileCode = get_encoding(os.path.join(filePath , saveFileName))
+                    # if(fileCode == None):
+                    #     info_o = os.system('cd ' + filePath + ';' 
+                    #     + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName )
+                    # else:
+                    #     info_o = os.system('cd ' + filePath + ';' 
+                    #     + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName + ' ' + fileCode )                        
+                    # if(info_o != 0):
+                    #     #转换失败
+                    #     print("转换失败. 失败码 : ", info_o)
+                    return redirect("/404/转码失败,请手动转换为gdb或utf-8")
                 #-----------------              
                 # 初始化图书
                 init_project(filePath, filename)

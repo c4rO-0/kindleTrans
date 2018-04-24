@@ -22,13 +22,23 @@
         </header>
     
         <main role="main" class="inner cover">
-            <h1 class="cover-heading">This is the page that does NOT exist yet</h1>
-            <p class="lead">
-                哈哈哈哈哈嗝哈哈哈哈哈
-            </p>
+            
+			{% if error == None %}
+				<h1 class="cover-heading">This is the page that does NOT exist yet</h1>
+				<p class="lead">
+
+					哈哈哈哈哈嗝哈哈哈哈哈
+				</p>
+			{% else %}
+				<p class="lead">
+					{{ error }}
+				</p>
+			{% endif %}
 
         </main>
     </div>
+
+	<a href='/'>点我返回主页</a>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="{{ url_for('static', filename='Scripts/jquery-3.2.1.slim.min.js') }}"></script>
