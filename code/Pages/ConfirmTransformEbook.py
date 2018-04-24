@@ -154,5 +154,7 @@ def downloads(filename):
     elif(not ('bookCount' in fileDict.keys())):
         return redirect('/TransformEbook')
 
+    print("download page : " + fileDict['filePath'])
+
     return send_from_directory(fileDict['filePath'],
                                filename)
