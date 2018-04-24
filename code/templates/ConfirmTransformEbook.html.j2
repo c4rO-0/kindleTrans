@@ -14,18 +14,26 @@
 
 
     <h1>{{  gettext( "书名" ) }}</h1>
-    <p>  {{ fileDict['filename'] }}</p>
+    <p>  {{ fileDict['filename'].rsplit('.')[0] }}</p>
 
 
     {#  下载  #}
     {% if 'bookCount' in fileDict.keys() %}
     {# 含有 'bookCount' 说明已经转化完毕, 提供下载#}
         <div>
-            {% for i_book in range(1, fileDict['bookCount']+1) %}
+
+            {% if fileDict['bookCount'] == 1 %}
+                {# 只有一本书, 不需要在书名后加标号 #}
                 <li>
-                    <a href={{ '/TransformDownloads/project-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
+                    <a href={{ '/TransformDownloads/project-1.mobi' }} download={{ fileDict['filename'].rsplit('.')[0]+'.mobi' }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
                 </li>
-            {% endfor %}
+            {% else %}
+                {% for i_book in range(1, fileDict['bookCount']+1) %}
+                    <li>
+                        <a href={{ '/TransformDownloads/project-%s.mobi' % i_book }} download={{ fileDict['filename'].rsplit('.')[0]+'-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
         </div>
     {% else %} 
 
