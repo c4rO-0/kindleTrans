@@ -14,28 +14,53 @@
 
 
     <h1>{{  gettext( "书名" ) }}</h1>
-    <p>  {{ fileDict['filename'] }}</p>
+    <p>  {{ fileDict['filename'].rsplit('.')[0] }}</p>
 
 
     {#  下载  #}
     {% if 'bookCount' in fileDict.keys() %}
     {# 含有 'bookCount' 说明已经转化完毕, 提供下载#}
-        {% for i_book in range(1, fileDict['bookCount']+1) %}
+        <div>
 
-            <a href={{ '/TransformDownloads/project-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
-
-        {% endfor %}
-
+            {% if fileDict['bookCount'] == 1 %}
+                {# 只有一本书, 不需要在书名后加标号 #}
+                <li>
+                    <a href={{ '/TransformDownloads/project-1.mobi' }} download={{ fileDict['filename'].rsplit('.')[0]+'.mobi' }}> 下载 {{fileDict['bookCount']}} </a>
+                </li>
+            {% else %}
+                {% for i_book in range(1, fileDict['bookCount']+1) %}
+                    <li>
+                        <a href={{ '/TransformDownloads/project-%s.mobi' % i_book }} download={{ fileDict['filename'].rsplit('.')[0]+'-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </div>
     {% else %} 
+
+    {# 修改目录规则 #}
+    <h1>{{  gettext( "修改过滤" ) }}</h1>
+    <form id="formTranTitle" method="POST" enctype="multipart/form-data">
+        {{ formTran.hidden_tag() }}
+
+        {{ formTran.titleFilter(value= J2sessionQueryTitleFilter()) }}
+
+        {{ formTran.confirmtitleFilter() }}
+
+
+        {% for error in formTran.titleFilter.errors %}
+        <div class="alert alert-danger" role="alert">
+            [{{error}}]
+        </div>
+        {% endfor %}        
+
+    </form>
+
+
+    <button id="confirmTOCTransfer">确定目录</button>
     {# 没有 'bookCount' 说明还没有确认转化#}
         <h1>{{  gettext( "目录" ) }}</h1>
         <div id='TOC'>
-        {% block content %}
-                {% set fileDict = J2SessionQueryFileUpload()  %}
-                {% include os.path.join('uploads', fileDict['saveFileName'], 'project-TOC.html') %}
-                 
-
-        {% endblock %}
+        {{ TOC }}
         </div>
 
 
@@ -47,7 +72,7 @@
         {{ formTran.TOClistindex(style="display: none;") }}
 
         {# 因为在提交之前要做一些处理, 用confirmTOCTransfer替代#}
-        <button id="confirmTOCTransfer">确定目录</button>
+
         {{ formTran.confirmTOC(style="display: none;") }}
 
             {% for error in formTran.confirmTOC.errors %}
