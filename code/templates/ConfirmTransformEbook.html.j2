@@ -20,12 +20,13 @@
     {#  下载  #}
     {% if 'bookCount' in fileDict.keys() %}
     {# 含有 'bookCount' 说明已经转化完毕, 提供下载#}
-        {% for i_book in range(1, fileDict['bookCount']+1) %}
-
-            <a href={{ '/TransformDownloads/project-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
-
-        {% endfor %}
-
+        <div>
+            {% for i_book in range(1, fileDict['bookCount']+1) %}
+                <li>
+                    <a href={{ '/TransformDownloads/project-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
+                </li>
+            {% endfor %}
+        </div>
     {% else %} 
 
     {# 修改目录规则 #}

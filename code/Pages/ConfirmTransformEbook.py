@@ -38,7 +38,7 @@ class TransformForm(FlaskForm):
     TOClistindex = FieldList( IntegerField())
     confirmTOC = SubmitField('确认目录')
 
-    titleFilter = StringField('过滤规则', validators=[validators.required()])
+    titleFilter = StringField('过滤规则')
     ChapterMaxLength = IntegerField()
     confirmtitleFilter = SubmitField('重新生成目录')
 
@@ -46,6 +46,11 @@ class TransformForm(FlaskForm):
     def validate_confirmTOC(self, field):
         if(sessionQueryFileUpload() == None):
             raise ValidationError(gettext('错误 : 没有检测到上传文件'))
+
+    def validate_titleFilter(self, field):
+        if(self.confirmtitleFilter.data):
+            if(field.data == None or len(field.data) == 0):
+                raise ValidationError(gettext('需要目录过滤规则'))
 
 
 @app.route('/ConfirmTransformEbook' , methods = ['GET', 'POST']  )
@@ -74,7 +79,7 @@ def ConfirmTransformEbook():
 
             titleFilter = formTran.titleFilter.data
             ChapterMaxLength = formTran.ChapterMaxLength.data
-            if(ChapterMaxLength <0):
+            if(ChapterMaxLength == None or ChapterMaxLength <0):
                 ChapterMaxLength = 25
 
             # book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'])
@@ -108,11 +113,11 @@ def ConfirmTransformEbook():
             print('---------index----------')
             print(formTran.TOClistindex.data)
 
-            titleFilter = sessionQueryTitleFilter['TitleFilter']
+            titleFilter = sessionQueryTitleFilter()
             if(titleFilter == None):
                 titleFilter = DEFAULT_TITLE_FILTER
 
-            book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'])
+            book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'], fileDict['ChapterMaxLength'])
 
             if(book == None):
                 print("没有检测到上传的书")
