@@ -29,6 +29,8 @@ from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, se
 #--------------------------------
 from flask_socketio import SocketIO, emit
 from Script_socketio import *
+
+import shutil
 #=================================
 
 class TransformForm(FlaskForm):
@@ -37,6 +39,7 @@ class TransformForm(FlaskForm):
     confirmTOC = SubmitField('确认目录')
 
     titleFilter = StringField('过滤规则', validators=[validators.required()])
+    ChapterMaxLength = IntegerField()
     confirmtitleFilter = SubmitField('重新生成目录')
 
 
@@ -49,12 +52,20 @@ class TransformForm(FlaskForm):
 def ConfirmTransformEbook():
     #....
 
-    if (sessionQueryFileUpload() == None):
+    fileDict = sessionQueryFileUpload()
+
+    if (fileDict == None):
         return redirect("/TransformEbook")
 
 
     # 确认转换
     formTran = TransformForm()
+
+
+    book , TOC = genTOC(sessionQueryTitleFilter(), fileDict['filePath'], fileDict['saveFileName'], fileDict['ChapterMaxLength'])
+    if(book is None):
+        return redirect("/TransformEbook")
+
 
     print("----formTran----")
     if formTran.validate_on_submit():
@@ -62,10 +73,11 @@ def ConfirmTransformEbook():
         if(formTran.confirmtitleFilter.data):
 
             titleFilter = formTran.titleFilter.data
+            ChapterMaxLength = formTran.ChapterMaxLength.data
+            if(ChapterMaxLength <0):
+                ChapterMaxLength = 25
 
-            fileDict = sessionQueryFileUpload()
-
-            book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'])
+            # book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'])
             sessionSaveTitleFilter(titleFilter)
 
             # book , TOC = genTOC(None, filePath, saveFileName)
@@ -74,13 +86,15 @@ def ConfirmTransformEbook():
                 return redirect("/TransformEbook")
             # 链接目录
             # 创建目录
-            if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']) )):
-                os.makedirs(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName'])) 
+            # if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']) )):
+            #     os.makedirs(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName'])) 
             # 连接
             # 删除之前的链接
-            os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']),'project-TOC.html'))
-            os.link(os.path.join(fileDict['filePath'],'project-TOC.html'), \
-            os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']),'project-TOC.html'))
+            # os.remove(os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']),'project-TOC.html'))
+            # # os.link(os.path.join(fileDict['filePath'],'project-TOC.html'), \
+            # # os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']),'project-TOC.html'))
+            # shutil.copy2(os.path.join(fileDict['filePath'],'project-TOC.html'), \
+            # os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']),'project-TOC.html'))
 
             return redirect("/ConfirmTransformEbook")
 
@@ -99,6 +113,7 @@ def ConfirmTransformEbook():
                 titleFilter = DEFAULT_TITLE_FILTER
 
             book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'])
+
             if(book == None):
                 print("没有检测到上传的书")
                 sessionDelFileUpload()
@@ -123,7 +138,7 @@ def ConfirmTransformEbook():
             return redirect("/ConfirmTransformEbook")
 
 
-    return render_template('ConfirmTransformEbook.html.j2', app = app, formTran=formTran, os=os)
+    return render_template('ConfirmTransformEbook.html.j2', app = app, formTran=formTran, os=os, TOC=TOC)
 
 
 @app.route('/TransformDownloads/<filename>')

@@ -1,4 +1,5 @@
 from flask import session
+from config import DEFAULT_TITLE_FILTER
 # from txt2html import Book
 
 # 对session操作
@@ -75,7 +76,7 @@ def sessionSaveFileUpload(fileUpload):
             return 2
 
     for key in fileUpload.keys():
-        if( not (key in ['filename', 'saveFileName', 'filePath' , 'bookCount'])):
+        if( not (key in ['filename', 'saveFileName', 'filePath' , 'bookCount', 'ChapterMaxLength'])):
             return 3
 
     if sessionQueryFileUpload == None:
@@ -129,7 +130,7 @@ def sessionQueryTitleFilter():
         _   TitleFilter 正则表达式
     """
 
-    return session.get('TitleFilter', None)
+    return session.get('TitleFilter', DEFAULT_TITLE_FILTER)
 
 
 

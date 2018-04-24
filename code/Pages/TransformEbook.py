@@ -32,6 +32,8 @@ from Script_socketio import *
 import time
 
 from config import DEFAULT_TITLE_FILTER
+
+import shutil
 #=================================
 
 class UploadForm(FlaskForm):
@@ -54,7 +56,7 @@ def TransformEbook():
 
     #上传文件
     form = UploadForm()
-
+    TOC = None
 
     if form.validate_on_submit():
         print("-------------------------")
@@ -75,7 +77,7 @@ def TransformEbook():
             # 保存session
             sessionDelFileUpload()
             print(filename)
-            info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath} )
+            info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath, 'ChapterMaxLength':25} )
             if info != 0:
                 print("储存文件错误 : ", info)
                 return redirect("/TransformEbook")
@@ -84,29 +86,33 @@ def TransformEbook():
                 #==================
                 #-----------------
                 # 统一文件编码
-                info_o = os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
-                if(info_o !=0):
+                info_o = os.system('cd ' + filePath + ';' + 'enca  -x UTF-8 ' + saveFileName)
+                if(info_o == 512):
+                    
                     #转换失败
+                    print("转换失败. 失败码 : ", info_o)
                     return redirect("/404")
                 #-----------------              
                 # 初始化图书
                 init_project(filePath, filename)
                 #-----------------              
                 # 生成目录
-                book , TOC = genTOC(DEFAULT_TITLE_FILTER, filePath, saveFileName)
-                sessionSaveTitleFilter(DEFAULT_TITLE_FILTER)
+                # book , TOC = genTOC(DEFAULT_TITLE_FILTER, filePath, saveFileName)
+                # sessionSaveTitleFilter(DEFAULT_TITLE_FILTER)
 
                 # book , TOC = genTOC(None, filePath, saveFileName)
               
-                if(book is None):
-                    return redirect("/TransformEbook")
-                # 链接目录
-                # 创建目录
-                if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName) )):
-                    os.makedirs(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName)) 
-                # 连接
-                os.link(os.path.join(filePath,'project-TOC.html'), \
-                os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName),'project-TOC.html'))
+                # if(book is None):
+                #     return redirect("/TransformEbook")
+                # # 链接目录
+                # # 创建目录
+                # if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName) )):
+                #     os.makedirs(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName)) 
+                # # 连接
+                # # os.link(os.path.join(filePath,'project-TOC.html'), \
+                # # os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName),'project-TOC.html'))
+                # shutil.copy2(os.path.join(filePath,'project-TOC.html'), \
+                # os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName),'project-TOC.html'))    
                     # sessionSaveTOC(TOC)
                     # sessionSaveBook(book)
         else:

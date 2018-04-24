@@ -51,11 +51,7 @@
     {# 没有 'bookCount' 说明还没有确认转化#}
         <h1>{{  gettext( "目录" ) }}</h1>
         <div id='TOC'>
-        {% block content %}
-                {% set fileDict = J2SessionQueryFileUpload()  %}
-                {% include os.path.join('uploads', fileDict['saveFileName'], 'project-TOC.html') %}
-                 
-        {% endblock %}
+        {{ TOC }}
         </div>
 
 
