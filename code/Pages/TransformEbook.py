@@ -84,7 +84,7 @@ def TransformEbook():
                 #==================
                 #-----------------
                 # 统一文件编码
-                info_o = os.system('cd ' + filePath + ';' + 'enca -x UTF-8 ' + saveFileName)
+                info_o = os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
                 if(info_o !=0):
                     #转换失败
                     return redirect("/404")
