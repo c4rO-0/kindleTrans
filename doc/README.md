@@ -13,6 +13,30 @@
 
 ## 程序运行
 
+### 安装环境
+
+1. 初始化
+
+   ``` bash
+   $ python3 -m venv 环境文件夹名字
+   ```
+
+2. 启动
+
+   ``` bash
+   $ source 环境文件夹名字/bin/active
+   ```
+
+3. 退出
+
+   ``` bash
+   $ deactivate
+   ```
+
+   ​
+
+
+
 ###安装python依赖
 
 ``` bash
