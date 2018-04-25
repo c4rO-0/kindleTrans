@@ -37,6 +37,7 @@
 - 设置用户名
 
   ``` bash
+  # 使用github的名字
   $ git config --global user.name 用户名
   $ git config --global user.email 邮箱
   ```
