@@ -146,13 +146,15 @@ def ConfirmTransformEbook():
     return render_template('ConfirmTransformEbook.html.j2', app = app, formTran=formTran, os=os, TOC=TOC)
 
 
-@app.route('/TransformDownloads/<filename>')
-def downloads(filename):
+@app.route('/TransformDownloads/<filepah>/<filename>')
+def downloads(filepah,filename):
     fileDict = sessionQueryFileUpload()
     if(fileDict == None):
         return redirect('/404')
     elif(not ('bookCount' in fileDict.keys())):
         return redirect('/TransformEbook')
+    elif(filepah !=  fileDict['filePath']):
+        return redirect('/404/没有找到文件')
 
     print("download page : " + fileDict['filePath'])
 
