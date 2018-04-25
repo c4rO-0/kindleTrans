@@ -13,6 +13,56 @@
 
 ## 程序运行
 
+### git
+
+#### 初始化git环境
+
+- git自动补全
+
+  ``` bash
+  # 在~/.bashrc文件下
+  # 添加以下内容
+  . /etc/bash_completion.d/git
+  ```
+
+  执行
+
+  ``` bash
+  $ source ~/.bashrc
+  ```
+
+  ​
+
+
+- 设置用户名
+
+  ``` bash
+  $ git config --global user.name 用户名
+  $ git config --global user.email 邮箱
+  ```
+
+  ​
+
+
+#### clone
+
+``` bash
+# 克隆项目
+$ git clone https://github.com/c4rO-0/kindleTrans.git
+# 子项目目前为空
+# 初始化子项目
+$ git submodule init
+# 克隆子项目
+$ git submodule update
+```
+
+####
+
+
+
+
+
+
 ### 安装环境
 
 1. 初始化
