@@ -25,12 +25,12 @@
             {% if fileDict['bookCount'] == 1 %}
                 {# 只有一本书, 不需要在书名后加标号 #}
                 <li>
-                    <a href={{ '/TransformDownloads/%s/project-1.mobi' % fileDict['filePath'] }} download={{ fileDict['filename'].rsplit('.')[0]+'.mobi' }}> 下载 {{fileDict['bookCount']}} </a>
+                    <a href={{ '/TransformDownloads/%s/project-1.mobi' % fileDict['saveFileName'] }} download={{ fileDict['filename'].rsplit('.')[0]+'.mobi' }}> 下载 {{fileDict['bookCount']}} </a>
                 </li>
             {% else %}
                 {% for i_book in range(1, fileDict['bookCount']+1) %}
                     <li>
-                        <a href={{ '/TransformDownloads/%s/project-%s.mobi' % fileDict['filePath'], i_book }} download={{ fileDict['filename'].rsplit('.')[0]+'-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
+                        <a href={{ '/TransformDownloads/%s/project-%s.mobi' % fileDict['saveFileName'], i_book }} download={{ fileDict['filename'].rsplit('.')[0]+'-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
                     </li>
                 {% endfor %}
             {% endif %}
