@@ -31,6 +31,8 @@ from flask_socketio import SocketIO, emit
 from Script_socketio import *
 
 import shutil
+
+import re
 #=================================
 
 class TransformForm(FlaskForm):
@@ -154,6 +156,8 @@ def downloads(saveFileName,filename):
     elif(not ('bookCount' in fileDict.keys())):
         return redirect('/TransformEbook')
     elif(saveFileName !=  fileDict['saveFileName']):
+        return redirect('/404/没有找到文件')
+    elif(not re.match('project-[0-9]{1,2}\.mobi', filename)):
         return redirect('/404/没有找到文件')
 
     print("download page : " + fileDict['filePath'])
