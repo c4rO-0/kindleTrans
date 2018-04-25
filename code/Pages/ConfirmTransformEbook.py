@@ -147,7 +147,7 @@ def ConfirmTransformEbook():
 
 
 @app.route('/TransformDownloads/<saveFileName>/<filename>')
-def downloads(filepah,filename):
+def downloads(saveFileName,filename):
     fileDict = sessionQueryFileUpload()
     if(fileDict == None):
         return redirect('/404')
