@@ -1,4 +1,5 @@
 from flask import session
+from config import DEFAULT_TITLE_FILTER
 # from txt2html import Book
 
 # 对session操作
@@ -75,7 +76,7 @@ def sessionSaveFileUpload(fileUpload):
             return 2
 
     for key in fileUpload.keys():
-        if( not (key in ['filename', 'saveFileName', 'filePath' , 'bookCount'])):
+        if( not (key in ['filename', 'saveFileName', 'filePath' , 'bookCount', 'ChapterMaxLength'])):
             return 3
 
     if sessionQueryFileUpload == None:
@@ -120,6 +121,35 @@ def sessionQueryTOC():
 
     return session.get('TOC', None)
 
+
+def sessionQueryTitleFilter():
+    """
+    查询目录匹配字符串
+
+    out :
+        _   TitleFilter 正则表达式
+    """
+
+    return session.get('TitleFilter', DEFAULT_TITLE_FILTER)
+
+
+
+def sessionSaveTitleFilter(TitleFilter):
+    """
+    保存目录匹配字符串
+
+    in :
+        TitleFilter 正则表达式
+    out :
+    """
+
+    session['TitleFilter'] = TitleFilter
+
+def sessionDelTitleFilter():
+    """
+    删除目录匹配字符串
+    """
+    session.pop('TitleFilter', None)
 
 # def sessionSaveBook(book):
 #     """
@@ -180,7 +210,19 @@ def sessionUtilityProcessor():
         """
         return sessionQueryTOC()
 
+    def J2sessionQueryTitleFilter():
+        """
+        查询目录匹配字符串
+
+        out :
+            _   TitleFilter 正则表达式
+        """
+
+        
+        return sessionQueryTitleFilter()
+
     return dict(\
     J2SessionQueryFileUpload=J2SessionQueryFileUpload, \
-    J2SessionQueryTOC=J2SessionQueryTOC \
+    J2SessionQueryTOC=J2SessionQueryTOC, \
+    J2sessionQueryTitleFilter=J2sessionQueryTitleFilter \
     )

@@ -32,6 +32,7 @@ socketio = SocketIO(app)
 #----------------------------------------------------
 #  设置上传文件根目录
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDERTOC'] = UPLOAD_FOLDERTOC
 
 #----------------------------------------------------
 #     set language
@@ -49,6 +50,6 @@ from Script_socketio import *
 if __name__ == '__main__':
     # app.run(host='127.0.0.1', port=8081   , debug=True)
     # socketio.run(app, host='0.0.0.0', port=8081, debug=True)
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0', debug=True)
 
 
