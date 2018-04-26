@@ -82,10 +82,10 @@ def TransformEbook():
                 #==================
                 #-----------------
                 # 统一文件编码
-                info_o = os.system('cd ' + filePath + ';' + 'enca -x UTF-8 ' + saveFileName)
-                if(info_o !=0):
-                    #转换失败
-                    return redirect("/404")
+                # info_o = os.system('cd ' + filePath + ';' + 'enca -x UTF-8 ' + saveFileName)
+                # if(info_o !=0):
+                #     #转换失败
+                #     return redirect("/404")
                 #-----------------              
                 # 初始化图书
                 init_project(filePath, filename)
