@@ -13,6 +13,79 @@
 
 ## 程序运行
 
+### git
+
+#### 初始化git环境
+
+- git自动补全
+
+  ``` bash
+  # 在~/.bashrc文件下
+  # 添加以下内容
+  . /etc/bash_completion.d/git
+  ```
+
+  执行
+
+  ``` bash
+  $ source ~/.bashrc
+  ```
+
+  ​
+
+
+- 设置用户名
+
+  ``` bash
+  # 使用github的名字
+  $ git config --global user.name 用户名
+  $ git config --global user.email 邮箱
+  ```
+
+  ​
+
+
+#### clone
+
+``` bash
+# 克隆项目
+$ git clone https://github.com/c4rO-0/kindleTrans.git
+# 子项目目前为空
+# 初始化子项目
+$ git submodule init
+# 克隆子项目
+$ git submodule update
+```
+
+####
+
+
+
+
+### 安装环境
+
+1. 初始化
+
+   ``` bash
+   $ python3 -m venv 环境文件夹名字
+   ```
+
+2. 启动
+
+   ``` bash
+   $ source 环境文件夹名字/bin/active
+   ```
+
+3. 退出
+
+   ``` bash
+   $ deactivate
+   ```
+
+   ​
+
+
+
 ###安装python依赖
 
 ``` bash
@@ -42,6 +115,27 @@ pip freeze | grep -v "pkg-resources" > requirements.txt
 Ubuntu/Debain存在bug导致requirements.txt文件里可能存在`pkg-resources==0.0.0`, 其他平台无法使用.
 
 
+### 在服务器端运行
+因为现在还是测试阶段, 所以没有单独创建服务进程.
+目前使用scrren来完成后台运行,以及多用户交互.
+因为一个窗口同时只能存在一个用户登录.
+所以在该窗口里仅是运行python, 编程可以在窗口之外进行.
+
+具体使用:
+``` bash
+# 查看当前正在运行的窗口
+$ screen -ls
+# 统一规定我们使用的窗口的名字为kindle
+# 链接kindle窗口
+$ screen -x kindle
+# 退出窗口
+ctrl-a d
+# 如果kindle窗口不存在, 创建窗口
+$ screen -S kindle
+# 如果提示attached无法链接, 踢掉上一个用户(上一个用户可能是自己), 再重新链接
+$ screen -D  -r <session-id>
+
+```
 
 ### 需要翻译的文字
 
