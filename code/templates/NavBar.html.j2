@@ -14,7 +14,7 @@
 	<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
 	<script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>			
 	<!-- our own scripts -->
-	<script src="{{ url_for('static', filename='Scripts/HomePage.js') }}"></script>
+	<script src="{{ url_for('static', filename='Scripts/NavBar.js') }}"></script>
 	{%block head%}
 	<title>{{ gettext("主页") }}</title>
 	{%endblock%}
@@ -52,11 +52,6 @@
 					</div>
                 </li>
             </ul>
-            
-
-
-			<a href={{ url_for('TransformEbook') }} class="btn btn-primary mr-2" role="button" aria-disabled="true">{{ gettext("转换") }}</a>
-
 		</div>
 	</nav>
 	{%block body%} 
