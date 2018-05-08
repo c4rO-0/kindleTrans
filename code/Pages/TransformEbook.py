@@ -89,7 +89,7 @@ def TransformEbook():
                 #-----------------
                 # 统一文件编码
                 print("--------coding---------")
-                info_o = os.system('cd ' + filePath + ';' + 'enca  -x UTF-8 ' + saveFileName)
+                info_o = os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
                 if(info_o == 512):
                     # print("----自动转码失败, 转用遍历匹配")
                     # fileCode = get_encoding(os.path.join(filePath , saveFileName))
