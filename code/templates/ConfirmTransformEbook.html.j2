@@ -22,7 +22,7 @@
         <h1>  {{ fileDict['filename'].rsplit('.')[0] }} 转换完成</h1>
 
         <p> 单击下载通道进行下载；</p>
-        <p> 如需继续转换请单击页面右上角转换按钮，返回请单击左上角主页 </p>
+        
 
         <div>
 
@@ -39,6 +39,8 @@
                 {% endfor %}
             {% endif %}
         </div>
+        <hr />
+        <a href="{{url_for('TransformEbook')}}" > 继续转化</a>
     {% else %}  {# 没有 'bookCount' 说明还没有确认转化#}
         <h1>  {{ fileDict['filename'].rsplit('.')[0] }} 检测目录</h1>
 
