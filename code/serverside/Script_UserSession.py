@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from flask import session
 from config import DEFAULT_TITLE_FILTER
 # from txt2html import Book

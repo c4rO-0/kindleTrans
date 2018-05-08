@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from flask.ext.babel import gettext
 #---------------------------------
 # 检验password和用户名
