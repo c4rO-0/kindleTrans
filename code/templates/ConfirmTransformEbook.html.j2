@@ -9,17 +9,21 @@
 
 {%block body%}
 
+
+
     {# 得到file #}
     {% set fileDict = J2SessionQueryFileUpload()  %}
 
 
-    <h1>{{  gettext( "书名" ) }}</h1>
-    <p>  {{ fileDict['filename'].rsplit('.')[0] }}</p>
-
 
     {#  下载  #}
-    {% if 'bookCount' in fileDict.keys() %}
     {# 含有 'bookCount' 说明已经转化完毕, 提供下载#}
+    {% if 'bookCount' in fileDict.keys() %}
+        <h1>  {{ fileDict['filename'].rsplit('.')[0] }} 转换完成</h1>
+
+        <p> 单击下载通道进行下载；</p>
+        <p> 如需继续转换请单击页面右上角转换按钮，返回请单击左上角主页 </p>
+
         <div>
 
             {% if fileDict['bookCount'] == 1 %}
@@ -35,30 +39,40 @@
                 {% endfor %}
             {% endif %}
         </div>
-    {% else %} 
+    {% else %}  {# 没有 'bookCount' 说明还没有确认转化#}
+        <h1>  {{ fileDict['filename'].rsplit('.')[0] }} 检测目录</h1>
 
-    {# 修改目录规则 #}
-    <h1>{{  gettext( "修改过滤" ) }}</h1>
-    <form id="formTranTitle" method="POST" enctype="multipart/form-data">
-        {{ formTran.hidden_tag() }}
+        {# -----------------#}
+        {# 修改目录规则 #}
+        <p>若生成目录不符，可更改通配符选择重新生成目录；<p>
+        <form id="formTranTitle" method="POST" enctype="multipart/form-data">
+            {{ formTran.hidden_tag() }}
 
-        {{ formTran.titleFilter(value= J2sessionQueryTitleFilter()) }}
+            {{ formTran.titleFilter(value= J2sessionQueryTitleFilter()) }}
 
-        {{ formTran.confirmtitleFilter() }}
-
-
-        {% for error in formTran.titleFilter.errors %}
-        <div class="alert alert-danger" role="alert">
-            [{{error}}]
-        </div>
-        {% endfor %}        
-
-    </form>
+            {{ formTran.confirmtitleFilter() }}
 
 
-    <button id="confirmTOCTransfer">确定目录</button>
-    {# 没有 'bookCount' 说明还没有确认转化#}
-        <h1>{{  gettext( "目录" ) }}</h1>
+            {% for error in formTran.titleFilter.errors %}
+            <div class="alert alert-danger" role="alert">
+                [{{error}}]
+            </div>
+            {% endfor %}        
+
+        </form>
+
+        <hr />
+
+        {# -----------------#}
+        <p>单击确定目录进行转换；</p>
+        <p>若初始生成的目录中出现错误生成章节，可单击对应位置，此时章节显示红色，再随后生成的mobi中即可删除此章节目录；</p>
+
+        <button id="confirmTOCTransfer">确定目录</button>
+        
+        <hr /> 
+
+        {# -----------------#}
+        <h2>{{  gettext( "目录" ) }}</h2>
         <div id='TOC'>
         {{ TOC }}
         </div>

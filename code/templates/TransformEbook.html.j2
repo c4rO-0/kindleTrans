@@ -12,6 +12,8 @@
 {# 得到file #}
 {% set fileDict = J2SessionQueryFileUpload()  %}
 <form id="formUpload" method="POST" enctype="multipart/form-data">
+<p>使用说明：</p>
+<p>单击浏览选择txt文件，upload上传需要转换的txt文件；</p>
 <h1>{{ gettext( "上传" ) }}</h1>
     {{ form.hidden_tag() }}
     {{ form.file }}
