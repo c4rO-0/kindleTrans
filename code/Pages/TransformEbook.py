@@ -58,6 +58,13 @@ class UploadForm(FlaskForm):
 def TransformEbook():
     #....
 
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        print("访问ip : ",request.environ['REMOTE_ADDR'], file=sys.stderr)
+        visitIP = request.environ['REMOTE_ADDR']
+    else:
+        print("访问ip : ",request.environ['HTTP_X_FORWARDED_FOR'], file=sys.stderr) # if behind a proxy
+        visitIP = request.environ['HTTP_X_FORWARDED_FOR']
+
     #上传文件
     form = UploadForm()
     TOC = None
@@ -69,7 +76,7 @@ def TransformEbook():
 
             filename = form.file.data.filename
             # secureFilename = secure_filename(filename)
-            saveFileName = str(time.time()) + '-' + jsonify({'ip': request.remote_addr}) +'.txt'
+            saveFileName = str(time.time()) + '-' + visitIP +'.txt'
             filePath = os.path.join(app.config['UPLOAD_FOLDER'],saveFileName)
             # print("-------------------------------")
             # print("file name : " + filename)
