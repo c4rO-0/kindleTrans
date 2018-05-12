@@ -46,11 +46,11 @@ class UploadForm(FlaskForm):
 
 
     def validate_file(self, field):
-        print("file check")
+        print("file check", file=sys.stderr)
         str_filename = field.data.filename
         if not ('.' in str_filename and \
            str_filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
-           print("格式不对")
+           print("格式不对", file=sys.stderr)
            raise ValidationError(gettext('文件格式不对'))
 
 
@@ -70,7 +70,7 @@ def TransformEbook():
     TOC = None
 
     if form.validate_on_submit():
-        print("-------------------------")
+        print("-------------------------", file=sys.stderr)
         if(form.upload.data):
             
 
@@ -87,17 +87,17 @@ def TransformEbook():
             form.file.data.save(os.path.join(filePath , saveFileName))
             # 保存session
             sessionDelFileUpload()
-            print(filename)
+            print(filename, file=sys.stderr)
             info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath, 'ChapterMaxLength':25} )
             if info != 0:
-                print("储存文件错误 : ", info)
+                print("储存文件错误 : ", info, file=sys.stderr)
                 return redirect("/TransformEbook")
             else:
                             
                 #==================
                 #-----------------
                 # 统一文件编码
-                print("--------coding---------")
+                print("--------coding---------", file=sys.stderr)
                 info_o = os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
                 if(info_o == 512):
                     # print("----自动转码失败, 转用遍历匹配")
@@ -136,7 +136,7 @@ def TransformEbook():
                     # sessionSaveTOC(TOC)
                     # sessionSaveBook(book)
         else:
-            print("unknown submit")
+            print("unknown submit", file=sys.stderr)
         return redirect("/ConfirmTransformEbook")
 
 

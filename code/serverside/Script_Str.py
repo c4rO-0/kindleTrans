@@ -33,7 +33,7 @@ def CheckUserNamePasswd(userName, userPasswd):
 
     f = UsernamPasswordValidation.UsernamPasswordValidation(userName,userPasswd,para)
     e = f.GetAllErrors()
-    print("script_str : " , e)
+    print("script_str : " , e, file=sys.stderr)
     if(len(e) == 0):
         Info = True
         strWarning = ""

@@ -76,7 +76,7 @@ def ConfirmTransformEbook():
         return redirect("/TransformEbook")
 
 
-    print("----formTran----")
+    print("----formTran----", file=sys.stderr)
     if formTran.validate_on_submit():
 
         if(formTran.confirmtitleFilter.data):
@@ -109,13 +109,13 @@ def ConfirmTransformEbook():
 
         else:
 
-            print("----submit----")
+            print("----submit----", file=sys.stderr)
             # print(formTran.confirmTOC.data)
             # if(formTran.confirmTOC.data):
-            print("确认目录")
+            print("确认目录", file=sys.stderr)
             fileDict = sessionQueryFileUpload()
-            print('---------index----------')
-            print(formTran.TOClistindex.data)
+            print('---------index----------', file=sys.stderr)
+            print(formTran.TOClistindex.data, file=sys.stderr)
 
             titleFilter = sessionQueryTitleFilter()
             if(titleFilter == None):
@@ -124,7 +124,7 @@ def ConfirmTransformEbook():
             book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'], fileDict['ChapterMaxLength'])
 
             if(book == None):
-                print("没有检测到上传的书")
+                print("没有检测到上传的书", file=sys.stderr)
                 sessionDelFileUpload()
                 return redirect("/TransformEbook")
                 
@@ -141,7 +141,7 @@ def ConfirmTransformEbook():
             sessionDelFileUpload()
             info = sessionSaveFileUpload(fileDict)
             if info != 0:
-                print("储存文件错误 : ", info)
+                print("储存文件错误 : ", info, file=sys.stderr)
                 return redirect("/404")
             
             return redirect("/ConfirmTransformEbook")
@@ -162,7 +162,7 @@ def downloads(saveFileName,filename):
     elif(not re.match('project-[0-9]{1,2}\.mobi', filename)):
         return redirect('/404/没有找到文件')
 
-    print("download page : " + fileDict['filePath'])
+    print("download page : " + fileDict['filePath'], file=sys.stderr)
 
     return send_from_directory(fileDict['filePath'],
                                filename)
