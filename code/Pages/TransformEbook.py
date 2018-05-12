@@ -36,6 +36,8 @@ import time
 from config import DEFAULT_TITLE_FILTER
 
 import shutil
+
+from flask import jsonify
 #=================================
 
 class UploadForm(FlaskForm):
@@ -67,7 +69,7 @@ def TransformEbook():
 
             filename = form.file.data.filename
             # secureFilename = secure_filename(filename)
-            saveFileName = str(time.time()) + '-' + request.remote_addr +'.txt'
+            saveFileName = str(time.time()) + '-' + jsonify({'ip': request.remote_addr}) +'.txt'
             filePath = os.path.join(app.config['UPLOAD_FOLDER'],saveFileName)
             # print("-------------------------------")
             # print("file name : " + filename)
