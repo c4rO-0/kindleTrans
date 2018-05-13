@@ -114,12 +114,8 @@ def TransformEbook():
                     #     print("转换失败. 失败码 : ", info_o)
                     return redirect("/404/转码失败,请手动转换为gdb或utf-8")
                 #-----------------              
-                if (form.author.data == ''):
-                    print("没有作者")
-                    init_project(filePath, filename)
-                else:
-                    print("作者 : ", form.author.data)
-                    init_project(filePath, filename, form.author.data)
+
+                init_project(filePath, filename, form.author.data)
                 # 初始化图书
                 
                 #-----------------              
