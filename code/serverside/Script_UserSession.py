@@ -3,6 +3,8 @@
 
 from flask import session
 from config import DEFAULT_TITLE_FILTER
+
+from Script_fun import *
 # from txt2html import Book
 
 # 对session操作
@@ -174,18 +176,8 @@ def sessionDelTitleFilter():
 
 #     return session.get('book', None)    
 
-#==============================
-#         jinja 函数
-from main import app
-
-#-------------filter-----------------
-
-# @app.template_filter('XXXX')
-# def XXXX():
-
-#-------------context_processor-----------------
 @app.context_processor
-def sessionUtilityProcessor():
+def UtilityProcessor():
 #     # 返回登录状态
     def J2SessionQueryFileUpload():
         """
@@ -224,8 +216,17 @@ def sessionUtilityProcessor():
         
         return sessionQueryTitleFilter()
 
+
+    def J2FunQueryNumTran():
+        """
+            查询转化的书的数目
+
+        """
+        return funQueryNumTran()        
+
     return dict(\
     J2SessionQueryFileUpload=J2SessionQueryFileUpload, \
     J2SessionQueryTOC=J2SessionQueryTOC, \
-    J2sessionQueryTitleFilter=J2sessionQueryTitleFilter \
+    J2sessionQueryTitleFilter=J2sessionQueryTitleFilter, \
+    J2FunQueryNumTran=J2FunQueryNumTran \
     )
