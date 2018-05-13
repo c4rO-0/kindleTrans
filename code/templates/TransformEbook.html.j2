@@ -31,8 +31,13 @@
 <h1>{{ gettext( "上传" ) }}</h1>
     {{ form.hidden_tag() }}
     {{ form.file }}
+    <br>
+    {# 作者 #}
+    {{ form.author(type="text", placeholder=gettext("作者(选填)")) }}
+    <br>
     {# 提交按钮 #}
     {{ form.upload }}
+    <br>
     {# 输出错误 #}
     {% for error in form.file.errors %}
     <div class="alert alert-danger" role="alert">

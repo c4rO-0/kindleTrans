@@ -57,6 +57,7 @@ class TransformForm(FlaskForm):
                 raise ValidationError(gettext('需要目录过滤规则'))
 
 
+
 @app.route('/ConfirmTransformEbook' , methods = ['GET', 'POST']  )
 def ConfirmTransformEbook():
     #....

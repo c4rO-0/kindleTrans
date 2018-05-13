@@ -10,7 +10,7 @@ from flask.ext.babel import gettext
 import os
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import SubmitField, FieldList, IntegerField
+from wtforms import SubmitField, FieldList, IntegerField, StringField
 from werkzeug.utils import secure_filename
 
 from wtforms.validators import ValidationError
@@ -42,6 +42,7 @@ from flask import jsonify
 
 class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
+    author = StringField('作者')
     upload = SubmitField('upload')
 
 
@@ -113,8 +114,14 @@ def TransformEbook():
                     #     print("转换失败. 失败码 : ", info_o)
                     return redirect("/404/转码失败,请手动转换为gdb或utf-8")
                 #-----------------              
+                if (form.author.data == ''):
+                    print("没有作者")
+                    init_project(filePath, filename)
+                else:
+                    print("作者 : ", form.author.data)
+                    init_project(filePath, filename, form.author.data)
                 # 初始化图书
-                init_project(filePath, filename)
+                
                 #-----------------              
                 # 生成目录
                 # book , TOC = genTOC(DEFAULT_TITLE_FILTER, filePath, saveFileName)
