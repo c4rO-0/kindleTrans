@@ -13,5 +13,3 @@ from   ConfirmTransformEbook   import *
 #----------------------------------------------------
 #     
 from NotFoundPage import *
-
-import Script_contextPro
