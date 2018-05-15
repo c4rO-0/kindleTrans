@@ -43,6 +43,9 @@ babel = Babel(app)
 #  append all the components
 from Pages import *
 #----------------------------------------------------
+#  interface
+import Script_contextPro
+#----------------------------------------------------
 #  import socket.io
 from Script_socketio import *
 #-----------------------------------------------------

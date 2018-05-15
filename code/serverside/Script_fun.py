@@ -5,6 +5,7 @@
 
 import os
 import time
+from Script_UserSession import *
 
 def funQueryNumTran():
     """
@@ -24,7 +25,4 @@ def funQueryNumTran():
     return num1 + num2
 
 
-#==============================
-#         jinja 函数
-from main import app
 
