@@ -1,3 +1,12 @@
+## 2018may19-L
+* 从master合并的最新版本不能在本地直接跑起来，需要
+    * 手动添加/archive/toc.dat文件
+    * 清空toc.dat中的内容
+* 修改了TransformEbook页面
+    * 删掉了navbar
+* 目前所有文字都是直接写的中文，没有用gettext
+    * 且有几个字是在写在TransformEbook.css里的，不知道怎么用gettext
+
 ## 2018-May02-BS
 flask设置端口为80
 利用apache2进行转接

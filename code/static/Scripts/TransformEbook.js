@@ -81,8 +81,11 @@
 // }
 
 $(document).ready(function () { 
-    console.log("准备");
-
+    // console.log("准备");
+    $("#fileUpload").on("change", function () {
+        let fileName = $(this).val()
+        $(this).next(".custom-file-label").html(fileName)
+    })
     // searchDouban("圣女的救济 ").then((html) => {
 
     //     console.log(html)
