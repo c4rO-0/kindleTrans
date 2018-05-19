@@ -5,6 +5,20 @@
 <title>{{ gettext("在线转化txt为mobi") }}</title>
 <script src="{{ url_for('static', filename='Scripts/ConfirmTransformEbook.js') }}"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+{# 广告 #}
+<!-- Begin BidVertiser code -->
+<SCRIPT data-cfasync="false" SRC="//bdv.bidvertiser.com/BidVertiser.dbm?pid=807493&bid=1941050" TYPE="text/javascript"></SCRIPT>
+<!-- End BidVertiser code --> 
+{# 添加谷歌分析 #}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="{{ url_for('static', filename='js/googleAnalytics.js') }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119134846-1');
+</script>
 {%endblock%}
 
 {%block body%}
@@ -19,7 +33,12 @@
     {#  下载  #}
     {# 含有 'bookCount' 说明已经转化完毕, 提供下载#}
     {% if 'bookCount' in fileDict.keys() %}
-        <h1>  {{ fileDict['filename'].rsplit('.')[0] }} 转换完成</h1>
+
+        <h2> 点击上方广告就是对我们最大的支持 </h2>
+        <h3> 不要轻信广告内容, 点开就关上 </h3>
+        <hr />
+
+        <h1>  {{ fileDict['filename'].rsplit('.',1)[0] }} 转换完成</h1>
 
         <p> 单击下载通道进行下载；</p>
         
@@ -29,12 +48,12 @@
             {% if fileDict['bookCount'] == 1 %}
                 {# 只有一本书, 不需要在书名后加标号 #}
                 <li>
-                    <a href={{ '/TransformDownloads/%s/project-1.mobi' % fileDict['saveFileName'] }} download={{ fileDict['filename'].rsplit('.')[0]+'.mobi' }}> 下载 {{fileDict['bookCount']}} </a>
+                    <a href={{ '/TransformDownloads/%s/project-1.mobi' % fileDict['saveFileName'] }} download={{ fileDict['filename'].rsplit('.',1)[0]+'.mobi' }}> 下载 {{fileDict['bookCount']}} </a>
                 </li>
             {% else %}
                 {% for i_book in range(1, fileDict['bookCount']+1) %}
                     <li>
-                        <a href={{ '/TransformDownloads/%s/project-%s.mobi' % fileDict['saveFileName'], i_book }} download={{ fileDict['filename'].rsplit('.')[0]+'-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
+                        <a href={{ '/TransformDownloads/%s/project-%s.mobi' % fileDict['saveFileName'], i_book }} download={{ fileDict['filename'].rsplit('.',1)[0]+'-%s.mobi' % i_book }}> 下载-第{{ i_book }}部分/共 {{fileDict['bookCount']}} </a>
                     </li>
                 {% endfor %}
             {% endif %}
@@ -42,7 +61,7 @@
         <hr />
         <a href="{{url_for('TransformEbook')}}" > 继续转化</a>
     {% else %}  {# 没有 'bookCount' 说明还没有确认转化#}
-        <h1>  {{ fileDict['filename'].rsplit('.')[0] }} 检测目录</h1>
+        <h1>  {{ fileDict['filename'].rsplit('.',1)[0] }} 检测目录</h1>
 
         {# -----------------#}
         {# 修改目录规则 #}

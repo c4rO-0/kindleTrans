@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #---------------------------------
 from config import *
 from main  import *
@@ -8,7 +10,7 @@ from flask.ext.babel import gettext
 import os
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import SubmitField, FieldList, IntegerField
+from wtforms import SubmitField, FieldList, IntegerField, StringField
 from werkzeug.utils import secure_filename
 
 from wtforms.validators import ValidationError
@@ -34,19 +36,24 @@ import time
 from config import DEFAULT_TITLE_FILTER
 
 import shutil
+
+from flask import jsonify
+
 #=================================
+
 
 class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
+    author = StringField('作者')
     upload = SubmitField('upload')
 
 
     def validate_file(self, field):
-        print("file check")
+        print("file check", file=sys.stderr)
         str_filename = field.data.filename
         if not ('.' in str_filename and \
            str_filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
-           print("格式不对")
+           print("格式不对", file=sys.stderr)
            raise ValidationError(gettext('文件格式不对'))
 
 
@@ -54,18 +61,25 @@ class UploadForm(FlaskForm):
 def TransformEbook():
     #....
 
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        print("访问ip : ",request.environ['REMOTE_ADDR'], file=sys.stderr)
+        visitIP = request.environ['REMOTE_ADDR']
+    else:
+        print("访问ip : ",request.environ['HTTP_X_FORWARDED_FOR'], file=sys.stderr) # if behind a proxy
+        visitIP = request.environ['HTTP_X_FORWARDED_FOR']
+
     #上传文件
     form = UploadForm()
     TOC = None
 
     if form.validate_on_submit():
-        print("-------------------------")
+        print("-------------------------", file=sys.stderr)
         if(form.upload.data):
             
 
             filename = form.file.data.filename
             # secureFilename = secure_filename(filename)
-            saveFileName = str(time.time()) + '-' + request.environ['REMOTE_ADDR']+'.txt'
+            saveFileName = str(time.time()) + '-' + visitIP +'.txt'
             filePath = os.path.join(app.config['UPLOAD_FOLDER'],saveFileName)
             # print("-------------------------------")
             # print("file name : " + filename)
@@ -76,34 +90,36 @@ def TransformEbook():
             form.file.data.save(os.path.join(filePath , saveFileName))
             # 保存session
             sessionDelFileUpload()
-            print(filename)
+            print(filename, file=sys.stderr)
             info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath, 'ChapterMaxLength':25} )
             if info != 0:
-                print("储存文件错误 : ", info)
+                print("储存文件错误 : ", info, file=sys.stderr)
                 return redirect("/TransformEbook")
             else:
                             
                 #==================
                 #-----------------
                 # 统一文件编码
-                # print("--------coding---------")
-                # info_o = os.system('cd ' + filePath + ';' + 'enca  -x UTF-8 ' + saveFileName)
-                # if(info_o == 512):
-                #     # print("----自动转码失败, 转用遍历匹配")
-                #     # fileCode = get_encoding(os.path.join(filePath , saveFileName))
-                #     # if(fileCode == None):
-                #     #     info_o = os.system('cd ' + filePath + ';' 
-                #     #     + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName )
-                #     # else:
-                #     #     info_o = os.system('cd ' + filePath + ';' 
-                #     #     + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName + ' ' + fileCode )                        
-                #     # if(info_o != 0):
-                #     #     #转换失败
-                #     #     print("转换失败. 失败码 : ", info_o)
-                #     return redirect("/404/转码失败,请手动转换为gdb或utf-8")
+                print("--------coding---------", file=sys.stderr)
+                info_o = os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
+                if(info_o == 512):
+                    # print("----自动转码失败, 转用遍历匹配")
+                    # fileCode = get_encoding(os.path.join(filePath , saveFileName))
+                    # if(fileCode == None):
+                    #     info_o = os.system('cd ' + filePath + ';' 
+                    #     + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName )
+                    # else:
+                    #     info_o = os.system('cd ' + filePath + ';' 
+                    #     + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName + ' ' + fileCode )                        
+                    # if(info_o != 0):
+                    #     #转换失败
+                    #     print("转换失败. 失败码 : ", info_o)
+                    return redirect("/404/转码失败,请手动转换为gdb或utf-8")
                 #-----------------              
+
+                init_project(filePath, filename, form.author.data)
                 # 初始化图书
-                init_project(filePath, filename)
+                
                 #-----------------              
                 # 生成目录
                 # book , TOC = genTOC(DEFAULT_TITLE_FILTER, filePath, saveFileName)
@@ -125,7 +141,7 @@ def TransformEbook():
                     # sessionSaveTOC(TOC)
                     # sessionSaveBook(book)
         else:
-            print("unknown submit")
+            print("unknown submit", file=sys.stderr)
         return redirect("/ConfirmTransformEbook")
 
 

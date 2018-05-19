@@ -1,5 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from flask import session
 from config import DEFAULT_TITLE_FILTER
+
+from Script_fun import *
 # from txt2html import Book
 
 # 对session操作
@@ -171,58 +176,3 @@ def sessionDelTitleFilter():
 
 #     return session.get('book', None)    
 
-#==============================
-#         jinja 函数
-from main import app
-
-#-------------filter-----------------
-
-# @app.template_filter('XXXX')
-# def XXXX():
-
-#-------------context_processor-----------------
-@app.context_processor
-def sessionUtilityProcessor():
-#     # 返回登录状态
-    def J2SessionQueryFileUpload():
-        """
-            查询上传文件信息
-
-            out :
-                _   dict    {
-                            filename        : str
-                            saveFileName    : str
-                            filePath        : str
-                            }
-        """
-        return sessionQueryFileUpload()
-
-    def J2SessionQueryTOC():
-        """
-        查询目录
-        out  :
-            TOC [[idx, index, title]
-                    ...
-                ]
-                indx 书籍标号
-                index  单个书籍里chapter的标号
-                title 目录
-        """
-        return sessionQueryTOC()
-
-    def J2sessionQueryTitleFilter():
-        """
-        查询目录匹配字符串
-
-        out :
-            _   TitleFilter 正则表达式
-        """
-
-        
-        return sessionQueryTitleFilter()
-
-    return dict(\
-    J2SessionQueryFileUpload=J2SessionQueryFileUpload, \
-    J2SessionQueryTOC=J2SessionQueryTOC, \
-    J2sessionQueryTitleFilter=J2sessionQueryTitleFilter \
-    )

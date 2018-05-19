@@ -1,3 +1,15 @@
+## 2018-May02-BS
+flask设置端口为80
+利用apache2进行转接
+[官方教程](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/#configuring-apache)
+
+[其他教程](https://blog.zhengzi.me/292.html)
+
+
+
+
+
+
 ## 2018-April25-BS
 
 - 更新服务器开发说明, 具体见README.md
