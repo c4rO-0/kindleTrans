@@ -59,7 +59,34 @@ var peer = new Peer({
             }
             delete connectedPeers[c.peer];
           });
-    } else if (c.label === 'file') {
+    }
+    if (c.label === 'activity') {
+      c.on('data', function(data) {
+        // console.log(data)
+        if(data.activity == "uploading"){
+          if(data.filesize < 1000){
+            var strFileSize = data.filesize + " B"
+          }else if(data.filesize < 1000000){
+            var strFileSize = data.filesize/1000 + " KB"
+          }else if(data.filesize < 1000000000){
+            var strFileSize = data.filesize/1000000 + "MB"
+          }else{
+            var strFileSize = data.filesize/1000000000 + "TB"
+          }
+
+          $('#' + c.peer).find('.messages').append('<div><span class="file">' +
+              c.peer + ' is uploading '+ data.filename+ ', Size : ' + strFileSize + '. Please wait.</span></div>');          
+        }
+
+        if(data.activity == "upDone"){
+
+          $('#' + c.peer).find('.messages').append('<div><span class="file">' +
+              c.peer + ' has received '+ data.filename+ '.</span></div>');          
+        }
+
+      });
+    }
+    if (c.label === 'file') {
       c.on('data', function(data) {
         // If we're getting a file, create a URL for it.
         if (data.file.constructor === ArrayBuffer) {
@@ -71,6 +98,15 @@ var peer = new Peer({
 
           $('#' + c.peer).find('.messages').append('<div><span class="file">' +
               c.peer + ' has sent you a <a  download="' + data.filename + '" href="' + url + '">file : ' + data.filename + '</a>.</span></div>');
+
+            eachActiveConnection(function(c, $c) {
+              if (c.label === 'activity' ){
+                c.send({
+                  activity:"upDone",
+                  filename: data.filename
+                })
+              }
+            });          
         }
       });
     }
@@ -85,12 +121,19 @@ var peer = new Peer({
     box.on('drop', function(e){
       e.originalEvent.preventDefault();
       var file = e.originalEvent.dataTransfer.files[0];
-      console.log(file.size/(1000*1000))
+      // console.log(file.size/(1000*1000))
       if( file.size/(1000*1000) > 100 ){
         $("#warning").text(file.name + " is larger than 100Mb")
       }else{
         $("#warning").text("")
         eachActiveConnection(function(c, $c) {
+            if (c.label === 'activity' ){
+              c.send({
+                activity:"uploading",
+                filename: file.name,
+                filesize: file.size
+              })
+            }
             if (c.label === 'file') {
     
               c.send({        
@@ -98,7 +141,7 @@ var peer = new Peer({
                 filename: file.name,
                 filetype: file.type});
     
-              $c.find('.messages').append('<div><span class="file">You sent ' + file.name + '.</span></div>');
+              $c.find('.messages').append('<div><span class="file">You are uploading ' + file.name + '. Please wait.</span></div>');
             }
           });
       }
@@ -123,11 +166,20 @@ var peer = new Peer({
           connect(c);
         });
         c.on('error', function(err) { alert(err); });
+
         var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
         f.on('open', function() {
           connect(f);
         });
         f.on('error', function(err) { alert(err); });
+
+        // 传递系统消息
+        var m = peer.connect(requestedPeer, { label: 'activity' });
+        m.on('open', function() {
+          connect(m);
+        });
+        m.on('error', function(err) { alert(err); });        
+
       }
       connectedPeers[requestedPeer] = 1;
     });
@@ -155,24 +207,7 @@ var peer = new Peer({
       $('#text').focus();
     });
   
-    // Goes through each active peer and calls FN on its connections.
-    function eachActiveConnection(fn) {
-      var actives = $('.active');
-      var checkedIds = {};
-      actives.each(function() {
-        var peerId = $(this).attr('id');
-  
-        if (!checkedIds[peerId]) {
-          var conns = peer.connections[peerId];
-          for (var i = 0, ii = conns.length; i < ii; i += 1) {
-            var conn = conns[i];
-            fn(conn, $(this));
-          }
-        }
-  
-        checkedIds[peerId] = 1;
-      });
-    }
+
   
     // Show browser version
     $('#browsers').text(navigator.userAgent);
@@ -186,3 +221,21 @@ var peer = new Peer({
     }
   };
   
+  // Goes through each active peer and calls FN on its connections.
+  function eachActiveConnection(fn) {
+    var actives = $('.active');
+    var checkedIds = {};
+    actives.each(function() {
+      var peerId = $(this).attr('id');
+
+      if (!checkedIds[peerId]) {
+        var conns = peer.connections[peerId];
+        for (var i = 0, ii = conns.length; i < ii; i += 1) {
+          var conn = conns[i];
+          fn(conn, $(this));
+        }
+      }
+
+      checkedIds[peerId] = 1;
+    });
+  }
