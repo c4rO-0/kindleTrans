@@ -20,7 +20,9 @@ $(document).ready(function () {
 
         $('#confirmTOCTransfer').
         on('click', function() {
+            // 点击确定
 
+            $("#message").text("转化为mobi需要一点时间. 短篇小说大概一分钟, 网络长篇小说大概五分钟. 转化完成会自动跳转到下载页面.")
 
         
             $("#TOClistindex").empty()
