@@ -62,12 +62,15 @@ var peer = new Peer({
     } else if (c.label === 'file') {
       c.on('data', function(data) {
         // If we're getting a file, create a URL for it.
-        if (data.constructor === ArrayBuffer) {
-          var dataView = new Uint8Array(data);
+        if (data.file.constructor === ArrayBuffer) {
+        //   console.log(data)
+          var dataView = new Uint8Array(data.file);
+        //   console.log(String.fromCharCode.apply(null, new Uint8Array(data)))
           var dataBlob = new Blob([dataView]);
           var url = window.URL.createObjectURL(dataBlob);
+
           $('#' + c.peer).find('.messages').append('<div><span class="file">' +
-              c.peer + ' has sent you a <a target="_blank" href="' + url + '">file</a>.</span></div>');
+              c.peer + ' has sent you a <a  download="' + data.filename + '" href="' + url + '">file : ' + data.filename + '</a>.</span></div>');
         }
       });
     }
@@ -82,12 +85,24 @@ var peer = new Peer({
     box.on('drop', function(e){
       e.originalEvent.preventDefault();
       var file = e.originalEvent.dataTransfer.files[0];
-      eachActiveConnection(function(c, $c) {
-        if (c.label === 'file') {
-          c.send(file);
-          $c.find('.messages').append('<div><span class="file">You sent a file.</span></div>');
-        }
-      });
+      console.log(file.size/(1000*1000))
+      if( file.size/(1000*1000) > 100 ){
+        $("#warning").text(file.name + " is larger than 100Mb")
+      }else{
+        $("#warning").text("")
+        eachActiveConnection(function(c, $c) {
+            if (c.label === 'file') {
+    
+              c.send({        
+                file: file,
+                filename: file.name,
+                filetype: file.type});
+    
+              $c.find('.messages').append('<div><span class="file">You sent ' + file.name + '.</span></div>');
+            }
+          });
+      }
+
     });
     function doNothing(e){
       e.preventDefault();
