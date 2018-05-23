@@ -72,6 +72,24 @@
                 </div>
             </div>
         </div>
+
+
+        {# ====================== #}
+        <div class="col-md-auto">
+            <div class="card mt-5" style="width:292px">
+                {# 缩略图 #}
+                <a  href="{{ url_for('ChatPage') }}">
+                    <img class="card-img-top" src="{{ url_for('static', filename='images/404.png') }}" alt="Card image cap">
+                </a>
+                <div class="card-body">
+                    {# 标题 #}
+                    <h5 class="card-title">P2P文件传输</h5>
+                    {# 概述 #}
+                    <p class="card-text">P2P文件传输 (施工中)</p>
+                    <a href="{{ url_for('TransformEbook') }}" class="btn btn-primary">试一试?</a>
+                </div>
+            </div>
+        </div>        
     </div>
 </div>
 
