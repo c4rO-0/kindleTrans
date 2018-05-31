@@ -6,9 +6,9 @@
 <script src="{{ url_for('static', filename='Scripts/ConfirmTransformEbook.js') }}"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 {# 广告 #}
-<!-- Begin BidVertiser code -->
-<SCRIPT data-cfasync="false" SRC="//bdv.bidvertiser.com/BidVertiser.dbm?pid=807493&bid=1941050" TYPE="text/javascript"></SCRIPT>
-<!-- End BidVertiser code --> 
+ <!-- Begin BidVertiser code -->
+ <SCRIPT data-cfasync="false" SRC="//bdv.bidvertiser.com/BidVertiser.dbm?pid=807493&bid=1944001" TYPE="text/javascript"></SCRIPT>
+ <!-- End BidVertiser code --> 
 {# 添加谷歌分析 #}
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="{{ url_for('static', filename='js/googleAnalytics.js') }}"></script>
@@ -34,13 +34,13 @@
     {# 含有 'bookCount' 说明已经转化完毕, 提供下载#}
     {% if 'bookCount' in fileDict.keys() %}
 
-        <h2> 点击上方广告就是对我们最大的支持 </h2>
+        <h2> 行行好点下广告吧, 网站要撑不住了 ( >﹏<。) </h2>
         <h3> 不要轻信广告内容, 点开就关上 </h3>
         <hr />
 
         <h1>  {{ fileDict['filename'].rsplit('.',1)[0] }} 转换完成</h1>
 
-        <p> 单击下载通道进行下载；</p>
+        <p> 单击"下载通道"进行下载；</p>
         
 
         <div>
@@ -90,6 +90,7 @@
 
         <button id="confirmTOCTransfer">确定目录</button>
         
+        <p id="message" style="background-color:Tomato;"></p>
         <hr /> 
 
         {# -----------------#}

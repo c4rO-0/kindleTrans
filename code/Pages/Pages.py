@@ -13,3 +13,7 @@ from   ConfirmTransformEbook   import *
 #----------------------------------------------------
 #     
 from NotFoundPage import *
+
+#----------------------------------------------------
+#  Chat   
+from ChatPage import *
