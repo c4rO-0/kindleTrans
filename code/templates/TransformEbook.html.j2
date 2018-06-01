@@ -94,6 +94,11 @@
                 </div>
             </div>
         </div>
+        {% for error in form.file.errors %}
+        <div class="alert alert-danger" role="alert">
+            [{{error}}]
+        </div>
+        {% endfor %}
     </form>
     <!-- <form id="formUpload" method="POST" enctype="multipart/form-data">
         <h1>{{ gettext( "上传" ) }}</h1>
