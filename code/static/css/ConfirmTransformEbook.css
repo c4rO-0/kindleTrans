@@ -1,0 +1,9 @@
+.c4r-font {
+    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+}
+
+.c4r-TOC {
+    /* min-width: 20rem; */
+    max-height: 20rem;
+    overflow-y: scroll;
+}

@@ -6,7 +6,7 @@ $(document).ready(function () {
         on('click', function() {
 
             if($(this).attr("del") == ""){ 
-                $(this).css("background-color", "red")
+                $(this).css("background-color", "darkgray")
                 $(this).attr("del","selected")
             }else{
                 // 还原回去
