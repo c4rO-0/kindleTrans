@@ -6,7 +6,7 @@ $(document).ready(function () {
         on('click', function() {
 
             if($(this).attr("del") == ""){ 
-                $(this).css("background-color", "red")
+                $(this).css("background-color", "darkgray")
                 $(this).attr("del","selected")
             }else{
                 // 还原回去
@@ -45,6 +45,14 @@ $(document).ready(function () {
 
             })            
             $('#formTran').submit()
+        })
+
+
+        $('#resetFilter').
+        on('click', function(e) {
+            // 重置通配符
+            e.preventDefault()
+            $('#titleFilter').val('.*[第]{1,2}[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]{1,2}.*')
         })
 
 
