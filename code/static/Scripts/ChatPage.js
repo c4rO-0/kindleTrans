@@ -1,247 +1,358 @@
-// Connect to PeerJS, have server assign an ID instead of providing one
-// Showing off some of the configs available with PeerJS :).
-var peer = new Peer({
-    host: 'papercomment.tech', port: 9000,
-  
-    // Set highest debug level (log everything!).
-    debug: 3,
-    config: {'iceServers': [
-      {urls:'stun:stun01.sipphone.com'},
-      {
-        url: 'turn:192.158.29.39:3478?transport=tcp',
-        credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-        username: '28224511:1379330808'
-      }]},
-    // Set a logging function:
-    logFunction: function() {
-      var copy = Array.prototype.slice.call(arguments).join(' ');
-      $('.log').append(copy + '<br>');
+/****************************************************************************
+ * Initial setup
+ ****************************************************************************/
+
+var configuration = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]},
+// {"url":"stun:stun.services.mozilla.com"}
+
+    roomURL = document.getElementById('url'),
+    video = document.getElementsByTagName('video')[0],
+    photo = document.getElementById('photo'),
+    photoContext = photo.getContext('2d'),
+    trail = document.getElementById('trail'),
+    snapBtn = document.getElementById('snap'),
+    sendBtn = document.getElementById('send'),
+    snapAndSendBtn = document.getElementById('snapAndSend'),
+    // Default values for width and height of the photoContext.
+    // Maybe redefined later based on user's webcam video stream.
+    photoContextW = 300, photoContextH = 150;
+
+// Attach even handlers
+video.addEventListener('play', setCanvasDimensions);
+snapBtn.addEventListener('click', snapPhoto);
+sendBtn.addEventListener('click', sendPhoto);
+snapAndSendBtn.addEventListener('click', snapAndSend);
+
+// Create a random room if not already present in the URL.
+var isInitiator;
+var room = window.location.hash.substring(1);
+if (!room) {
+    room = window.location.hash = randomToken();
+}
+
+
+/****************************************************************************
+ * Signaling server 
+ ****************************************************************************/
+
+// Connect to the signaling server
+var socket = io.connect();
+
+socket.on('ipaddr', function (ipaddr) {
+    console.log('Server IP address is: ' + ipaddr);
+    updateRoomURL(ipaddr);
+});
+
+socket.on('created', function (room, clientId) {
+  console.log('Created room', room, '- my client ID is', clientId);
+  isInitiator = true;
+  grabWebCamVideo();
+});
+
+socket.on('joined', function (room, clientId) {
+  console.log('This peer has joined room', room, 'with client ID', clientId);
+  isInitiator = false;
+  grabWebCamVideo();
+});
+
+socket.on('full', function (room) {
+    alert('Room "' + room + '" is full. We will create a new room for you.');
+    window.location.hash = '';
+    window.location.reload();
+});
+
+socket.on('ready', function () {
+    createPeerConnection(isInitiator, configuration);
+})
+
+socket.on('log', function (array) {
+  console.log.apply(console, array);
+});
+
+socket.on('message', function (message){
+    console.log('Client received message:', message);
+    signalingMessageCallback(message);
+});
+
+// Join a room
+socket.emit('create or join', room);
+
+if (location.hostname.match(/localhost|127\.0\.0/)) {
+    socket.emit('ipaddr');
+}
+
+/**
+ * Send message to signaling server
+ */
+function sendMessage(message){
+    console.log('Client sending message: ', message);
+    socket.emit('message', message);
+}
+
+/**
+ * Updates URL on the page so that users can copy&paste it to their peers.
+ */
+function updateRoomURL(ipaddr) {
+    var url;
+    if (!ipaddr) {
+        url = location.href
+    } else {
+        url = location.protocol + '//' + ipaddr + ':2013/#' + room
     }
-  });
-  var connectedPeers = {};
-  
-  // Show this peer's ID.
-  peer.on('open', function(id){
-    $('#pid').text(id);
-  });
-  
-  // Await connections from others
-  peer.on('connection', connect);
-  
-  peer.on('error', function(err) {
-    console.log(err);
-  })
-  
-  // Handle a connection object.
-  function connect(c) {
-    // Handle a chat connection.
-    if (c.label === 'chat') {
-      var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
-      var header = $('<h1></h1>').html('Chat with <strong>' + c.peer + '</strong>');
-      var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
-      chatbox.append(header);
-      chatbox.append(messages);
-   
-      // Select connection handler.
-      chatbox.on('click', function() {
-        if ($(this).attr('class').indexOf('active') === -1) {
-          $(this).addClass('active');
+    roomURL.innerHTML = url;
+}
+
+
+/**************************************************************************** 
+ * User media (webcam) 
+ ****************************************************************************/
+
+function grabWebCamVideo() {
+    console.log('Getting user media (video) ...');
+    getUserMedia({video: true}, getMediaSuccessCallback, getMediaErrorCallback);
+}
+
+function getMediaSuccessCallback(stream) {
+    var streamURL = window.URL.createObjectURL(stream);
+    console.log('getUserMedia video stream URL:', streamURL);
+    window.stream = stream; // stream available to console
+
+    video.src = streamURL;
+    show(snapBtn);
+}
+
+function getMediaErrorCallback(error){
+    console.log("getUserMedia error:", error);
+}
+
+
+/**************************************************************************** 
+ * WebRTC peer connection and data channel
+ ****************************************************************************/
+
+var peerConn;
+var dataChannel;
+
+function signalingMessageCallback(message) {
+    if (message.type === 'offer') {
+        console.log('Got offer. Sending answer to peer.');
+        peerConn.setRemoteDescription(new RTCSessionDescription(message), function(){}, logError);
+        peerConn.createAnswer(onLocalSessionCreated, logError);
+
+    } else if (message.type === 'answer') {
+        console.log('Got answer.');
+        peerConn.setRemoteDescription(new RTCSessionDescription(message), function(){}, logError);
+
+    } else if (message.type === 'candidate') {
+        peerConn.addIceCandidate(new RTCIceCandidate({candidate: message.candidate}));
+
+    } else if (message === 'bye') {
+        // TODO: cleanup RTC connection?
+    }
+}
+
+function createPeerConnection(isInitiator, config) {
+    console.log('Creating Peer connection as initiator?', isInitiator, 'config:', config);
+    peerConn = new RTCPeerConnection(config);
+
+    // send any ice candidates to the other peer
+    peerConn.onicecandidate = function (event) {
+        console.log('onIceCandidate event:', event);
+        if (event.candidate) {
+            sendMessage({
+                type: 'candidate',
+                label: event.candidate.sdpMLineIndex,
+                id: event.candidate.sdpMid,
+                candidate: event.candidate.candidate
+            });
         } else {
-          $(this).removeClass('active');
+            console.log('End of candidates.');
         }
-      });
-      $('.filler').hide();
-      $('#connections').append(chatbox);
-  
-      c.on('data', function(data) {
-        messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
-          '</div>');
-          });
-          c.on('close', function() {
-            alert(c.peer + ' has left the chat.');
-            chatbox.remove();
-            if ($('.connection').length === 0) {
-              $('.filler').show();
+    };
+
+    if (isInitiator) {
+        console.log('Creating Data Channel');
+        dataChannel = peerConn.createDataChannel("photos");
+        onDataChannelCreated(dataChannel);
+
+        console.log('Creating an offer');
+        peerConn.createOffer(onLocalSessionCreated, logError);
+    } else {
+        peerConn.ondatachannel = function (event) {
+            console.log('ondatachannel:', event.channel);
+            dataChannel = event.channel;
+            onDataChannelCreated(dataChannel);
+        };
+    }
+}
+
+function onLocalSessionCreated(desc) {
+    console.log('local session created:', desc);
+    peerConn.setLocalDescription(desc, function () {
+        console.log('sending local desc:', peerConn.localDescription);
+        sendMessage(peerConn.localDescription);
+    }, logError);
+}
+
+function onDataChannelCreated(channel) {
+    console.log('onDataChannelCreated:', channel);
+
+    channel.onopen = function () {
+        console.log('CHANNEL opened!!!');
+    };
+
+    channel.onmessage = (webrtcDetectedBrowser == 'firefox') ? 
+        receiveDataFirefoxFactory() :
+        receiveDataChromeFactory();
+}
+
+function receiveDataChromeFactory() {
+    var buf, count;
+
+    return function onmessage(event) {
+        if (typeof event.data === 'string') {
+            buf = window.buf = new Uint8ClampedArray(parseInt(event.data));
+            count = 0;
+            console.log('Expecting a total of ' + buf.byteLength + ' bytes');
+            return;
+        }
+
+        var data = new Uint8ClampedArray(event.data);
+        buf.set(data, count);
+
+        count += data.byteLength;
+        console.log('count: ' + count);
+
+        if (count === buf.byteLength) {
+            // we're done: all data chunks have been received
+            console.log('Done. Rendering photo.');
+            renderPhoto(buf);
+        }
+    }
+}
+
+function receiveDataFirefoxFactory() {
+    var count, total, parts;
+
+    return function onmessage(event) {
+        if (typeof event.data === 'string') {
+            total = parseInt(event.data);
+            parts = [];
+            count = 0;
+            console.log('Expecting a total of ' + total + ' bytes');
+            return;
+        }
+
+        parts.push(event.data);
+        count += event.data.size;
+        console.log('Got ' + event.data.size + ' byte(s), ' + (total - count) + ' to go.');
+
+        if (count == total) {
+            console.log('Assembling payload')
+            var buf = new Uint8ClampedArray(total);
+            var compose = function(i, pos) {
+                var reader = new FileReader();
+                reader.onload = function() { 
+                    buf.set(new Uint8ClampedArray(this.result), pos);
+                    if (i + 1 == parts.length) {
+                        console.log('Done. Rendering photo.');
+                        renderPhoto(buf);
+                    } else {
+                        compose(i + 1, pos + this.result.byteLength);
+                    }
+                };
+                reader.readAsArrayBuffer(parts[i]);
             }
-            delete connectedPeers[c.peer];
-          });
-    }
-    if (c.label === 'activity') {
-      c.on('data', function(data) {
-        // console.log(data)
-        if(data.activity == "uploading"){
-          if(data.filesize < 1000){
-            var strFileSize = data.filesize + " B"
-          }else if(data.filesize < 1000000){
-            var strFileSize = data.filesize/1000 + " KB"
-          }else if(data.filesize < 1000000000){
-            var strFileSize = data.filesize/1000000 + "MB"
-          }else{
-            var strFileSize = data.filesize/1000000000 + "TB"
-          }
-
-          $('#' + c.peer).find('.messages').append('<div><span class="file">' +
-              c.peer + ' is uploading '+ data.filename+ ', Size : ' + strFileSize + '. Please wait.</span></div>');          
+            compose(0, 0);
         }
-
-        if(data.activity == "upDone"){
-
-          $('#' + c.peer).find('.messages').append('<div><span class="file">' +
-              c.peer + ' has received '+ data.filename+ '.</span></div>');          
-        }
-
-      });
     }
-    if (c.label === 'file') {
-      c.on('data', function(data) {
-        // If we're getting a file, create a URL for it.
-        if (data.file.constructor === ArrayBuffer) {
-        //   console.log(data)
-          var dataView = new Uint8Array(data.file);
-        //   console.log(String.fromCharCode.apply(null, new Uint8Array(data)))
-          var dataBlob = new Blob([dataView]);
-          var url = window.URL.createObjectURL(dataBlob);
+}
 
-          $('#' + c.peer).find('.messages').append('<div><span class="file">' +
-              c.peer + ' has sent you a <a  download="' + data.filename + '" href="' + url + '">file : ' + data.filename + '</a>.</span></div>');
 
-            eachActiveConnection(function(c, $c) {
-              if (c.label === 'activity' ){
-                c.send({
-                  activity:"upDone",
-                  filename: data.filename
-                })
-              }
-            });          
-        }
-      });
+/**************************************************************************** 
+ * Aux functions, mostly UI-related
+ ****************************************************************************/
+
+function snapPhoto() {
+    photoContext.drawImage(video, 0, 0, photoContextW, photoContextH);
+    show(photo, sendBtn);
+}
+
+function sendPhoto() {
+    // Split data channel message in chunks of this byte length.
+    var CHUNK_LEN = 64000;
+
+    var img = photoContext.getImageData(0, 0, photoContextW, photoContextH),
+        len = img.data.byteLength,
+        n = len / CHUNK_LEN | 0;
+
+    console.log('Sending a total of ' + len + ' byte(s)');
+    dataChannel.send(len);
+
+    // split the photo and send in chunks of about 64KB
+    for (var i = 0; i < n; i++) {
+        var start = i * CHUNK_LEN,
+            end = (i+1) * CHUNK_LEN;
+        console.log(start + ' - ' + (end-1));
+        dataChannel.send(img.data.subarray(start, end));
     }
-    connectedPeers[c.peer] = 1;
-  }
-  
-  $(document).ready(function() {
-    // Prepare file drop box.
-    var box = $('#box');
-    box.on('dragenter', doNothing);
-    box.on('dragover', doNothing);
-    box.on('drop', function(e){
-      e.originalEvent.preventDefault();
-      var file = e.originalEvent.dataTransfer.files[0];
-      // console.log(file.size/(1000*1000))
-      if( file.size/(1000*1000) > 100 ){
-        $("#warning").text(file.name + " is larger than 100Mb")
-      }else{
-        $("#warning").text("")
-        eachActiveConnection(function(c, $c) {
-            if (c.label === 'activity' ){
-              c.send({
-                activity:"uploading",
-                filename: file.name,
-                filesize: file.size
-              })
-            }
-            if (c.label === 'file') {
+
+    // send the reminder, if any
+    if (len % CHUNK_LEN) {
+        console.log('last ' + len % CHUNK_LEN + ' byte(s)');
+        dataChannel.send(img.data.subarray(n * CHUNK_LEN));
+    }
+}
+
+function snapAndSend() {
+    snapPhoto();
+    sendPhoto();
+}
+
+function renderPhoto(data) {
+    var canvas = document.createElement('canvas');
+    canvas.classList.add('photo');
+    trail.insertBefore(canvas, trail.firstChild);
+
+    var context = canvas.getContext('2d');
+    var img = context.createImageData(photoContextW, photoContextH);
+    img.data.set(data);
+    context.putImageData(img, 0, 0);
+}
+
+function setCanvasDimensions() {
+    if (video.videoWidth == 0) {
+        setTimeout(setCanvasDimensions, 200);
+        return;
+    }
     
-              c.send({        
-                file: file,
-                filename: file.name,
-                filetype: file.type});
-    
-              $c.find('.messages').append('<div><span class="file">You are uploading ' + file.name + '. Please wait.</span></div>');
-            }
-          });
-      }
+    console.log('video width:', video.videoWidth, 'height:', video.videoHeight)
 
+    photoContextW = video.videoWidth / 2;
+    photoContextH = video.videoHeight / 2;
+    //photo.style.width = photoContextW + 'px';
+    //photo.style.height = photoContextH + 'px';
+    // TODO: figure out right dimensions
+    photoContextW = 300; //300;
+    photoContextH = 150; //150;
+}
+
+function show() {
+    Array.prototype.forEach.call(arguments, function(elem){
+        elem.style.display = null;
     });
-    function doNothing(e){
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  
-    // Connect to a peer
-    $('#connect').click(function() {
-      var requestedPeer = $('#rid').val();
-      if (!connectedPeers[requestedPeer]) {
-        // Create 2 connections, one labelled chat and another labelled file.
-        var c = peer.connect(requestedPeer, {
-          label: 'chat',
-          serialization: 'none',
-          metadata: {message: 'hi i want to chat with you!'}
-        });
-        c.on('open', function() {
-          connect(c);
-        });
-        c.on('error', function(err) { alert(err); });
+}
 
-        var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
-        f.on('open', function() {
-          connect(f);
-        });
-        f.on('error', function(err) { alert(err); });
-
-        // 传递系统消息
-        var m = peer.connect(requestedPeer, { label: 'activity' });
-        m.on('open', function() {
-          connect(m);
-        });
-        m.on('error', function(err) { alert(err); });        
-
-      }
-      connectedPeers[requestedPeer] = 1;
+function hide() {
+    Array.prototype.forEach.call(arguments, function(elem){
+        elem.style.display = 'none';
     });
-  
-    // Close a connection.
-    $('#close').click(function() {
-      eachActiveConnection(function(c) {
-        c.close();
-      });
-    });
-  
-    // Send a chat message to all active connections.
-    $('#send').submit(function(e) {
-      e.preventDefault();
-      // For each active connection, send the message.
-      var msg = $('#text').val();
-      eachActiveConnection(function(c, $c) {
-        if (c.label === 'chat') {
-          c.send(msg);
-          $c.find('.messages').append('<div><span class="you">You: </span>' + msg
-            + '</div>');
-        }
-      });
-      $('#text').val('');
-      $('#text').focus();
-    });
-  
+}
 
-  
-    // Show browser version
-    $('#browsers').text(navigator.userAgent);
-  });
-  
-  // Make sure things clean up properly.
-  
-  window.onunload = window.onbeforeunload = function(e) {
-    if (!!peer && !peer.destroyed) {
-      peer.destroy();
-    }
-  };
-  
-  // Goes through each active peer and calls FN on its connections.
-  function eachActiveConnection(fn) {
-    var actives = $('.active');
-    var checkedIds = {};
-    actives.each(function() {
-      var peerId = $(this).attr('id');
+function randomToken() {
+    return Math.floor((1 + Math.random()) * 1e16).toString(16).substring(1);
+}
 
-      if (!checkedIds[peerId]) {
-        var conns = peer.connections[peerId];
-        for (var i = 0, ii = conns.length; i < ii; i += 1) {
-          var conn = conns[i];
-          fn(conn, $(this));
-        }
-      }
-
-      checkedIds[peerId] = 1;
-    });
-  }
+function logError(err) {
+    console.log(err.toString(), err);
+}
