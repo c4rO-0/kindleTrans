@@ -6,10 +6,13 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="WebRTC, SimpleWebRTC, Talky, Talky.io, library, JavaScript, Node.js">
+        <meta name="description" content="WebRTC, peer to peer transfer files, 点对点传文件">
 
         <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7773252/764742/css/fonts.css" />
         <link rel="stylesheet" href="https://simplewebrtc.com/css/style.min.css">
+        <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	
+
         <link rel="icon" type="image/png" href="https://simplewebrtc.com/img/favicon.png">
         <style>
 li span {
@@ -52,21 +55,51 @@ li .filename {
         </style>
     </head>
     <body>
-        <h1 class="logo"><span>simple</span><span>WebRTC</span></h1>
-        <h2>You can build cool stuff with WebRTC in five minutes.</h2>
 
-        <p>This is a filetransfer demo. See <a href="notsosimple.html#filetransfer">here</a> for some background information. As it is just a demo, we are not providing the TURN relay servers that are required to get close to 100% connectivity and connections might fail.</p>
+        <div class="row justify-content-center">
+            <div class="col-auto align-self-center">
+                <h1 style="font-size:4rem; color:dimgray"><span style="color:red">Easy</span> Transfer</h1>
+            </div>
+            <div class="col-auto align-self-end px-1">
+                <p class="align-text-bottom">Powered by</p>
+            </div>
+            <div class="col-auto align-self-end px-1">
+                <a href="{{url_for('HomePage')}}">
+                    <img  class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
+                </a>
+            </div>
+        </div>
 
-        <h3 id="title">Start a session</h3>
+
+        <h2>创建一个房间, 等待加入后发送</h2>
+        <h2>Create a room, join and send</h2>
+
+
+
+        <h3 id="title">创建/加入房间</h3>
+        <hr>        
         <form id="createRoom">
             <input id="sessionInput"/>
-            <button disabled type="submit">Create it!</button>
+            <button disabled type="submit">加入</button>
         </form>
         <p id="subTitle"></p>
+        <p id="ownID"> </p>
+
 
 
         <hr>
         <div id="remotes"></div>
+
+        <hr>
+
+        <div class="row justify-content-center">
+                <div class="col-auto align-self-end px-1">
+                    <img  class="mb-3" src="{{ url_for('static', filename='images/wechat.png') }}" width="229" height="266">
+                </div> 
+        </div>
+
+        <p>该网页基于<a href="https://simplewebrtc.com/">simpleWebRTC</a>创建</p>
+
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="https://simplewebrtc.com/latest-v3.js"></script>
         <script>
@@ -91,6 +124,11 @@ var webrtc = new SimpleWebRTC({
 // called when a peer is created
 webrtc.on('createdPeer', function (peer) {
     console.log('createdPeer', peer);
+
+    // show ones own id
+    var ownID = webrtc.connection.getSessionid()
+    $("#ownID").text("ID : "+ownID)
+
     var remotes = document.getElementById('remotes');
     if (!remotes) return;
     var container = document.createElement('div');
@@ -261,7 +299,7 @@ webrtc.on('connectivityError', function (peer) {
 
 function setRoom(name) {
     document.querySelector('form').remove();
-    document.getElementById('title').innerText = 'Session: ' + name;
+    document.getElementById('title').innerText = '房间号/Room: ' + name;
     document.getElementById('subTitle').innerText =  'Link to join: ' + location.href;
     $('body').addClass('active');
 }
@@ -274,7 +312,6 @@ if (room) {
 } else {
     $('form>button').attr('disabled', null);
     $('form').submit(function () {
-	console.log("test")
         var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
         webrtc.createRoom(val, function (err, name) {
             console.log(' create room cb', arguments);
@@ -287,6 +324,8 @@ if (room) {
                 console.log(err);
             }
         });
+
+        
         return false;          
     });
 }
