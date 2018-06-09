@@ -82,11 +82,11 @@
         
         
         
-            <h3 id="title">创建/加入房间</h3>
+            <h3 id="title">第一步: 创建房间</h3>
             <hr>
             <form id="createRoom">
                 <input id="sessionInput" />
-                <button disabled type="submit">加入</button>
+                <button disabled type="submit">创建</button>
             </form>
             <p id="subTitle"></p>
             <p id="ownID"> </p>
@@ -97,7 +97,7 @@
             <div id="remotes"></div>
         
             <hr>
-        
+            <h3 >微信扫一扫支持我们 o(〃'▽'〃)o</h3>
             <div class="row justify-content-center">
                 <div class="col-auto align-self-end px-1">
                     <img class="mb-3" src="{{ url_for('static', filename='images/wechat.png') }}" width="229" height="266">
@@ -309,7 +309,7 @@ webrtc.on('connectivityError', function (peer) {
 function setRoom(name) {
     document.querySelector('form').remove();
     document.getElementById('title').innerText = '房间号/Room: ' + name;
-    document.getElementById('subTitle').innerText =  'Link to join: ' + location.href;
+    document.getElementById('subTitle').innerText =  '把链接分享给别人: ' + location.href;
     $('body').addClass('active');
 }
 
