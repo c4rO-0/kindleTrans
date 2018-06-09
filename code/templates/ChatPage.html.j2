@@ -15,90 +15,99 @@
 
         <link rel="icon" type="image/png" href="https://simplewebrtc.com/img/favicon.png">
         <style>
-li span {
-    margin-right: 1em;
-}
-
-progress {
-    margin-right: 1em;
-    width: 50%;
-}
-
-li .filename {
-    display: inline-block;
-    width: 50%;
-}
-
-.peerContainer {
-    margin-bottom: 1em;
-}
-
-.p2pChecking {
-    background-color: #ffeed7;
-}
-.p2pConnected, .p2pCompleted {
-    background-color: #12acef;
-}
-.p2pFailed {
-    background-color: #ffe3eb
-}
-.p2pDisconnected {
-    background-color: #ffeed7;
-}
-.p2pClosed {
-    background-color: #f5f7f8;
-}
-
-.receiving a {
-    color: #ec008c;
-}
+            li span {
+                margin-right: 1em;
+            }
+        
+            progress {
+                margin-right: 1em;
+                width: 50%;
+            }
+        
+            li .filename {
+                display: inline-block;
+                width: 50%;
+            }
+        
+            .peerContainer {
+                margin-bottom: 1em;
+            }
+        
+            .p2pChecking {
+                background-color: #ffeed7;
+            }
+        
+            .p2pConnected,
+            .p2pCompleted {
+                background-color: #12acef;
+            }
+        
+            .p2pFailed {
+                background-color: #ffe3eb
+            }
+        
+            .p2pDisconnected {
+                background-color: #ffeed7;
+            }
+        
+            .p2pClosed {
+                background-color: #f5f7f8;
+            }
+        
+            .receiving a {
+                color: #ec008c;
+            }
         </style>
     </head>
     <body>
-
-        <div class="row justify-content-center">
-            <div class="col-auto align-self-center">
-                <h1 style="font-size:4rem; color:dimgray"><span style="color:red">Easy</span>Transfer</h1>
-            </div>
-            <div class="col-auto align-self-end px-1">
-                <p class="align-text-bottom">Powered by</p>
-            </div>
-            <div class="col-auto align-self-end px-1">
-                <a href="{{url_for('HomePage')}}">
-                    <img  class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
-                </a>
-            </div>
-        </div>
-
-
-        <h2>创建一个房间, 等待加入后发送</h2>
-        <h2>Create a room, join and send</h2>
-
-
-
-        <h3 id="title">创建/加入房间</h3>
-        <hr>        
-        <form id="createRoom">
-            <input id="sessionInput"/>
-            <button disabled type="submit">加入</button>
-        </form>
-        <p id="subTitle"></p>
-        <p id="ownID"> </p>
-
-
-
-        <hr>
-        <div id="remotes"></div>
-
-        <hr>
-
-        <div class="row justify-content-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-auto align-self-center">
+                    <h1 style="font-size:4rem; color:dimgray">
+                        <span style="color:red">Easy</span>Transfer</h1>
+                </div>
                 <div class="col-auto align-self-end px-1">
-                    <img  class="mb-3" src="{{ url_for('static', filename='images/wechat.png') }}" width="229" height="266">
-                </div> 
+                    <p class="align-text-bottom">Powered by</p>
+                </div>
+                <div class="col-auto align-self-end px-1">
+                    <a href="{{url_for('HomePage')}}">
+                        <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
+                    </a>
+                </div>
+            </div>
+        
+        
+            <h2>创建一个房间, 等待加入后发送</h2>
+            <h2>Create a room, join and send</h2>
+        
+        
+        
+            <h3 id="title">创建/加入房间</h3>
+            <hr>
+            <form id="createRoom">
+                <input id="sessionInput" />
+                <button disabled type="submit">加入</button>
+            </form>
+            <p id="subTitle"></p>
+            <p id="ownID"> </p>
+        
+        
+        
+            <hr>
+            <div id="remotes"></div>
+        
+            <hr>
+        
+            <div class="row justify-content-center">
+                <div class="col-auto align-self-end px-1">
+                    <img class="mb-3" src="{{ url_for('static', filename='images/wechat.png') }}" width="229" height="266">
+                </div>
+            </div>
+        
+            <p>该网页基于
+                <a href="https://simplewebrtc.com/">simpleWebRTC</a>创建</p>
         </div>
 
-        <p>该网页基于<a href="https://simplewebrtc.com/">simpleWebRTC</a>创建</p>
 
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="https://simplewebrtc.com/latest-v3.js"></script>
