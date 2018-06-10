@@ -13,7 +13,12 @@
         <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	
 
-        <link rel="icon" type="image/png" href="https://simplewebrtc.com/img/favicon.png">
+        {# 标签logo #}
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">
+
+        {# 添加谷歌分析 #}
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="{{ url_for('static', filename='js/googleAnalytics.js') }}"></script>        
         <style>
             li span {
                 margin-right: 1em;

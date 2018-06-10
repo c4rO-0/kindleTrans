@@ -6,15 +6,20 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <title>{{ gettext("在线转化txt为mobi") }}</title>
+
+    {# 标签logo #}
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">      
+
 	<script src="{{ url_for('static', filename='Scripts/jquery-3.3.1.js') }}"></script>		
 	<link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-	<script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>			
-	<!-- our own scripts -->
-    <title>{{ gettext("在线转化txt为mobi") }}</title>
+    <script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>		
+    	
+	<!-- our own scripts -->  
     <script src="{{ url_for('static', filename='Scripts/TransformEbook.js') }}"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     {# 广告 #}
