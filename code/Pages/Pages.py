@@ -17,3 +17,7 @@ from NotFoundPage import *
 #----------------------------------------------------
 #  Chat   
 from ChatPage import *
+
+#----------------------------------------------------
+#  about us   
+from AboutUsPage import *
