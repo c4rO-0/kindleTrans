@@ -9,7 +9,7 @@ from config import DEFAULT_TITLE_FILTER
 #---------------------------------
 
 
-@app.route('/AboutUs' , methods = ['GET', 'POST']  )
+@app.route('/AboutUsPage' , methods = ['GET', 'POST']  )
 def AboutUsPage():
 
     return render_template('AboutUsPage.html.j2', app = app)
