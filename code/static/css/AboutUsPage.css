@@ -1,0 +1,17 @@
+.card.c4r {
+    font-family: 'Arial','Microsoft YaHei','黑体',sans-serif;
+    color: #343a40;
+}
+
+pre {
+    font-family: SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace, Consolas, 'Microsoft YaHei','黑体';
+    font-size: 1rem;
+    color: white;
+    margin-bottom: 0;
+}
+
+p.c4r {
+    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+    font-size: 1.5rem;
+    color: #343a40;
+}
