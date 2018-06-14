@@ -1,358 +1,269 @@
-/****************************************************************************
- * Initial setup
- ****************************************************************************/
+$(document).ready(function () { 
+// grab the room from the URL
+var room = location.search && location.search.split('?')[1];
 
-var configuration = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]},
-// {"url":"stun:stun.services.mozilla.com"}
-
-    roomURL = document.getElementById('url'),
-    video = document.getElementsByTagName('video')[0],
-    photo = document.getElementById('photo'),
-    photoContext = photo.getContext('2d'),
-    trail = document.getElementById('trail'),
-    snapBtn = document.getElementById('snap'),
-    sendBtn = document.getElementById('send'),
-    snapAndSendBtn = document.getElementById('snapAndSend'),
-    // Default values for width and height of the photoContext.
-    // Maybe redefined later based on user's webcam video stream.
-    photoContextW = 300, photoContextH = 150;
-
-// Attach even handlers
-video.addEventListener('play', setCanvasDimensions);
-snapBtn.addEventListener('click', snapPhoto);
-sendBtn.addEventListener('click', sendPhoto);
-snapAndSendBtn.addEventListener('click', snapAndSend);
-
-// Create a random room if not already present in the URL.
-var isInitiator;
-var room = window.location.hash.substring(1);
-if (!room) {
-    room = window.location.hash = randomToken();
-}
-
-
-/****************************************************************************
- * Signaling server 
- ****************************************************************************/
-
-// Connect to the signaling server
-var socket = io.connect();
-
-socket.on('ipaddr', function (ipaddr) {
-    console.log('Server IP address is: ' + ipaddr);
-    updateRoomURL(ipaddr);
-});
-
-socket.on('created', function (room, clientId) {
-  console.log('Created room', room, '- my client ID is', clientId);
-  isInitiator = true;
-  grabWebCamVideo();
-});
-
-socket.on('joined', function (room, clientId) {
-  console.log('This peer has joined room', room, 'with client ID', clientId);
-  isInitiator = false;
-  grabWebCamVideo();
-});
-
-socket.on('full', function (room) {
-    alert('Room "' + room + '" is full. We will create a new room for you.');
-    window.location.hash = '';
-    window.location.reload();
-});
-
-socket.on('ready', function () {
-    createPeerConnection(isInitiator, configuration);
-})
-
-socket.on('log', function (array) {
-  console.log.apply(console, array);
-});
-
-socket.on('message', function (message){
-    console.log('Client received message:', message);
-    signalingMessageCallback(message);
-});
-
-// Join a room
-socket.emit('create or join', room);
-
-if (location.hostname.match(/localhost|127\.0\.0/)) {
-    socket.emit('ipaddr');
-}
-
-/**
- * Send message to signaling server
- */
-function sendMessage(message){
-    console.log('Client sending message: ', message);
-    socket.emit('message', message);
-}
-
-/**
- * Updates URL on the page so that users can copy&paste it to their peers.
- */
-function updateRoomURL(ipaddr) {
-    var url;
-    if (!ipaddr) {
-        url = location.href
-    } else {
-        url = location.protocol + '//' + ipaddr + ':2013/#' + room
+// create our webrtc connection
+var webrtc = new SimpleWebRTC({
+    url:'http://papercomment.tech:8888',
+    // we don't do video
+    localVideoEl: '',
+    remoteVideosEl: '',
+    // dont ask for camera access
+    autoRequestMedia: false,
+    // dont negotiate media
+    receiveMedia: {
+        offerToReceiveAudio: false,
+        offerToReceiveVideo: false
     }
-    roomURL.innerHTML = url;
-}
+});
 
+// called when a peer is created
+webrtc.on('createdPeer', function (peer) {
+    console.log('createdPeer', peer);
 
-/**************************************************************************** 
- * User media (webcam) 
- ****************************************************************************/
+    // show ones own id
+    var ownID = webrtc.connection.getSessionid()
+    $("#ownID").text("ID : "+ownID)
 
-function grabWebCamVideo() {
-    console.log('Getting user media (video) ...');
-    getUserMedia({video: true}, getMediaSuccessCallback, getMediaErrorCallback);
-}
+    var remotes = document.getElementById('remotes');
+    if (!remotes) return;
+    var container = document.createElement('div');
+    container.className = 'peerContainer';
+    container.id = 'container_' + webrtc.getDomId(peer);
 
-function getMediaSuccessCallback(stream) {
-    var streamURL = window.URL.createObjectURL(stream);
-    console.log('getUserMedia video stream URL:', streamURL);
-    window.stream = stream; // stream available to console
+    // show the peer id
+    var peername = document.createElement('div');
+    peername.className = 'peerName';
+    peername.appendChild(document.createTextNode('Peer: ' + peer.id));
+    container.appendChild(peername);
 
-    video.src = streamURL;
-    show(snapBtn);
-}
+    // show a list of files received / sending
+    var filelist = document.createElement('ul');
+    filelist.className = 'fileList';
+    container.appendChild(filelist);
 
-function getMediaErrorCallback(error){
-    console.log("getUserMedia error:", error);
-}
+    // show a file select form
+    var fileinput = document.createElement('input');
+    fileinput.type = 'file';
 
+    // send a file
+    fileinput.addEventListener('change', function() {
+        fileinput.disabled = true;
 
-/**************************************************************************** 
- * WebRTC peer connection and data channel
- ****************************************************************************/
+        var file = fileinput.files[0];
+        var sender = peer.sendFile(file);
 
-var peerConn;
-var dataChannel;
+        // create a file item
+        var item = document.createElement('li');
+        item.className = 'sending';
 
-function signalingMessageCallback(message) {
-    if (message.type === 'offer') {
-        console.log('Got offer. Sending answer to peer.');
-        peerConn.setRemoteDescription(new RTCSessionDescription(message), function(){}, logError);
-        peerConn.createAnswer(onLocalSessionCreated, logError);
+        // make a label
+        var span = document.createElement('span');
+        span.className = 'filename';
+        span.appendChild(document.createTextNode(file.name));
+        item.appendChild(span);
 
-    } else if (message.type === 'answer') {
-        console.log('Got answer.');
-        peerConn.setRemoteDescription(new RTCSessionDescription(message), function(){}, logError);
+        span = document.createElement('span');
+        span.appendChild(document.createTextNode(file.size + ' bytes'));
+        item.appendChild(span);
 
-    } else if (message.type === 'candidate') {
-        peerConn.addIceCandidate(new RTCIceCandidate({candidate: message.candidate}));
+        // create a progress element
+        var sendProgress = document.createElement('progress');
+        sendProgress.max = file.size;
+        item.appendChild(sendProgress);
 
-    } else if (message === 'bye') {
-        // TODO: cleanup RTC connection?
-    }
-}
+        // hook up send progress
+        sender.on('progress', function (bytesSent) {
+            sendProgress.value = bytesSent;
+        });
+        // sending done
+        sender.on('sentFile', function () {
+            item.appendChild(document.createTextNode('sent'));
 
-function createPeerConnection(isInitiator, config) {
-    console.log('Creating Peer connection as initiator?', isInitiator, 'config:', config);
-    peerConn = new RTCPeerConnection(config);
+            // we allow only one filetransfer at a time
+            fileinput.removeAttribute('disabled');
+        });
+        // receiver has actually received the file
+        sender.on('complete', function () {
+            // safe to disconnect now
+        });
+        filelist.appendChild(item);
+    }, false);
+    fileinput.disabled = 'disabled';
+    container.appendChild(fileinput);
 
-    // send any ice candidates to the other peer
-    peerConn.onicecandidate = function (event) {
-        console.log('onIceCandidate event:', event);
-        if (event.candidate) {
-            sendMessage({
-                type: 'candidate',
-                label: event.candidate.sdpMLineIndex,
-                id: event.candidate.sdpMid,
-                candidate: event.candidate.candidate
-            });
-        } else {
-            console.log('End of candidates.');
-        }
-    };
+    // show the ice connection state
+    if (peer && peer.pc) {
+        var connstate = document.createElement('div');
+        connstate.className = 'connectionstate';
+        container.appendChild(connstate);
+        peer.pc.on('iceConnectionStateChange', function (event) {
+            var state = peer.pc.iceConnectionState;
+            console.log('state', state);
+            container.className = 'peerContainer p2p' + state.substr(0, 1).toUpperCase()
+                + state.substr(1);
+            switch (state) {
+            case 'checking': 
+                connstate.innerText = 'Connecting to peer...';
+                break;
+            case 'connected':
+            case 'completed': // on caller side
+                connstate.innerText = 'Connection established.';
+                // enable file sending on connnect
+                fileinput.removeAttribute('disabled');
+                break;
+            case 'disconnected':
+                connstate.innerText = 'Disconnected.';
+                break;
+            case 'failed':
+                // not handled here
+                break;
+            case 'closed':
+                connstate.innerText = 'Connection closed.';
 
-    if (isInitiator) {
-        console.log('Creating Data Channel');
-        dataChannel = peerConn.createDataChannel("photos");
-        onDataChannelCreated(dataChannel);
-
-        console.log('Creating an offer');
-        peerConn.createOffer(onLocalSessionCreated, logError);
-    } else {
-        peerConn.ondatachannel = function (event) {
-            console.log('ondatachannel:', event.channel);
-            dataChannel = event.channel;
-            onDataChannelCreated(dataChannel);
-        };
-    }
-}
-
-function onLocalSessionCreated(desc) {
-    console.log('local session created:', desc);
-    peerConn.setLocalDescription(desc, function () {
-        console.log('sending local desc:', peerConn.localDescription);
-        sendMessage(peerConn.localDescription);
-    }, logError);
-}
-
-function onDataChannelCreated(channel) {
-    console.log('onDataChannelCreated:', channel);
-
-    channel.onopen = function () {
-        console.log('CHANNEL opened!!!');
-    };
-
-    channel.onmessage = (webrtcDetectedBrowser == 'firefox') ? 
-        receiveDataFirefoxFactory() :
-        receiveDataChromeFactory();
-}
-
-function receiveDataChromeFactory() {
-    var buf, count;
-
-    return function onmessage(event) {
-        if (typeof event.data === 'string') {
-            buf = window.buf = new Uint8ClampedArray(parseInt(event.data));
-            count = 0;
-            console.log('Expecting a total of ' + buf.byteLength + ' bytes');
-            return;
-        }
-
-        var data = new Uint8ClampedArray(event.data);
-        buf.set(data, count);
-
-        count += data.byteLength;
-        console.log('count: ' + count);
-
-        if (count === buf.byteLength) {
-            // we're done: all data chunks have been received
-            console.log('Done. Rendering photo.');
-            renderPhoto(buf);
-        }
-    }
-}
-
-function receiveDataFirefoxFactory() {
-    var count, total, parts;
-
-    return function onmessage(event) {
-        if (typeof event.data === 'string') {
-            total = parseInt(event.data);
-            parts = [];
-            count = 0;
-            console.log('Expecting a total of ' + total + ' bytes');
-            return;
-        }
-
-        parts.push(event.data);
-        count += event.data.size;
-        console.log('Got ' + event.data.size + ' byte(s), ' + (total - count) + ' to go.');
-
-        if (count == total) {
-            console.log('Assembling payload')
-            var buf = new Uint8ClampedArray(total);
-            var compose = function(i, pos) {
-                var reader = new FileReader();
-                reader.onload = function() { 
-                    buf.set(new Uint8ClampedArray(this.result), pos);
-                    if (i + 1 == parts.length) {
-                        console.log('Done. Rendering photo.');
-                        renderPhoto(buf);
-                    } else {
-                        compose(i + 1, pos + this.result.byteLength);
-                    }
-                };
-                reader.readAsArrayBuffer(parts[i]);
+                // disable file sending
+                fileinput.disabled = 'disabled';
+                // FIXME: remove container, but when?
+                break;
             }
-            compose(0, 0);
-        }
+        });
     }
-}
+    remotes.appendChild(container);
 
+    // receiving an incoming filetransfer
+    peer.on('fileTransfer', function (metadata, receiver) {
+        console.log('incoming filetransfer', metadata);
+        var item = document.createElement('li');
+        item.className = 'receiving';
 
-/**************************************************************************** 
- * Aux functions, mostly UI-related
- ****************************************************************************/
+        // make a label
+        var span = document.createElement('span');
+        span.className = 'filename';
+        span.appendChild(document.createTextNode(metadata.name));
+        item.appendChild(span);
 
-function snapPhoto() {
-    photoContext.drawImage(video, 0, 0, photoContextW, photoContextH);
-    show(photo, sendBtn);
-}
+        span = document.createElement('span');
+        span.appendChild(document.createTextNode(metadata.size + ' bytes'));
+        item.appendChild(span);
 
-function sendPhoto() {
-    // Split data channel message in chunks of this byte length.
-    var CHUNK_LEN = 64000;
+        // create a progress element
+        var receiveProgress = document.createElement('progress');
+        receiveProgress.max = metadata.size;
+        item.appendChild(receiveProgress);
 
-    var img = photoContext.getImageData(0, 0, photoContextW, photoContextH),
-        len = img.data.byteLength,
-        n = len / CHUNK_LEN | 0;
+        // hook up receive progress
+        receiver.on('progress', function (bytesReceived) {
+            receiveProgress.value = bytesReceived;
+        });
+        // get notified when file is done
+        receiver.on('receivedFile', function (file, metadata) {
+            console.log('received file', metadata.name, metadata.size);
+            var href = document.createElement('a');
+            href.href = URL.createObjectURL(file);
+            href.download = metadata.name;
+            href.appendChild(document.createTextNode('download'));
+            item.appendChild(href);
 
-    console.log('Sending a total of ' + len + ' byte(s)');
-    dataChannel.send(len);
+            // close the channel
+            receiver.channel.close();
+        });
+        filelist.appendChild(item);
+    });
+});
 
-    // split the photo and send in chunks of about 64KB
-    for (var i = 0; i < n; i++) {
-        var start = i * CHUNK_LEN,
-            end = (i+1) * CHUNK_LEN;
-        console.log(start + ' - ' + (end-1));
-        dataChannel.send(img.data.subarray(start, end));
+// local p2p/ice failure
+webrtc.on('iceFailed', function (peer) {
+    var connstate = document.querySelector('#container_' + webrtc.getDomId(peer) + ' .connectionstate');
+    var fileinput = document.querySelector('#container_' + webrtc.getDomId(peer) + ' input');
+    console.log('local fail', connstate);
+    if (connstate) {
+        connstate.innerText = 'Connection failed.';
+        fileinput.disabled = 'disabled';
     }
+});
 
-    // send the reminder, if any
-    if (len % CHUNK_LEN) {
-        console.log('last ' + len % CHUNK_LEN + ' byte(s)');
-        dataChannel.send(img.data.subarray(n * CHUNK_LEN));
+// remote p2p/ice failure
+webrtc.on('connectivityError', function (peer) {
+    var connstate = document.querySelector('#container_' + webrtc.getDomId(peer) + ' .connectionstate');
+    var fileinput = document.querySelector('#container_' + webrtc.getDomId(peer) + ' input');
+    console.log('remote fail', connstate);
+    if (connstate) {
+        connstate.innerText = 'Connection failed.';
+        fileinput.disabled = 'disabled';
     }
+});
+
+function setRoom(name) {
+    // document.querySelector('form').remove();
+    // document.getElementById('title').innerText = '房间号/Room: ' + name;
+    document.getElementById('subTitle').innerText =  '分享房间链接: ' + location.href;
+    $('body').addClass('active');
 }
 
-function snapAndSend() {
-    snapPhoto();
-    sendPhoto();
-}
+//=========== 随机或得hash值 =====================\\
 
-function renderPhoto(data) {
-    var canvas = document.createElement('canvas');
-    canvas.classList.add('photo');
-    trail.insertBefore(canvas, trail.firstChild);
-
-    var context = canvas.getContext('2d');
-    var img = context.createImageData(photoContextW, photoContextH);
-    img.data.set(data);
-    context.putImageData(img, 0, 0);
-}
-
-function setCanvasDimensions() {
-    if (video.videoWidth == 0) {
-        setTimeout(setCanvasDimensions, 200);
-        return;
+//产生一个hash值，只有数字，规则和java的hashcode规则相同
+function hashCode(str) {
+    var h = 0;
+    var len = str.length;
+    var t = 2147483648;
+    for (var i = 0; i < len; i++) {
+        h = 31 * h + str.charCodeAt(i);
+        if (h > 2147483647) h %= t; //java int溢出则取模
     }
+    /*var t = -2147483648 * 2;
+     while (h > 2147483647) {
+     h += t
+     }*/
+    return h;
+}
+
+function randomWord(randomFlag, min, max) {
+    var str = "",
+        range = min,
+        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    // 随机产生
+    if (randomFlag) {
+        range = Math.round(Math.random() * (max - min)) + min;
+    }
+    for (var i = 0; i < range; i++) {
+        pos = Math.round(Math.random() * (arr.length - 1));
+        str += arr[pos];
+    }
+    return str;
+}
+
+function gethashcode() {
+    //定义一个时间戳，计算与1970年相差的毫秒数  用来获得唯一时间
+    var timestamp = (new Date()).valueOf();
+    var myRandom=randomWord(false,6);
+    var hashcode=hashCode(myRandom+timestamp.toString());
+    return hashcode;
+}
+
+if (room) {
+    setRoom(room);
+    webrtc.joinRoom(room, function (err, res) {
+        console.log('joined', room, err, res);
+    });
+} else {
+    $('form>button').attr('disabled', null);
+    //$('form').submit(function () { 
+    var val = gethashcode().toString(); 
+    webrtc.createRoom(val, function (err, name) {
+        console.log(' create room cb', arguments);
     
-    console.log('video width:', video.videoWidth, 'height:', video.videoHeight)
-
-    photoContextW = video.videoWidth / 2;
-    photoContextH = video.videoHeight / 2;
-    //photo.style.width = photoContextW + 'px';
-    //photo.style.height = photoContextH + 'px';
-    // TODO: figure out right dimensions
-    photoContextW = 300; //300;
-    photoContextH = 150; //150;
-}
-
-function show() {
-    Array.prototype.forEach.call(arguments, function(elem){
-        elem.style.display = null;
+        var newUrl = location.pathname + '?' + name;
+        if (!err) {
+            history.replaceState({foo: 'bar'}, null, newUrl);
+            setRoom(name);
+        } else {
+            console.log(err);
+        }
     });
-}
+    // return false; 
+//});
+         
 
-function hide() {
-    Array.prototype.forEach.call(arguments, function(elem){
-        elem.style.display = 'none';
-    });
 }
-
-function randomToken() {
-    return Math.floor((1 + Math.random()) * 1e16).toString(16).substring(1);
-}
-
-function logError(err) {
-    console.log(err.toString(), err);
-}
+})
