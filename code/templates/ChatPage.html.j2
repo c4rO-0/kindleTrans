@@ -13,7 +13,12 @@
         <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	
 
-        <link rel="icon" type="image/png" href="https://simplewebrtc.com/img/favicon.png">
+        {# 标签logo #}
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">
+
+        {# 添加谷歌分析 #}
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="{{ url_for('static', filename='js/googleAnalytics.js') }}"></script>        
         <style>
             li span {
                 margin-right: 1em;
@@ -62,7 +67,7 @@
     <body>
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-auto align-self-center">
+                <div class="col-auto align-self-center" >
                     <h1 style="font-size:4rem; color:dimgray">
                         <span style="color:red">Easy</span>Transfer</h1>
                 </div>
@@ -70,42 +75,50 @@
                     <p class="align-text-bottom">Powered by</p>
                 </div>
                 <div class="col-auto align-self-end px-1">
-                    <a href="{{url_for('HomePage')}}">
+                    <a href="{{url_for('AboutUsPage')}}">
                         <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
                     </a>
                 </div>
             </div>
         
         
-            <h2>创建一个房间, 等待加入后发送</h2>
-            <h2>Create a room, join and send</h2>
+            <h2>分享房间链接后分享你的文件</h2>
+            <h2>Share the link, then share your files</h2>
         
         
         
-            <h3 id="title">创建/加入房间</h3>
-            <hr>
-            <form id="createRoom">
+            <!-- <h3 id="title"></h3> -->
+            <hr> 
+            <!-- <form id="createRoom">
                 <input id="sessionInput" />
-                <button disabled type="submit">加入</button>
-            </form>
-            <p id="subTitle"></p>
+                <button disabled type="submit">创建</button>
+            </form>  -->
+            <h3 id="subTitle"></h3>
             <p id="ownID"> </p>
         
         
         
             <hr>
+            <!-- <p>添加/接收文件:</p> -->
             <div id="remotes"></div>
         
             <hr>
-        
+            <h3 >微信扫一扫支持我们 o(〃'▽'〃)o</h3>
             <div class="row justify-content-center">
                 <div class="col-auto align-self-end px-1">
                     <img class="mb-3" src="{{ url_for('static', filename='images/wechat.png') }}" width="229" height="266">
                 </div>
             </div>
         
-            <p>该网页基于
-                <a href="https://simplewebrtc.com/">simpleWebRTC</a>创建</p>
+            
+
+            <div class="row justify-content-center my-4">
+                <div class="col-md-9 bg-light">
+                    <p>该网页基于
+                            <a href="https://simplewebrtc.com/">simpleWebRTC</a>创建</p>
+                    <p>欢迎在知乎给<a target="_blank" href="https://www.zhihu.com/people/c4rO-0/activities">我们</a>私信</p>
+                </div>
+            </div>      
         </div>
 
 
@@ -307,10 +320,51 @@ webrtc.on('connectivityError', function (peer) {
 });
 
 function setRoom(name) {
-    document.querySelector('form').remove();
-    document.getElementById('title').innerText = '房间号/Room: ' + name;
-    document.getElementById('subTitle').innerText =  'Link to join: ' + location.href;
+    // document.querySelector('form').remove();
+    // document.getElementById('title').innerText = '房间号/Room: ' + name;
+    document.getElementById('subTitle').innerText =  '分享房间链接: ' + location.href;
     $('body').addClass('active');
+}
+
+//=========== 随机或得hash值 =====================\\
+
+//产生一个hash值，只有数字，规则和java的hashcode规则相同
+function hashCode(str) {
+    var h = 0;
+    var len = str.length;
+    var t = 2147483648;
+    for (var i = 0; i < len; i++) {
+        h = 31 * h + str.charCodeAt(i);
+        if (h > 2147483647) h %= t; //java int溢出则取模
+    }
+    /*var t = -2147483648 * 2;
+     while (h > 2147483647) {
+     h += t
+     }*/
+    return h;
+}
+
+function randomWord(randomFlag, min, max) {
+    var str = "",
+        range = min,
+        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    // 随机产生
+    if (randomFlag) {
+        range = Math.round(Math.random() * (max - min)) + min;
+    }
+    for (var i = 0; i < range; i++) {
+        pos = Math.round(Math.random() * (arr.length - 1));
+        str += arr[pos];
+    }
+    return str;
+}
+
+function gethashcode() {
+    //定义一个时间戳，计算与1970年相差的毫秒数  用来获得唯一时间
+    var timestamp = (new Date()).valueOf();
+    var myRandom=randomWord(false,6);
+    var hashcode=hashCode(myRandom+timestamp.toString());
+    return hashcode;
 }
 
 if (room) {
@@ -320,23 +374,23 @@ if (room) {
     });
 } else {
     $('form>button').attr('disabled', null);
-    $('form').submit(function () {
-        var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
-        webrtc.createRoom(val, function (err, name) {
-            console.log(' create room cb', arguments);
-        
-            var newUrl = location.pathname + '?' + name;
-            if (!err) {
-                history.replaceState({foo: 'bar'}, null, newUrl);
-                setRoom(name);
-            } else {
-                console.log(err);
-            }
-        });
-
-        
-        return false;          
+    //$('form').submit(function () { 
+    var val = gethashcode().toString(); 
+    webrtc.createRoom(val, function (err, name) {
+        console.log(' create room cb', arguments);
+    
+        var newUrl = location.pathname + '?' + name;
+        if (!err) {
+            history.replaceState({foo: 'bar'}, null, newUrl);
+            setRoom(name);
+        } else {
+            console.log(err);
+        }
     });
+    // return false; 
+//});
+         
+
 }
         </script>
     </body>
