@@ -1,6 +1,6 @@
 .card.c4r {
     font-family: 'Arial','Microsoft YaHei','黑体',sans-serif;
-    color: #343a40;
+    /* color: #343a40; */
 }
 
 pre {
@@ -14,4 +14,10 @@ p.c4r {
     font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
     font-size: 1.5rem;
     color: #343a40;
+}
+
+p.c4r-year {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 0;
 }
