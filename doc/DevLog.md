@@ -1,4 +1,18 @@
+## 2018Jun6-BS
+* 把书名P到cover存在隐患. 
+* 详情如下:
+    把文字P到图片用命令行
+    大概格式是convert  a.png "test" b.png
+    就会把test放到a图上, 最后生成b
+    但是如果一个人把test换成"; ls -al ;"
+    直接就可以执行命令了
+* 解决方案 :
+目前是发现特殊字符直接去掉
+coverName = (filename.rsplit('.',1)[0]).replace('\'','').replace('\\','').replace('\"','')
+
+
 ## 2018Jun10-BS
+
 * **子模块里需要返回主页的链接**
 * 了联系方式暂定为在知乎给我们留言
 * 
