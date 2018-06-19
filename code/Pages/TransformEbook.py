@@ -123,15 +123,6 @@ def TransformEbook():
                 # 初始化图书
                 
                 
-
-            # 转化封面
-            coverFontFlag = ' -font \'' + os.path.join(Txt2mobiPath,'resources','STHeiti.ttf') + '\''
-            coverFlag = coverFontFlag + ' -gravity North -pointsize 50 -annotate +0+100 '
-            coverName = (filename.rsplit('.',1)[0]).replace('\'','').replace('\\','').replace('\"','')
-            
-            info_o = os.system("convert " + os.path.join(filePath , "cover.png") + coverFlag + '\''  + coverName + '\' ' +os.path.join(filePath , "cover.png"))
-            # print("convert " + os.path.join(filePath , "cover.png") + coverFlag + '\'' + coverName + '\' ' +os.path.join(filePath , "cover.png"))
-            print("转化 : ", info_o, file=sys.stderr)
                 
         else:
             print("unknown submit", file=sys.stderr)
