@@ -88,6 +88,8 @@ def TransformEbook():
             if (not os.path.exists(filePath) ):
                 os.makedirs(filePath) 
             form.file.data.save(os.path.join(filePath , saveFileName))
+
+
             # 保存session
             sessionDelFileUpload()
             print(filename, file=sys.stderr)
@@ -120,26 +122,8 @@ def TransformEbook():
                 init_project(filePath, filename, form.author.data)
                 # 初始化图书
                 
-                #-----------------              
-                # 生成目录
-                # book , TOC = genTOC(DEFAULT_TITLE_FILTER, filePath, saveFileName)
-                # sessionSaveTitleFilter(DEFAULT_TITLE_FILTER)
-
-                # book , TOC = genTOC(None, filePath, saveFileName)
-              
-                # if(book is None):
-                #     return redirect("/TransformEbook")
-                # # 链接目录
-                # # 创建目录
-                # if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName) )):
-                #     os.makedirs(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName)) 
-                # # 连接
-                # # os.link(os.path.join(filePath,'project-TOC.html'), \
-                # # os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName),'project-TOC.html'))
-                # shutil.copy2(os.path.join(filePath,'project-TOC.html'), \
-                # os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName),'project-TOC.html'))    
-                    # sessionSaveTOC(TOC)
-                    # sessionSaveBook(book)
+                
+                
         else:
             print("unknown submit", file=sys.stderr)
         return redirect("/ConfirmTransformEbook")
