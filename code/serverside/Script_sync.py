@@ -34,7 +34,7 @@ for dir in dirs:
                 # 开始备份
                 ## 删除除txt和mobi的其他文件
                 for file in files:
-                    if(file.rsplit('.',1)[1] not in ['txt', 'mobi']):
+                    if(file.rsplit('.',1)[1] not in ['txt', 'mobi'] and file != 'project-TOC.html'):
                         # 删除 
                         os.remove(os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir, file )))
                 ## 备份
