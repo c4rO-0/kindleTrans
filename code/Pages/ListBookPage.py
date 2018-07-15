@@ -3,7 +3,7 @@
 #---------------------------------
 from config import *
 from main  import *
-from flask import Flask, render_template, request, redirect,  url_for, g
+from flask import Flask, render_template, request, redirect,  url_for, g, send_from_directory
 from flask.ext.babel import gettext
 #---------------------------------
 # 上传文件
@@ -39,12 +39,46 @@ import shutil
 
 from flask import jsonify
 
+import re
 
 #=================================
 
-@app.route('/ListBook' , methods = ['GET', 'POST']  )
+@app.route('/ListBook/' , methods = ['GET', 'POST']  )
 def ListBook():
 
+    listBookName  = {}
+    listBookIndex = {}
     with open(os.path.abspath(os.path.join(os.path.dirname(__file__),'..','archive','toc.dat')),'r') as f:
-    lines = f.readlines()
+        for line in f.readlines():
+            
+            tarName, booName = (line.strip('\n')).split('\t',1)
+
+            listBookName[len(listBookName)] = booName
+            listBookIndex[len(listBookIndex)] = tarName
+            
     f.close()
+
+    return render_template('ListBookPage.html.j2', app = app, listBookName = listBookName)
+
+@app.route('/ListBook/<Downloadindex>/<DownloadBookName>')
+def downloadsOthersBook(Downloadindex,DownloadBookName):
+    index = int(Downloadindex)
+    listBookName  = {}
+    listBookIndex = {}
+    with open(os.path.abspath(os.path.join(os.path.dirname(__file__),'..','archive','toc.dat')),'r') as f:
+        for line in f.readlines():
+            
+            tarName, booName = (line.strip('\n')).split('\t',1)
+
+            listBookName[len(listBookName)] = booName
+            listBookIndex[len(listBookIndex)] = tarName
+            
+    f.close()
+
+    if(index <len(listBookName) and listBookName[index] == DownloadBookName):
+        bookPath = os.path.abspath(os.path.join(os.path.dirname(__file__),'..','archive'))
+
+        print(bookPath)
+        return send_from_directory(bookPath, listBookIndex[index]+".tar.gz")
+    else:
+        return redirect('/404/没有找到文件')
