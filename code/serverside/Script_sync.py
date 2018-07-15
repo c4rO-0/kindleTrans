@@ -16,7 +16,7 @@ for dir in dirs:
    timeDot = float(dir.rsplit('-')[0])
    # 判断时间差 超过一天
 
-   if ((timeCurrent-timeDot)/(60.*60.*24.) > 1. ):
+   if ((timeCurrent-timeDot)/(60.*60.*24.) > 0. ):
         # 文件已经超过一天, 进行归档
         ## 首先判断是否含有mobi文件
         files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir)) )
@@ -40,8 +40,8 @@ for dir in dirs:
                 ## 备份
                 if (not os.path.exists(os.path.abspath(os.path.join(os.path.dirname(__file__),'..','archive'))) ):
                     os.makedirs(os.path.abspath(os.path.join(os.path.dirname(__file__),'..','archive')))         
-
-                os.system('tar -czf ' + os.path.abspath(os.path.join(os.path.dirname(__file__),'..','archive', dir )) + ".tar.gz "  + os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir ))) 
+                
+                os.system('tar -czf ' + os.path.abspath(os.path.join(os.path.dirname(__file__),'..','archive', dir )) + ".tar.gz -C "  + os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir)) + " ." ) 
                 ## 写入记录
                 with open(os.path.abspath(os.path.join(os.path.dirname(__file__),'..','archive', 'toc.dat')), 'a+', encoding='UTF-8') as f:
                     f.write(dir+"\t"+title+"\n")
