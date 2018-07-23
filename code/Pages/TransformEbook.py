@@ -46,7 +46,7 @@ class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
     author = StringField('作者')
     upload = SubmitField('upload')
-    share = BooleanField('agreed to share')
+    share = BooleanField('agreed to share',default="checked")
 
 
     def validate_file(self, field):
@@ -77,7 +77,7 @@ def TransformEbook():
         print("-------------------------", file=sys.stderr)
         if(form.upload.data):
             
-
+            # print("共享 : ", form.share.data, file=sys.stderr)
             filename = form.file.data.filename
             # secureFilename = secure_filename(filename)
             saveFileName = str(time.time()) + '-' + visitIP +'.txt'
@@ -120,9 +120,15 @@ def TransformEbook():
                     return redirect("/404/转码失败,请手动转换为gdb或utf-8")
                 #-----------------              
 
-                init_project(filePath, filename, form.author.data)
                 # 初始化图书
-
+                init_project(filePath, filename, form.author.data)
+                # 储存是否保存
+                print("========准备写入==========")
+                with open(os.path.abspath(os.path.join(filePath, '.project.ini')), 'a+', encoding='UTF-8') as f:
+                    print(os.path.abspath(os.path.join(filePath, '.project.ini')))
+                    print("========写入==========")
+                    f.write("\nshare="+str(form.share.data)+"\n")
+                    f.close()
                 
                 
                 
