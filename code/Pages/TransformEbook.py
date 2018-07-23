@@ -10,7 +10,7 @@ from flask.ext.babel import gettext
 import os
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import SubmitField, FieldList, IntegerField, StringField
+from wtforms import SubmitField, FieldList, IntegerField, StringField, BooleanField
 from werkzeug.utils import secure_filename
 
 from wtforms.validators import ValidationError
@@ -46,6 +46,7 @@ class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
     author = StringField('作者')
     upload = SubmitField('upload')
+    share = BooleanField('agreed to share')
 
 
     def validate_file(self, field):
@@ -121,6 +122,7 @@ def TransformEbook():
 
                 init_project(filePath, filename, form.author.data)
                 # 初始化图书
+
                 
                 
                 
