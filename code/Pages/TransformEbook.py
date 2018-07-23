@@ -123,10 +123,10 @@ def TransformEbook():
                 # 初始化图书
                 init_project(filePath, filename, form.author.data)
                 # 储存是否保存
-                print("========准备写入==========")
+                # print("========准备写入==========")
                 with open(os.path.abspath(os.path.join(filePath, '.project.ini')), 'a+', encoding='UTF-8') as f:
-                    print(os.path.abspath(os.path.join(filePath, '.project.ini')))
-                    print("========写入==========")
+                    # print(os.path.abspath(os.path.join(filePath, '.project.ini')))
+                    # print("========写入==========")
                     f.write("\nshare="+str(form.share.data)+"\n")
                     f.close()
                 
