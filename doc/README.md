@@ -98,6 +98,28 @@ Ubuntu/Debain存在bug导致requirements.txt文件里可能存在`pkg-resources=
 
 
 
+### linux环境依赖
+
+因为程序是直接在了linux上运行的, 有一些动作直接调用了linux命令
+
+1. cd
+
+2. enca
+
+   对文本文件进行转码
+
+3. convert
+
+   命令行下P图
+
+4. kindlegen
+
+   amazon发布的转mobi工具. 该工具有windows版本的. 但是项目里默认的是linux版.
+
+   ​
+
+
+
 ### 导出python依赖
 
  ``` bash

@@ -10,7 +10,7 @@ from flask.ext.babel import gettext
 import os
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import SubmitField, FieldList, IntegerField, StringField
+from wtforms import SubmitField, FieldList, IntegerField, StringField, BooleanField
 from werkzeug.utils import secure_filename
 
 from wtforms.validators import ValidationError
@@ -46,6 +46,7 @@ class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
     author = StringField('作者')
     upload = SubmitField('upload')
+    share = BooleanField('agreed to share',default="checked")
 
 
     def validate_file(self, field):
@@ -76,7 +77,7 @@ def TransformEbook():
         print("-------------------------", file=sys.stderr)
         if(form.upload.data):
             
-
+            # print("共享 : ", form.share.data, file=sys.stderr)
             filename = form.file.data.filename
             # secureFilename = secure_filename(filename)
             saveFileName = str(time.time()) + '-' + visitIP +'.txt'
@@ -88,6 +89,8 @@ def TransformEbook():
             if (not os.path.exists(filePath) ):
                 os.makedirs(filePath) 
             form.file.data.save(os.path.join(filePath , saveFileName))
+
+
             # 保存session
             sessionDelFileUpload()
             print(filename, file=sys.stderr)
@@ -117,29 +120,18 @@ def TransformEbook():
                     return redirect("/404/转码失败,请手动转换为gdb或utf-8")
                 #-----------------              
 
-                init_project(filePath, filename, form.author.data)
                 # 初始化图书
+                init_project(filePath, filename, form.author.data)
+                # 储存是否保存
+                # print("========准备写入==========")
+                with open(os.path.abspath(os.path.join(filePath, '.project.ini')), 'a+', encoding='UTF-8') as f:
+                    # print(os.path.abspath(os.path.join(filePath, '.project.ini')))
+                    # print("========写入==========")
+                    f.write("\nshare="+str(form.share.data)+"\n")
+                    f.close()
                 
-                #-----------------              
-                # 生成目录
-                # book , TOC = genTOC(DEFAULT_TITLE_FILTER, filePath, saveFileName)
-                # sessionSaveTitleFilter(DEFAULT_TITLE_FILTER)
-
-                # book , TOC = genTOC(None, filePath, saveFileName)
-              
-                # if(book is None):
-                #     return redirect("/TransformEbook")
-                # # 链接目录
-                # # 创建目录
-                # if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName) )):
-                #     os.makedirs(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName)) 
-                # # 连接
-                # # os.link(os.path.join(filePath,'project-TOC.html'), \
-                # # os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName),'project-TOC.html'))
-                # shutil.copy2(os.path.join(filePath,'project-TOC.html'), \
-                # os.path.join(os.path.join(app.config['UPLOAD_FOLDERTOC'],saveFileName),'project-TOC.html'))    
-                    # sessionSaveTOC(TOC)
-                    # sessionSaveBook(book)
+                
+                
         else:
             print("unknown submit", file=sys.stderr)
         return redirect("/ConfirmTransformEbook")

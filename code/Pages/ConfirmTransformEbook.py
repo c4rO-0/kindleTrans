@@ -134,11 +134,30 @@ def ConfirmTransformEbook():
             if(len(formTran.TOClistindex.data) >0 ):
                 book.combineChapter(formTran.TOClistindex.data)
             #-----------------
-            # 生成项目文件        
-            gen_project(book, titleFilter, fileDict['filePath'], fileDict['saveFileName'])
 
             # 用bookCount代表已经转化完book
             fileDict['bookCount'] = book.book_count()
+
+            # 转化封面
+            coverFontFlag = ' -font \'' + os.path.join(Txt2mobiPath,'resources','STHeiti.ttf') + '\''
+            coverFlag = coverFontFlag + ' -gravity North -pointsize 50 -annotate +0+100 '
+            coverName = (fileDict['filename'].rsplit('.',1)[0]).replace('\'','').replace('\\','').replace('\"','')
+            
+            if(fileDict['bookCount'] == 1):
+                info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\' ' +os.path.join(fileDict['filePath'] , "cover-1.png"))
+                # print("convert " + os.path.join(filePath , "cover.png") + coverFlag + '\'' + coverName + '\' ' +os.path.join(filePath , "cover.png"))
+                print("转化 : ", info_o, file=sys.stderr) 
+            else:
+                for idx in range(1, fileDict['bookCount']+1):
+                    info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\n P-%s\' ' % idx +os.path.join(fileDict['filePath'] , "cover-%s.png" % idx))
+                    print("转化 : ", info_o, file=sys.stderr) 
+                    
+
+
+            # 生成项目文件        
+            gen_project(book, titleFilter, fileDict['filePath'], fileDict['saveFileName'])
+
+
             sessionDelFileUpload()
             info = sessionSaveFileUpload(fileDict)
             if info != 0:
