@@ -77,4 +77,4 @@ class manageMoney(db.Model):
         
 
 
-        return '<%s|'%(self.opName ) + strMode +'|%f'%(self.opMount)+'|%s'%(self.currency)+'|'+strDate +'|%s>'%(self.opLog)
+        return '<%s|'%(self.opName ) + strMode +'|%0.2f'%(self.opMount)+'|%s'%(self.currency)+'|'+strDate +'|%s>'%(self.opLog)

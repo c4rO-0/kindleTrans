@@ -48,6 +48,8 @@ from datetime import datetime
 
 from Script_dbModel import manageMoney
 
+import re
+
 #=================================
 
 def querySQLSum(name,mode,currency):
@@ -161,10 +163,21 @@ def ManageMoney():
                 (0. if(dic_sql_total['deEUR'] == 0) else dic_sql_bs['deEUR']/dic_sql_total['deEUR'])*dic_sql_total['wdEUR'],2)
     }
 
-    
+    idLast = manageMoney.query.order_by('-id').first().id
+    idStart = 1 if idLast < 10 else idLast-10+1
+
+    listStrRecord= []
+    for id in range(idLast,idStart-1,-1):
+        strRecord = manageMoney.query.get(id).__repr__()
+        strRecord = strRecord[1:len(strRecord)-1]
+        # print(re.split('\|',strRecord,5) , file=sys.stderr)
+        listStrRecord.append(re.split('\|',strRecord,5))
+    # print(listStrRecord, file=sys.stderr)
+
+
 
     if form.validate_on_submit():
-        print("-------------------------", file=sys.stderr)
+        # print("-------------------------", file=sys.stderr)
         if(form.comfirm.data): 
             # 获取当前时间 
             opTime = int((datetime.now().timestamp())*1000)
@@ -202,7 +215,7 @@ def ManageMoney():
 
 
 
-    return render_template('ManageMoney.html.j2', app = app, form=form, dicLSQ=dic_aya_lsq, dicBS=dic_aya_bs)
+    return render_template('ManageMoney.html.j2', app = app, form=form, dicLSQ=dic_aya_lsq, dicBS=dic_aya_bs, listStrRecord=listStrRecord)
 
 
 
