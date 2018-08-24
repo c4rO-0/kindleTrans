@@ -64,4 +64,4 @@ class manageMoney(db.Model):
         self.opLog = opLog
 
     def __repr__(self):
-        return '<| Name %r |  Mode %r |>' % self.opName  % self.opMode
+        return '<| Name %r |  Mode %r |>' % (self.opName , self.opMode)

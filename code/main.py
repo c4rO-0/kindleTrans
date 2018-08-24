@@ -39,9 +39,7 @@ app.config['UPLOAD_FOLDERTOC'] = UPLOAD_FOLDERTOC
 from flask.ext.babel import Babel
 babel = Babel(app)
 
-#----------------------------------------------------
-#  append all the components
-from Pages import *
+
 #----------------------------------------------------
 #  interface
 import Script_contextPro
@@ -56,6 +54,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 #-----------------------------------------------------
+#  append all the components
+from Pages import *
+#----------------------------------------------------
 
 #    Run
 if __name__ == '__main__':

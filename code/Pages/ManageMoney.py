@@ -50,6 +50,21 @@ from Script_dbModel import manageMoney
 
 #=================================
 
+def querySQLSum(name,mode,currency):
+
+    listRecord = manageMoney.query.filter_by(opName=name,opMode=mode, currency=currency).all()
+    
+    if (listRecord is None):
+        value = 0
+    else:
+        value = 0
+        for slide in listRecord:
+            # print(name+"|"+str(mode)+"|"+currency+"|"+str(slide.opMount), file=sys.stderr)
+            value = value + slide.opMount
+
+    return value
+
+
 class MoneyRecordForm(FlaskForm):
 
     opName = SelectField(
@@ -69,12 +84,14 @@ class MoneyRecordForm(FlaskForm):
     opMount  = IntegerField()
     currency = SelectField(
         '货币',
-        choices=[('RMB', '人民币'), ('EU', '欧元')]
+        choices=[('RMB', '人民币'), ('EUR', '欧元')]
     )
     opLog = StringField('操作原因', widget=TextArea())
     comfirm = SubmitField('comfirm')
 
-
+    def validate_opLog(self, field):
+        if(len(field.data) == 0):
+            raise ValidationError('缺少操作原因')
 
     # def validate_file(self, field):
     #     print("file check", file=sys.stderr)
@@ -97,6 +114,53 @@ def ManageMoney():
     else:
         # print("访问ip : ",request.environ['HTTP_X_FORWARDED_FOR'], file=sys.stderr) # if behind a proxy
         visitIP = request.environ['HTTP_X_FORWARDED_FOR'] 
+
+
+    # 统计金额
+    dic_sql_lsq = {
+        'wdRMB': querySQLSum("lsq",1,"RMB"),
+        'wdEUR': querySQLSum("lsq",1,"EUR"),
+        'deRMB': querySQLSum("lsq",0,"RMB"),
+        'deEUR': querySQLSum("lsq",0,"EUR")
+    }
+
+    dic_sql_bs = {
+        'wdRMB': querySQLSum("bs",1,"RMB"),
+        'wdEUR': querySQLSum("bs",1,"EUR"),
+        'deRMB': querySQLSum("bs",0,"RMB"),
+        'deEUR': querySQLSum("bs",0,"EUR")
+    }
+
+    # print(dic_sql_lsq, file=sys.stderr)
+    # print("-------------------------", file=sys.stderr)
+    # print(dic_sql_bs, file=sys.stderr)
+
+    dic_sql_total = {
+        'wdRMB': dic_sql_lsq['wdRMB']+dic_sql_bs['wdRMB'],
+        'wdEUR': dic_sql_lsq['wdEUR']+dic_sql_bs['wdEUR'],
+        'deRMB': dic_sql_lsq['deRMB']+dic_sql_bs['deRMB'],
+        'deEUR': dic_sql_lsq['deEUR']+dic_sql_bs['deEUR']
+    }
+
+
+    dic_aya_lsq = {
+        'RMB': round(
+                dic_sql_lsq['deRMB'] - 
+                (0. if (dic_sql_total['deRMB'] == 0) else dic_sql_lsq['deRMB']/dic_sql_total['deRMB'])*dic_sql_total['wdRMB'],2),
+        'EUR': round(
+                dic_sql_lsq['deEUR'] - 
+                (0. if(dic_sql_total['deEUR'] == 0) else dic_sql_lsq['deEUR']/dic_sql_total['deEUR'])*dic_sql_total['wdEUR'],2)
+    }
+
+    dic_aya_bs = {
+        'RMB': round(
+                dic_sql_bs['deRMB'] - 
+                (0. if (dic_sql_total['deRMB'] == 0) else dic_sql_bs['deRMB']/dic_sql_total['deRMB'])*dic_sql_total['wdRMB'],2),
+        'EUR': round(
+                dic_sql_bs['deEUR'] - 
+                (0. if(dic_sql_total['deEUR'] == 0) else dic_sql_bs['deEUR']/dic_sql_total['deEUR'])*dic_sql_total['wdEUR'],2)
+    }
+
     
 
     if form.validate_on_submit():
@@ -131,12 +195,14 @@ def ManageMoney():
             db.session.add(slidRecord)
             db.session.commit()
 
+
+
             return redirect("/ManageMoney")
 
 
 
 
-    return render_template('ManageMoney.html.j2', app = app, form=form)
+    return render_template('ManageMoney.html.j2', app = app, form=form, dicLSQ=dic_aya_lsq, dicBS=dic_aya_bs)
 
 
 
