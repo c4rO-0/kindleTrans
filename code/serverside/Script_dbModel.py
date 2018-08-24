@@ -1,4 +1,6 @@
 from main import db
+from datetime import datetime
+from dateutil import tz
 
 # 类的定义
 
@@ -37,7 +39,7 @@ class manageMoney(db.Model):
     opTime = db.Column(db.Integer)
     recordTime = db.Column(db.Integer)
     opMode = db.Column(db.Integer)
-    opMount = db.Column(db.Integer)
+    opMount = db.Column(db.Float)
     currency = db.Column(db.String(5))
     opLog = db.Column(db.Text)
 
@@ -64,4 +66,15 @@ class manageMoney(db.Model):
         self.opLog = opLog
 
     def __repr__(self):
-        return '<| Name %r |  Mode %r |>' % (self.opName , self.opMode)
+        if (self.opMode == 1):
+            strMode = "取钱"
+        else:
+            strMode = "存钱"
+
+        tzlocal = tz.tzoffset('UTC', 28800) # 转化为北京时间
+        strDate = datetime.fromtimestamp(float(self.recordTime)/1000.,tzlocal).strftime('%Y-%m-%d')
+
+        
+
+
+        return '<%s|'%(self.opName ) + strMode +'|%f'%(self.opMount)+'|%s'%(self.currency)+'|'+strDate +'|%s>'%(self.opLog)
