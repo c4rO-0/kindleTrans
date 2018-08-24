@@ -163,16 +163,20 @@ def ManageMoney():
                 (0. if(dic_sql_total['deEUR'] == 0) else dic_sql_bs['deEUR']/dic_sql_total['deEUR'])*dic_sql_total['wdEUR'],2)
     }
 
-    idLast = manageMoney.query.order_by('-id').first().id
-    idStart = 1 if idLast < 10 else idLast-10+1
-
+    lastRecord = manageMoney.query.order_by('-id').first()
     listStrRecord= []
-    for id in range(idLast,idStart-1,-1):
-        strRecord = manageMoney.query.get(id).__repr__()
-        strRecord = strRecord[1:len(strRecord)-1]
-        # print(re.split('\|',strRecord,5) , file=sys.stderr)
-        listStrRecord.append(re.split('\|',strRecord,5))
-    # print(listStrRecord, file=sys.stderr)
+
+    if(lastRecord is not None):
+        idLast = lastRecord.id
+        idStart = 1 if idLast < 10 else idLast-10+1
+
+        
+        for id in range(idLast,idStart-1,-1):
+            strRecord = manageMoney.query.get(id).__repr__()
+            strRecord = strRecord[1:len(strRecord)-1]
+            # print(re.split('\|',strRecord,5) , file=sys.stderr)
+            listStrRecord.append(re.split('\|',strRecord,5))
+        # print(listStrRecord, file=sys.stderr)
 
 
 

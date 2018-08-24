@@ -53,6 +53,10 @@ from flask_migrate import Migrate
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+from Script_dbModel import manageMoney
+if(not os.path.exists(os.path.join(Project_path, "db", 'app.db') )):
+    db.create_all()
 #-----------------------------------------------------
 #  append all the components
 from Pages import *

@@ -1,6 +1,7 @@
 from main import db
 from datetime import datetime
 from dateutil import tz
+import os
 
 # 类的定义
 
@@ -15,7 +16,6 @@ from dateutil import tz
 
 #     def __repr__(self):
 #         return '<User %r>' % self.username  
-
 
 class manageMoney(db.Model):
     '''
