@@ -72,9 +72,9 @@ function shortAuthor(line){
     let localAuthor = line;
     let listShortName = new Array();
 
-    line.trim().split('and').forEach(function(singleAuthorRaw, i) {
+    line.trim().split(' and ').forEach(function(singleAuthorRaw, i) {
 
-        // console.log(singleAuthorRaw)
+        console.log(singleAuthorRaw)
         let shortName = '';
         // 名字分为有逗号和没逗号两种
         let listSingleName = singleAuthorRaw.trim().split(',');
@@ -103,7 +103,7 @@ function shortAuthor(line){
         }
 
         // return shortName
-        // console.log(listShortName)
+        console.log(listShortName)
     })
     
     if(listShortName.length > 1){
@@ -227,7 +227,7 @@ $(document).ready(function () {
 
         listSlideBibtex.reverse().forEach(function(slideBibtex, i) {
 
-            // console.log("=========", i, "==========");
+            console.log("=========", i, "==========");
             // console.log(slideBibtex);
             // console.log(convertPRB(slideBibtex))
             strSlide = convertPRB(slideBibtex);
