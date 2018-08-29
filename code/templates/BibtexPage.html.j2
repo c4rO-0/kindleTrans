@@ -16,8 +16,10 @@
 	<link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>		
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>	
+    
     	
 	<!-- our own scripts -->  
     <script src="{{ url_for('static', filename='Scripts/TransformEbook.js') }}"></script>
@@ -42,10 +44,20 @@
                     <img  class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
                 </a>
             </div>
-        </div>   
-    
+
+        </div>  
+        <div class="row justify-content-center">
+            <div class="col-auto align-self-end px-1">
+                <p class="align-text-bottom" style="font-size:1.5rem">The website is still updating. Please use '<b>ctrl+F5</b>' to reload script.</p>
+            </div>
+        </div> 
+
         
         <div class="form-group">
+            <select id="format" class="custom-select " >
+                <option value="APS">APS</option>
+                <option value="Nature Physics">Nature Physics</option>
+              </select>
 
             <textarea id="bibtex" rows="10" class="form-control rounded-0" placeholder="paste Bibtex here. @article{...."></textarea>
         </div>
@@ -57,6 +69,13 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-auto mb-3">
+            <a class="btn btn-outline-primary btn-lg" href="http://ref.lexique.org/"> Bibtex to APA </a>
+            <a class="btn btn-outline-primary btn-lg" href="http://latex2png.com/"> Latex math to png</a>
+        </div>
+
+
 
 
         <div class="col-auto">
