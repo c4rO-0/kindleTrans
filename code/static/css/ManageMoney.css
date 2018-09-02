@@ -1,5 +1,5 @@
 body { 
-    background: url(/static/images/ToBeWithYou.webp) no-repeat center center fixed; 
+    background: url(/static/images/ToBeWithYou.png) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -13,7 +13,8 @@ body {
 }
 
 .bx-color {
-    background-color: #c9e8ded6;
+    /* background-color: #c9e8ded6; */
+    background-color: #ead7f0c9;
 }
 
 .bx-font {
