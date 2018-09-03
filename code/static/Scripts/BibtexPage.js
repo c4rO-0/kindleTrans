@@ -143,26 +143,26 @@ function shortAuthorNature(line) {
         // 名字分为有逗号和没逗号两种
         let listSingleName = singleAuthorRaw.trim().split(',');
         if (listSingleName.length == 1) {
-            // 没逗号，以空格区分， 保持原有顺序, 只有最后一个词不缩写
+            // 没逗号，以空格区分
             listSingleName = listSingleName[0].trim().split(' ');
 
             listSingleName.forEach((word, i) => {
 
                 if (i < listSingleName.length - 1) {
                     if (word.indexOf("-") > -1) {
-                        shortName = shortName + word[0] + '.-' + word[word.indexOf("-") + 1] + '., '
+                        shortName = shortName + word[0] + '.-' + word[word.indexOf("-") + 1] + '. '
                     } else {
-                        shortName = shortName + word[0] + '., '
+                        shortName = shortName + word[0] + '. '
                     }
                 } else {
-                    shortName = shortName + word + ', '
+                    shortName = word + ', ' + shortName 
                 }
 
 
             })
             // shortName = shortName.substr(0,shortName.length-2) + listSingleName[listSingleName.length-1].substr(1)
 
-            listShortName.push(shortName)
+            listShortName.push(shortName.trim() + ', ')
 
         } else if (listSingleName.length == 2) {
             // 有逗号 
@@ -170,16 +170,16 @@ function shortAuthorNature(line) {
             listSingleName[1].trim().split(' ').forEach((word, i) => {
 
                 if (word.indexOf("-") > -1) {
-                    shortName = shortName + word[0] + '.-' + word[word.indexOf("-") + 1] + '., '
+                    shortName = shortName + word[0] + '.-' + word[word.indexOf("-") + 1] + '. '
                 } else {
-                    shortName = shortName + word[0] + '., '
+                    shortName = shortName + word[0] + '. '
                 }
 
 
             })
             // shortName = shortName + listSingleName[0].trim()
 
-            listShortName.push(shortName)
+            listShortName.push(shortName.trim() + ', ')
         } else {
             // 有两个逗号, 返回空
             return null;
@@ -195,9 +195,9 @@ function shortAuthorNature(line) {
     }
 
     if (listShortName.length == 2) {
-        return listShortName.join("");
+        return listShortName.join("").trim();
     } else {
-        return listShortName.join("");
+        return listShortName.join("").trim();
     }
 
 
