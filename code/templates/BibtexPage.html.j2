@@ -2,25 +2,26 @@
 <html>
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <title>{{ gettext("Bibtex2Text") }}</title>
 
     {# 标签logo #}
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">      
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">
 
-	<script src="{{ url_for('static', filename='Scripts/jquery-3.3.1.js') }}"></script>		
-	<link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	
+    <script src="{{ url_for('static', filename='Scripts/jquery-3.3.1.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
+    <!-- <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	 -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>		
-    	
-	<!-- our own scripts -->  
-    <script src="{{ url_for('static', filename='Scripts/TransformEbook.js') }}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+
+
+    <!-- our own scripts -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="{{ url_for('static', filename='Scripts/BibtexPage.js') }}"></script>
@@ -31,50 +32,75 @@
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-auto align-self-center">
-                <h1 style="font-size:4rem; color:dimgray">Bibtex<span style="color:red" ><font >2</font></span>Cite</h1>
+            <div class="col-auto align-self-center px-0">
+                <h1 style="font-size:4rem; color:dimgray">Bibtex<span style="color:red"><font>2</font></span>Cite</h1>
             </div>
             <div class="col-auto align-self-end px-1">
                 <p class="align-text-bottom">Powered by</p>
             </div>
             <div class="col-auto align-self-end px-1">
                 <a href="{{url_for('AboutUsPage')}}">
-                    <img  class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
+                    <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
                 </a>
             </div>
-        </div>   
-    
-        
-        <div class="form-group">
-
-            <textarea id="bibtex" rows="10" class="form-control rounded-0" placeholder="paste Bibtex here. @article{...."></textarea>
         </div>
+
         <div class="row justify-content-center">
-            <div class="col-auto">
-                <div class="input-group mb-3">
-                    <a id="confirm" class="btn btn-outline-primary btn-lg"> confirm </a>
-                    <a id="clearBibtex" class="btn btn-outline-primary btn-lg"> clear Bibtex </a>
+            <div class="col align-self-end px-1">
+                <p class="align-text-bottom" style="font-size:1.5rem;">
+                    <!-- The website is still updating. Please use '<b>ctrl+F5</b>' to reload script.</p> -->
+                    We are keeping improving this tool. </br>
+                    Please use '<b>ctrl+F5</b>' frequently to load latest scripts.</p>
+            </div>
+        </div>
+
+        <div class="row mb-1">
+            <div class="col">
+                <div class="input-group">
+                    <textarea id="bibtex" rows="10" class="form-control rounded-0" placeholder="paste Bibtex here. @article{...."></textarea>
                 </div>
             </div>
         </div>
 
-
-        <div class="col-auto">
-            <div class="input-group mb-3">
-                <a id="clearCite" class="btn btn-outline-primary btn-lg"> clear Cite</a>
+        <div class="row mb-3">
+            <div class="col-auto">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text">Format</label>
+                    </div>
+                    <select class="custom-select" id="format">
+                        <option value="APS">APS</option>
+                        <option value="Nature Physics">Nature Physics</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button id="confirm" class="btn btn-primary"> confirm </button>
+                        <button id="clearBibtex" class="btn btn-outline-secondary"> clear Bibtex </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <a class="btn btn-link" href="http://ref.lexique.org/"> Bibtex to APA </a>
+                <a class="btn btn-link" href="http://latex2png.com/"> Latex math to png</a>
             </div>
         </div>
-        <div id="ref">
-            <div id="refError" >
 
-            </div>            
-            <hr>
-            <div id="refList">
+        <div class="row justify-content-center">
+            <div class="col">
+                <div id="ref">
+                    <div id="refError">
 
+                    </div>
+                    <hr>
+                <div class="input-group mb-3">
+                    <a id="clearCite" class="btn btn-outline-primary"> clear Cite</a>
+                </div>
+                    <div id="refList">
+
+                    </div>
+                </div>
             </div>
         </div>
-    </div>  
-
-
+    </div>
 </body>
+
 </html>
