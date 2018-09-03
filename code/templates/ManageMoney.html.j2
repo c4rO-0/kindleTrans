@@ -14,196 +14,185 @@
 
 	<script src="{{ url_for('static', filename='Scripts/jquery-3.3.1.js') }}"></script>		
 	<link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	
+    <link href="{{ url_for('static', filename='css/ManageMoney.css') }}" rel="stylesheet" type="text/css">	
+    <link href="{{ url_for('static', filename='css/fonts/fonts.css') }}" rel="stylesheet" type="text/css">	
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>		
     	
 	<!-- our own scripts -->  
-    <script src="{{ url_for('static', filename='Scripts/TransformEbook.js') }}"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="{{ url_for('static', filename='Scripts/ManageMoney.js') }}"></script>
-
-
 </head>
 
-<body>
+<body class="bx-font">
     <div class="container">
 
         <div class="row justify-content-center">
-                <div class="col-auto align-self-center">
-                    <h1 style="font-size:4rem; color:dimgray">B<span style="color:red" ><font size="9">¥€</font></span>X</h1>
-                </div>
-                <div class="col-auto align-self-end px-1">
-                    <p class="align-text-bottom">Powered by</p>
-                </div>
-                <div class="col-auto align-self-end px-1">
-                    <a href="{{url_for('AboutUsPage')}}">
-                        <img  class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
-                    </a>
-                </div>
-        </div>   
-        
-        <div class="row justify-content-center">
-                <div class="col-md-7">
-                    <h5> 总金额 </h5>
-                    <p id="total-rmb">  {{dicBS["RMB"]+dicLSQ["RMB"]}}块钱 </p>
-                    <p id="total-EUR">  {{dicBS["EUR"]+dicLSQ["EUR"]}}欧元 </p>
-
-                    <h4> 毕升 </h4>
-                    <p id="bs-rmb"> {{dicBS["RMB"]}}块钱 </p>
-                    <p id="bs-EUR"> {{dicBS["EUR"]}}欧元 </p> 
-
-                    <h4> 刘士琦 </h4>
-                    <p id="lsq-rmb"> {{dicLSQ["RMB"]}}块钱 </p>
-                    <p id="lsq-EUR"> {{dicLSQ["EUR"]}}欧元 </p>                                        
-                </div>
+            <div class="col-auto align-self-center">
+                <h1 style="font-size:4rem; color:dimgray">B<span style="color:red"><font size="9">¥€</font></span>X</h1>
+            </div>
+            <div class="col-auto align-self-end px-1">
+                <p class="align-text-bottom">Powered by</p>
+            </div>
+            <div class="col-auto align-self-end px-1">
+                <a href="{{url_for('AboutUsPage')}}">
+                    <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
+                </a>
+            </div>
         </div>
+        
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-8 col ml-3">
+                <div class="row">
+                    <div class="col-auto bx-color bx-font">
+                        <h4> 总金额 </h5>
+                        <p id="total-rmb"> {{dicBS["RMB"]+dicLSQ["RMB"]}} 块钱 </p>
+                        <p id="total-EUR"> {{dicBS["EUR"]+dicLSQ["EUR"]}} 欧元 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-4 col ml-3 pl-4">
+                <div class="row">
+                    <div class="col-auto bx-color">
+                        <h5> 毕升 </h4>
+                        <p id="bs-rmb"> {{dicBS["RMB"]}} 块钱 </p>
+                        <p id="bs-EUR"> {{dicBS["EUR"]}} 欧元 </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col ml-3 pl-4">
+                <div class="row">
+                    <div class="col-auto bx-color">
+                        <h5> 刘士琦 </h4>
+                        <p id="lsq-rmb"> {{dicLSQ["RMB"]}} 块钱 </p>
+                        <p id="lsq-EUR"> {{dicLSQ["EUR"]}} 欧元 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <form  id="formUpload" method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-
-
-
-            <div class="row justify-content-center">
-
-                <div class="col-md-7 align-self-center">
-
-
-                        <div class="input-group mb-3 w-75">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">是谁</span>
-                            </div>
-                            {{ form.opName(class="form-control") }}
-                            
+            <div class="form-row justify-content-center">
+                <div class="form-group col-md-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">是谁</label>
                         </div>
-    
-                </div>
-
-                <div class="col-md-7 align-self-center">
-
-
-                        <div class="input-group mb-3 w-75">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">干啥</span>
-                            </div>
-                            {{ form.opMode(class="form-control") }}
-                            
-                        </div>
-    
-                </div>
-
-                <div class="col-md-7 align-self-center">
-
-
-                        <div class="input-group mb-3 w-75">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">金额</span>
-                            </div>
-                            {{ form.opMount(class="form-control") }}                          
-                        </div>
-                        {# 输出错误 #}
-                        {% if form.opMount.errors %}
-                            <div id="error-opMount" class="alert alert-danger mb-3 w-75" role="alert">
-                                    {% for error in form.opMount.errors  %}
-                                        <p>金额 : {{ error }}</p>
-                                    {% endfor %}
-                            </div>  
-                        {% endif %}
-                </div>
-            
-                
-                <div class="col-md-7 align-self-center">
-
-
-                        <div class="input-group mb-3 w-75">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">货币</span>
-                            </div>
-                            {{ form.currency(class="form-control") }}
-                            
-                        </div>
-    
-                </div>    
-
-                <div class="col-md-7 align-self-center">
-
-
-                        <div class="input-group mb-3 w-75">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">日期</span>
-                            </div>
-                            {{ form.recordTime(class="form-control", placeholder=gettext("日期")) }}
-
-                            {{ form.recordZone(class="form-control", placeholder=gettext("时区")) }}
-                        </div>
-    
-                </div>           
-                
-                <div class="col-md-7 align-self-center">
-
-
-                        <div class="form-group mb-3 w-75">
-                            <div class="form-group">
-                                <span class="input-group-text">日志</span>
-                            </div>
-                            {{ form.opLog(class="form-control",rows="3") }}
-    
-                        </div>
-                        {# 输出错误 #}
-                        {% if form.opLog.errors %}
-                            <div id="error-opLog" class="alert alert-danger mb-3 w-75" role="alert">
-                                    {% for error in form.opLog.errors  %}
-                                        <p>日志 : {{ error }}</p>
-                                    {% endfor %} 
-                            </div>  
-                        {% endif %}
-                </div>    
-            </div>
-
-
-
-            <div class="row justify-content-center">
-                    <div class="col-auto">
-                        <div class="input-group mb-3">
-                            {{ form.comfirm(class="btn btn-outline-primary btn-lg", value="提交") }}
-                            <!-- <input class="btn btn-outline-primary btn-lg" type="submit" value="Submit"> -->
-                        </div>
+                        {{ form.opName(class="form-control bx-color") }}
                     </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">干啥</label>
+                        </div>
+                        {{ form.opMode(class="form-control bx-color") }}
+                    </div>
+                </div>
             </div>
 
+            <div class="form-row justify-content-center">
+                <div class="form-group col-md-5">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">金额</label>
+                        </div>
+                        {{ form.opMount(class="form-control bx-color") }}                          
+                    </div>
+                    {# 输出错误 #}
+                    {% if form.opMount.errors %}
+                    <div id="error-opMount" class="alert alert-danger mb-3 w-75" role="alert">
+                        {% for error in form.opMount.errors  %}
+                            <p>金额 : {{ error }}</p>
+                        {% endfor %}
+                    </div>  
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">货币</label>
+                        </div>
+                        {{ form.currency(class="form-control bx-color") }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row justify-content-center">
+                <div class="form-group col-md-8 col">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">日期</label>
+                        </div>
+                        {{ form.recordTime(class="form-control bx-color", placeholder=gettext("日期")) }}
+                        {{ form.recordZone(class="form-control bx-color", placeholder=gettext("时区")) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row justify-content-center">
+                <div class="form-group col-md-8 col">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">日志</span>
+                        </div>
+                        {{ form.opLog(class="form-control bx-color",rows="3") }}
+                    </div>
+                    {# 输出错误 #}
+                    {% if form.opLog.errors %}
+                    <div id="error-opLog" class="alert alert-danger mb-3 w-75" role="alert">
+                    {% for error in form.opLog.errors  %}
+                        <p>日志 : {{ error }}</p>
+                    {% endfor %} 
+                    </div>  
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row justify-content-center">
+                <div class="form-group col-auto">
+                    <div class="input-group">
+                        {{ form.comfirm(class="btn btn-outline-primary btn-lg bx-color", value="提交") }}
+                        <!-- <input class="btn btn-outline-primary btn-lg" type="submit" value="Submit"> -->
+                    </div>
+                </div>
+            </div>
         </form>  
 
-        <table class="table">
-            {# listStrRecord 是列表. 每一个元素存取的是一条记录.#}
-            <thead>
+        <div class="table-responsive">
+            <table class="table bx-color">
+                {# listStrRecord 是列表. 每一个元素存取的是一条记录.#}
+                <thead>
                     <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">Action</th>
-                      <th scope="col">Amount</th>
-                      <th scope="col">Currency</th>
-                      <th scope="col">Date(Beijing)</th>
-                      <th scope="col">Reason</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Date(Beijing)</th>
+                        <th scope="col" style="text-align:center">Reason</th>
                     </tr>
-            </thead>
-            <tbody>
-            {% for slideRecord in listStrRecord %}
-
-                <tr>
-                    {# 每个记录还是一个列表. 按照 '姓名 动作 钱数 货币 时间 原因' 储存#}
-                    {% for word in slideRecord %}
+                </thead>
+                <tbody>
+                    {% for slideRecord in listStrRecord %}
+                    <tr>
+                        {# 每个记录还是一个列表. 按照 '姓名 动作 钱数 货币 时间 原因' 储存#} {% for word in slideRecord %}
                         <td>
-                           {{ word }}
+                            <div class="td-fix-height">
+                                {{ word }}
+                            </div>
                         </td>
+                        {% endfor %}
+                    </tr>
                     {% endfor %}
-                </tr>
-
-            {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>  
-
-
 </body>
 </html>
