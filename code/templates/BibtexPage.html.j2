@@ -16,7 +16,7 @@
     <script src="{{ url_for('static', filename='js/jquery-ui-v1.12.1.js') }}"></script>
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
     <!-- <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	 -->
-    
+
     <link href="{{ url_for('static', filename='css/jquery-ui-v1.12.1.css') }}" rel="stylesheet" type="text/css">
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/popper-v1.12.5.min.js') }}"></script>
@@ -26,14 +26,28 @@
     <!-- our own scripts -->
     <script src="{{ url_for('static', filename='Scripts/BibtexPage.js') }}"></script>
 
+    <!-- ad scripts -->
+    <!-- Begin BidVertiser code -->
+    <!-- <SCRIPT data-cfasync="false" SRC="//bdv.bidvertiser.com/BidVertiser.dbm?pid=807493&bid=1943999" TYPE="text/javascript"></SCRIPT> -->
+    <!-- End BidVertiser code -->
+    <!-- Global ad -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-6940136403546385",
+            enable_page_level_ads: true
+        });
+    </script>
+
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119134846-1"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'UA-119134846-1');
+        gtag('config', 'UA-119134846-1');
     </script>
 
 
@@ -43,7 +57,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-auto align-self-center px-0">
-                <h1 style="font-size:4rem; color:dimgray">Bibtex<span style="color:red"><font>2</font></span>Cite</h1>
+                <h1 style="font-size:4rem; color:dimgray">Bibtex<span style="color:red">
+                        <font>2</font>
+                    </span>Cite</h1>
             </div>
             <div class="col-auto align-self-end px-1">
                 <p class="align-text-bottom">Powered by</p>
@@ -101,9 +117,9 @@
 
                     </div>
                     <hr>
-                <div class="input-group mb-3">
-                    <a id="clearCite" class="btn btn-outline-primary"> clear Cite</a>
-                </div>
+                    <div class="input-group mb-3">
+                        <a id="clearCite" class="btn btn-outline-primary"> clear Cite</a>
+                    </div>
                     <div id="refList">
 
                     </div>
