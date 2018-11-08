@@ -55,6 +55,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from Script_dbModel import manageMoney
+if(not os.path.exists(os.path.join(Project_path, "db") )):
+    os.makedirs(os.path.join(Project_path, "db"))
 if(not os.path.exists(os.path.join(Project_path, "db", 'app.db') )):
     db.create_all()
 #-----------------------------------------------------
