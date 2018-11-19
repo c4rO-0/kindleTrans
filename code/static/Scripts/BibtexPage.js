@@ -51,7 +51,7 @@ function splitAllBibtex(allBibtex) {
 
 function journalAbbreviation(journal) {
 
-    if(journal.split(" ").length == 1){
+    if (journal.split(" ").length == 1) {
         return journal
     }
 
@@ -447,13 +447,40 @@ $(document).ready(function () {
 }\
         "
     );
-    $("#confirm").trigger("click");
+
+
+    // 检查cookie
+    if (typeof (Storage) !== "undefined") {
+        // Code for localStorage/sessionStorage.
+        let BibTexHistory = localStorage.getItem("BibtexHistory");
+        if (BibTexHistory == undefined || BibTexHistory == '') {
+            // console.log("click")
+            setTimeout(() => {
+                $("#confirm").trigger("click");
+            }, 10);
+
+        } else {
+            // console.log(BibTexHistory.length)
+            $("#refList").prepend(BibTexHistory)
+        }
+    } else {
+        // Sorry! No Web Storage support..
+        console.log("Web Storage support")
+    }
+
 
 
 
     $("#clearCite").click(function () {
         $("#refError").empty();
         $("#refList").empty();
+        if (typeof (Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            localStorage.setItem('BibtexHistory', '');
+        } else {
+            // Sorry! No Web Storage support..
+            console.log("Web Storage support")
+        }
     });
 
     $("#clearBibtex").click(function () {
@@ -490,66 +517,117 @@ $(document).ready(function () {
                 // $("#refError").prepend(
                 //     "<p style='color:red'>" + strSlide + "</p>"
                 // );
-                insertStr = insertStr+ "<p style='color:red' name='error'>" + strSlide + "</p>"
+                insertStr = insertStr + "<p style='color:red' name='error'>" + strSlide + "</p>"
             } else {
-                
+
                 // $("#refList").prepend(
                 //     "<p name='cite'>" +strSlide+  "</p>"
                 // );
-                insertStr = insertStr+ "<p name='cite-slide'>" +strSlide+  "</p>"
+                insertStr = insertStr + "<p name='cite-slide'>" + strSlide + "</p>"
             }
 
         })
-        insertStr = "<div name='cite-all'>" + insertStr + "</div"
+        insertStr = "<div name='cite-all'>" + insertStr + "</div>"
+        insertStr = insertStr + "<div name='rawCite' style='display: none;'>" + allBibtex + "</div>"
 
 
-        let strbutton = "<button id='cp2Clipboard' type='button' class='btn-xs btn-outline-secondary'><i class='fa fa-clipboard'></i></button>"
+        let strbuttonCopy = "<button id='cp2Clipboard' type='button' class='btn-xs btn-outline-secondary' title='copy to clipboard'><i class='fa fa-clipboard'></i></button>"
+        let strbuttonBack = "<button id='rollBack' type='button' class='btn-xs btn-outline-secondary'><i class='fas fa-backward' title='rall back the BibTex content'></i></button>"
+
         // $("#refList").prepend(
         //     "<hr>",
         //     "<p name='time'> <span style='color:green'>" + (new Date()).format("yyyy-MM-dd hh:mm:ss") + "</span> | " + format + " | "+ strbutton + "</p>"
         // );
 
-        insertStr = "<p name='time'> <span style='color:green'>" + (new Date()).format("yyyy-MM-dd hh:mm:ss") + "</span> | " + format + " | "+ strbutton + "</p>" + insertStr
+        insertStr = "<p name='time'> <span style='color:green'>"
+            + (new Date()).format("yyyy-MM-dd hh:mm:ss")
+            + "</span> | "
+            + "<span name='format'> " + format + "</span>"
+            + " | " + strbuttonCopy
+            + " | " + strbuttonBack
+            + "</p>" + insertStr
+
+
+        insertStr = "<span name='chunk'><hr><div>"+insertStr+"</div></span>"
         $("#refList").prepend(
-            "<hr>",
-            "<div>" + insertStr + "</div>"
-        );   
+            insertStr
+        );
+
+
+        // 保存在cookie
+        // Cookies.set('BibtexHistory', $("#refList").html());
+        // console.log($("#refList").html().length)
+        // console.log("-----------------")
+        // console.log($("#refList").html())
+        if (typeof (Storage) !== "undefined") {
+            // Code for localStorage/sessionStorage.
+            // let $("#refList") = 
+
+            // console.log($("#refList").children("span[name='chunk']:lt(4)"))
+            let container = ""
+            $("#refList").children("span[name='chunk']:lt(50)").toArray().forEach((val)=>{
+                
+                // console.log($(val).prop('outerHTML'))
+                container = container+$(val).prop('outerHTML')
+            })
+            // console.log(container)
+            localStorage.setItem('BibtexHistory', container);
+        } else {
+            // Sorry! No Web Storage support..
+            console.log("Web Storage support")
+        }
     })
 
-    $(document).on("click","#cp2Clipboard", function(){
-        console.log("copy")
-        
-        let objdiv= $(this).closest("div").find("div[name='cite-all']")
-        console.log(objdiv)
-        // $(objdiv).focus();
-        // $(objdiv).select().createTextRange();
-        // document.execCommand('copy');
+    // 复制
+    $(document).on("click", "#cp2Clipboard", function () {
+        // console.log("copy")
 
-        // var $temp = $("<input>");
-        // $("body").append($temp);
-        // $temp.val($(objdiv).text()).select();
-        // document.execCommand("copy");
-        // $temp.remove();        
+        let objdiv = $(this).closest("div").find("div[name='cite-all']")
+        // console.log(objdiv)
+
 
         function listener(e) {
 
             let str = ""
-            $(objdiv).find("p[name='cite-slide']").toArray().forEach((cvalue,index)=>{
-                str = str + $(cvalue).text() +"\n"
+            $(objdiv).find("p[name='cite-slide']").toArray().forEach((cvalue, index) => {
+                str = str + $(cvalue).text() + "\n"
             })
-            str = str.substr(0, str.length-1)
+            str = str.substr(0, str.length - 1)
 
             // 带格式复制
             e.clipboardData.setData("text/html", $(objdiv).html());
             // 不带格式复制
             e.clipboardData.setData("text/plain", str);
             e.preventDefault();
-          }
-          document.addEventListener("copy", listener);
-          document.execCommand("copy");
-          document.removeEventListener("copy", listener);
-        
+        }
+        document.addEventListener("copy", listener);
+        document.execCommand("copy");
+        document.removeEventListener("copy", listener);
+
     })
+
+    // 重新加载历史
+    $(document).on("click", "#rollBack", function () {
+
+
+        let objdiv = $(this).closest("div")
+
+        // 粘贴内容
+        $("textarea#bibtex").val($(objdiv).find("div[name='rawCite']").text())
+
+        // 改变格式
+        let format = $(objdiv).find("span[name='format']").text().trim()
+        $("#format").val(format)
+
+
+        $("#frameTextarear").addClass("border border-primary")
+        setTimeout(() => {
+            $("#frameTextarear").removeClass("border border-primary")
+        }, 1000);
+
+    })
+
+
 })
 
 
