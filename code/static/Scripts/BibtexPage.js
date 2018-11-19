@@ -532,7 +532,7 @@ $(document).ready(function () {
 
 
         let strbuttonCopy = "<button id='cp2Clipboard' type='button' class='btn-xs btn-outline-secondary' title='copy to clipboard'><i class='fa fa-clipboard'></i></button>"
-        let strbuttonBack = "<button id='rollBack' type='button' class='btn-xs btn-outline-secondary'><i class='fas fa-backward' title='rall back the BibTex content'></i></button>"
+        let strbuttonBack = "<button id='rollBack' type='button' class='btn-xs btn-outline-secondary'  title='rall back the BibTex content'><i class='fas fa-backward'></i></button>"
 
         // $("#refList").prepend(
         //     "<hr>",
