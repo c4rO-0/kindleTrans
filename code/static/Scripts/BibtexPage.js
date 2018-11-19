@@ -472,6 +472,7 @@ $(document).ready(function () {
         let listSlideBibtex = splitAllBibtex(allBibtex);
 
 
+        let insertStr = ''
         listSlideBibtex.reverse().forEach(function (slideBibtex, i) {
 
             console.log("=========", i, "==========");
@@ -486,22 +487,68 @@ $(document).ready(function () {
 
             // 插入
             if (strSlide.indexOf("<b> Not Supported</b>") > -1) {
-                $("#refError").prepend(
-                    "<p style='color:red'>" + strSlide + "</p>"
-                );
+                // $("#refError").prepend(
+                //     "<p style='color:red'>" + strSlide + "</p>"
+                // );
+                insertStr = insertStr+ "<p style='color:red' name='error'>" + strSlide + "</p>"
             } else {
-                $("#refList").prepend(
-                    "<p>" + strSlide + "</p>"
-                );
+                
+                // $("#refList").prepend(
+                //     "<p name='cite'>" +strSlide+  "</p>"
+                // );
+                insertStr = insertStr+ "<p name='cite-slide'>" +strSlide+  "</p>"
             }
 
         })
+        insertStr = "<div name='cite-all'>" + insertStr + "</div"
+
+
+        let strbutton = "<button id='cp2Clipboard' type='button' class='btn-xs btn-outline-secondary'><i class='fa fa-clipboard'></i></button>"
+        // $("#refList").prepend(
+        //     "<hr>",
+        //     "<p name='time'> <span style='color:green'>" + (new Date()).format("yyyy-MM-dd hh:mm:ss") + "</span> | " + format + " | "+ strbutton + "</p>"
+        // );
+
+        insertStr = "<p name='time'> <span style='color:green'>" + (new Date()).format("yyyy-MM-dd hh:mm:ss") + "</span> | " + format + " | "+ strbutton + "</p>" + insertStr
         $("#refList").prepend(
             "<hr>",
-            "<p > <span style='color:green'>" + (new Date()).format("yyyy-MM-dd hh:mm:ss") + "</span> | " + format + "</p>"
-        );
+            "<div>" + insertStr + "</div>"
+        );   
+    })
 
+    $(document).on("click","#cp2Clipboard", function(){
+        console.log("copy")
+        
+        let objdiv= $(this).closest("div").find("div[name='cite-all']")
+        console.log(objdiv)
+        // $(objdiv).focus();
+        // $(objdiv).select().createTextRange();
+        // document.execCommand('copy');
 
+        // var $temp = $("<input>");
+        // $("body").append($temp);
+        // $temp.val($(objdiv).text()).select();
+        // document.execCommand("copy");
+        // $temp.remove();        
+
+        function listener(e) {
+
+            let str = ""
+            $(objdiv).find("p[name='cite-slide']").toArray().forEach((cvalue,index)=>{
+                str = str + $(cvalue).text() +"\n"
+            })
+            str = str.substr(0, str.length-1)
+
+            // 带格式复制
+            e.clipboardData.setData("text/html", $(objdiv).html());
+            // 不带格式复制
+            e.clipboardData.setData("text/plain", str);
+            e.preventDefault();
+          }
+          document.addEventListener("copy", listener);
+          document.execCommand("copy");
+          document.removeEventListener("copy", listener);
+        
     })
 })
 
