@@ -56,7 +56,7 @@ function journalAbbreviation(journal) {
     }
 
 
-    let similarity = 0.5
+    let similarity = 0.8
     let reName = journal
     let fuzzy = FuzzySet();
     fuzzy.add(journal)
