@@ -627,7 +627,7 @@ $(document).ready(function () {
 
     })
 
-
+    // customization
     $('#format').on('change', () => {
         let format = $("#format").val();
         if(format == 'customization'){
@@ -658,6 +658,21 @@ $(document).ready(function () {
         filter: '.sortable-disabled',
         chosenClass: 'active'
       });
+
+      $("#folding").on("click", ()=>{
+        //   console.log('click ... ')
+          if($('#customization-list').is(':visible')){
+            $('#customization-list').hide()
+          }else{
+            $('#customization-list').show()
+          }
+
+          if($('#customization-button [name="cite-all"]').is(':visible')){
+            $('#customization-button [name="cite-all"]').hide()
+          }else{
+            $('#customization-button [name="cite-all"]').show()
+          }
+      })
       
 
 })
