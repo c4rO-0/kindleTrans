@@ -119,20 +119,22 @@
         </div>
 
         {# 尝试拖拽 #}
-        <div class="row mb-3">
+        <div class="row mb-3" id='customization-form' style='display:none;'>
             <div class="col">
-                <ul class="list-group" id="demo1">
-                    <div class="list-group-item">Title</div>
-                    <div class="list-group-item">issue/number</div>
+                <ul class="list-group" id="comCandidate">
+                    <div class="list-group-item" value='title'>Title</div>
+                    <div class="list-group-item" value='issue'>issue/number</div>
+                    <div class="list-group-item" value='auther:np'>auther: Nature Physics</div>
+                    <div class="list-group-item" value='auther:fn'>auther: Full Name</div>
                 </ul>
             </div>
             <div class="col">
-                <ul class="list-group mt-4" id="demo2">
-                    <div class="list-group-item">auther</div>
-                    <div class="list-group-item">Jornal</div>
-                    <div class="list-group-item">volume</div>
-                    <div class="list-group-item">page</div>
-                    <div class="list-group-item">Year</div>
+                <ul class="list-group mt-4" id="comItem">
+                    <div class="list-group-item" value='auther:aps'>auther: APS</div>
+                    <div class="list-group-item" value='jornal'>Jornal</div>
+                    <div class="list-group-item" value='volume'>volume</div>
+                    <div class="list-group-item" value='page'>page</div>
+                    <div class="list-group-item" value='year'>Year</div>
                 </ul>
             </div>
         </div>

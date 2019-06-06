@@ -630,12 +630,16 @@ $(document).ready(function () {
 
     $('#format').on('change', () => {
         let format = $("#format").val();
-
+        if(format == 'customization'){
+            $('#customization-form').show()
+        }else{
+            $('#customization-form').hide()
+        }
         console.log("form changed : ", format)
 
     })
 
-    Sortable.create(demo1, {
+    Sortable.create(comCandidate, {
         animation: 100,
         group: 'list-1',
         draggable: '.list-group-item',
@@ -645,9 +649,14 @@ $(document).ready(function () {
         chosenClass: 'active'
       });
       
-      Sortable.create(demo2, {
+      Sortable.create(comItem, {
+        animation: 100,
         group: 'list-1',
-        handle: '.list-group-item'
+        draggable: '.list-group-item',
+        handle: '.list-group-item',
+        sort: true,
+        filter: '.sortable-disabled',
+        chosenClass: 'active'
       });
       
 
