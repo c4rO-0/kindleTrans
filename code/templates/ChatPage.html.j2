@@ -15,7 +15,8 @@
 
 
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-        <script src="https://simplewebrtc.com/latest-v3.js"></script>
+        <!-- <script src="https://simplewebrtc.com/latest-v3.js"></script> -->
+        <script src="{{ url_for('static', filename='js/simplewebrtc.bundle.js') }}"></script>
         {# 标签logo #}
         <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">
 
@@ -94,8 +95,11 @@
             </div>
         
         
-            <h2>分享房间链接后分享你的文件</h2>
-            <h2>Share the link, then share your files</h2>
+            <h2>The server is under maintenance...</h2>
+            <h3>we recommand <a href='https://send.firefox.com/'>Firefox send</a></h3>
+
+            <!-- <h2>分享房间链接后分享你的文件</h2>
+            <h2>Share the link, then share your files</h2> -->
         
         
         
