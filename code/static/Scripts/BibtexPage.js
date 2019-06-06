@@ -548,7 +548,7 @@ $(document).ready(function () {
             + "</p>" + insertStr
 
 
-        insertStr = "<span name='chunk'><hr><div>"+insertStr+"</div></span>"
+        insertStr = "<span name='chunk'><hr><div>" + insertStr + "</div></span>"
         $("#refList").prepend(
             insertStr
         );
@@ -565,10 +565,10 @@ $(document).ready(function () {
 
             // console.log($("#refList").children("span[name='chunk']:lt(4)"))
             let container = ""
-            $("#refList").children("span[name='chunk']:lt(50)").toArray().forEach((val)=>{
-                
+            $("#refList").children("span[name='chunk']:lt(50)").toArray().forEach((val) => {
+
                 // console.log($(val).prop('outerHTML'))
-                container = container+$(val).prop('outerHTML')
+                container = container + $(val).prop('outerHTML')
             })
             // console.log(container)
             localStorage.setItem('BibtexHistory', container);
@@ -627,6 +627,29 @@ $(document).ready(function () {
 
     })
 
+
+    $('#format').on('change', () => {
+        let format = $("#format").val();
+
+        console.log("form changed : ", format)
+
+    })
+
+    Sortable.create(demo1, {
+        animation: 100,
+        group: 'list-1',
+        draggable: '.list-group-item',
+        handle: '.list-group-item',
+        sort: true,
+        filter: '.sortable-disabled',
+        chosenClass: 'active'
+      });
+      
+      Sortable.create(demo2, {
+        group: 'list-1',
+        handle: '.list-group-item'
+      });
+      
 
 })
 
