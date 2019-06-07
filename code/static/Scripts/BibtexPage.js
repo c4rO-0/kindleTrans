@@ -253,6 +253,71 @@ function shortAuthorNature(line) {
 }
 
 
+// 作者缩写
+function shortAuthorFullName(line) {
+
+    let localAuthor = line;
+    let listShortName = new Array();
+
+    line.trim().split(' and ').forEach(function (singleAuthorRaw, i) {
+
+        console.log(singleAuthorRaw)
+        let shortName = '';
+        // 名字分为有逗号和没逗号两种
+        let listSingleName = singleAuthorRaw.trim().split(',');
+        if (listSingleName.length == 1) {
+            // 没逗号，以空格区分， 保持原有顺序, 只有最后一个词不缩写
+            listSingleName = listSingleName[0].trim().split(' ');
+
+            listSingleName.forEach((word, i) => {
+
+                if (word.indexOf("-") > -1) {
+                    shortName = shortName + word + ' '
+                } else {
+                    shortName = shortName + word + ' '
+                }
+
+            })
+            shortName = shortName.substr(0, shortName.length - 2) + listSingleName[listSingleName.length - 1].substr(1)
+
+            listShortName.push(shortName)
+
+        } else if (listSingleName.length == 2) {
+            // 有逗号 逗号前不缩写，逗号后缩写 并拿到前面
+            listSingleName[1].trim().split(' ').forEach((word, i) => {
+                if (word.indexOf("-") > -1) {
+                    shortName = shortName + word + ' '
+                } else {
+                    shortName = shortName + word + ' '
+                }
+            })
+            shortName = shortName + listSingleName[0].trim()
+
+            listShortName.push(shortName)
+        } else {
+            // 有两个逗号, 返回空
+            return null;
+        }
+
+        // return shortName
+        console.log(listShortName)
+    })
+
+    if (listShortName.length > 1) {
+        listShortName[listShortName.length - 1] = "and " + listShortName[listShortName.length - 1];
+    }
+
+    if (listShortName.length == 2) {
+        return listShortName.join(" ");
+    } else {
+        return listShortName.join(", ");
+    }
+
+
+    // return joinShortName;
+
+}
+
 // convertPRB
 function convertPRB(slide) {
 
@@ -397,6 +462,130 @@ function convertNature(slide) {
 
 }
 
+
+/**
+ * 
+ * @param {*} arrayItem  Customized Item
+ * @param {*} slide 
+ */
+function convertCustomization(arrayItem, slide) {
+
+
+    let dicRead = {}
+
+
+    if (slide.trim().split('\n')[0].toLowerCase().indexOf("@article") > -1) {
+        slide.trim().split('\n').forEach(function (lineRaw, i) {
+
+            if (i > 0) {
+                let listLine = lineRaw.trim().split('=', 2);
+                if (listLine.length != 2) {
+                    return null;
+                }
+
+                let itemName = listLine[0].trim().toLowerCase();
+                let itemValue = delBrace(listLine[1].trim());
+
+                // console.log(itemName, itemValue);
+
+
+                if (itemName == "author") {
+                    dicRead.authorRuff = itemValue;
+                }
+                if (itemName == "volume") {
+                    dicRead.volume = itemValue.trim();
+                }
+                if (itemName == "journal") {
+                    dicRead.journal = journalAbbreviation(itemValue.trim().replace(/\s+/g, ' '));
+                }
+                if (itemName == "pages") {
+                    dicRead.pagesRuff = itemValue.trim();
+                }
+                if (itemName == "year") {
+
+                    dicRead.year = itemValue.trim();
+                }
+                if (itemName == "issue") {
+
+                    dicRead.issue = itemValue.trim();
+                }
+                if (itemName == "number") {
+
+                    dicRead.number = itemValue.trim();
+                }
+                if (itemName == "title") {
+
+                    dicRead.title = itemValue.trim();
+                }
+            }
+
+
+        })
+        let citeStr = ''
+
+        arrayItem.forEach(element => {
+            if (element.value.indexOf("author") != -1) {
+                if (element.value == 'author:np') {
+                    citeStr = citeStr + shortAuthorNature(dicRead.authorRuff) + element.connecter
+                } else if (element.value == 'author:aps') {
+                    citeStr = citeStr + shortAuthorAPS(dicRead.authorRuff) + element.connecter
+                } else if (element.value == 'author:fn') {
+                    citeStr = citeStr + shortAuthorFullName(dicRead.authorRuff) + element.connecter
+                }
+            } else if (element.value.indexOf("volume") != -1) {
+                citeStr = citeStr + dicRead.volume + element.connecter
+            } else if (element.value.indexOf("journal") != -1) {
+                citeStr = citeStr + dicRead.journal + element.connecter
+            } else if (element.value.indexOf("pages") != -1) {
+                if (element.value == 'pages:start') {
+                    citeStr = citeStr + (dicRead.pagesRuff.trim().split('-'))[0].trim() + element.connecter
+                } else if (element.value == 'pages:full') {
+                    citeStr = citeStr + dicRead.pagesRuff + element.connecter
+                }
+            } else if (element.value.indexOf("year") != -1) {
+                citeStr = citeStr + dicRead.year + element.connecter
+            } else if (element.value.indexOf("issue") != -1) {
+                if (dicRead.issue) {
+                    citeStr = citeStr + dicRead.issue + element.connecter
+                } else if (dicRead.number) {
+                    citeStr = citeStr + dicRead.issue + element.connecter
+                } else {
+                    citeStr = citeStr + ' ' + element.connecter
+                }
+            } else if (element.value.indexOf("title") != -1) {
+                citeStr = citeStr + dicRead.title + element.connecter
+            }
+        })
+
+
+        return citeStr;
+    } else {
+        // 不支持
+        return slide.trim().split('\n')[0] + "<b> Not Supported</b>"
+    }
+
+
+}
+
+function storeCusSettings(arrayItemUsed, arrayItemAbandon){
+    strSettings = '<ul type="used">'
+
+    arrayItemUsed.forEach(element => {
+        strSettings = strSettings +
+        '<li value="'+element.value+'" connecter="'+element.connecter+'" text="' + element.text + '"></li>'
+    })
+    strSettings = strSettings + '</ul><ul type="abandon">'
+
+    arrayItemAbandon.forEach(element => {
+        strSettings = strSettings +
+        '<li value="'+element.value+'" connecter="'+element.connecter+'" text="' + element.text + '"></li>'
+    })  
+    strSettings = strSettings + '</ul>'  
+
+    return strSettings
+}
+
+
 Date.prototype.format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份
@@ -498,6 +687,18 @@ $(document).ready(function () {
         // 切割
         let listSlideBibtex = splitAllBibtex(allBibtex);
 
+        // 读取
+        let arrayItemUsed = new Array()
+        $('#comItem .list-group-item').each((index, element) => {
+            // console.log('value : ', $(element).find('div').attr('value'), 'connecter : ', $(element).find('input').val())
+            arrayItemUsed.push({ 'value': $(element).find('div').attr('value'), 'connecter': $(element).find('input').val(), 'text': $(element).find('div').text() })
+        })
+
+        let arrayItemAbandon = new Array()
+        $('#comCandidate .list-group-item').each((index, element) => {
+            // console.log('value : ', $(element).find('div').attr('value'), 'connecter : ', $(element).find('input').val())
+            arrayItemAbandon.push({ 'value': $(element).find('div').attr('value'), 'connecter': $(element).find('input').val(), 'text': $(element).find('div').text() })
+        })        
 
         let insertStr = ''
         listSlideBibtex.reverse().forEach(function (slideBibtex, i) {
@@ -510,6 +711,10 @@ $(document).ready(function () {
             }
             if (format == "Nature Physics") {
                 strSlide = convertNature(slideBibtex);
+            }
+            if (format == "customization") {
+
+                strSlide = convertCustomization(arrayItemUsed, slideBibtex);
             }
 
             // 插入
@@ -529,7 +734,9 @@ $(document).ready(function () {
         })
         insertStr = "<div name='cite-all'>" + insertStr + "</div>"
         insertStr = insertStr + "<div name='rawCite' style='display: none;'>" + allBibtex + "</div>"
-
+        if (format == "customization") {
+            insertStr = insertStr + "<div name='settings' style='display: none;'>" +  storeCusSettings(arrayItemUsed, arrayItemAbandon) + "</div>"
+        }
 
         let strbuttonCopy = "<button id='cp2Clipboard' type='button' class='btn-xs btn-outline-secondary' title='copy to clipboard'><i class='fa fa-clipboard'></i></button>"
         let strbuttonBack = "<button id='rollBack' type='button' class='btn-xs btn-outline-secondary'  title='rall back the BibTex content'><i class='fas fa-backward'></i></button>"
@@ -548,7 +755,7 @@ $(document).ready(function () {
             + "</p>" + insertStr
 
 
-        insertStr = "<span name='chunk'><hr><div>"+insertStr+"</div></span>"
+        insertStr = "<span name='chunk'><hr><div>" + insertStr + "</div></span>"
         $("#refList").prepend(
             insertStr
         );
@@ -565,10 +772,10 @@ $(document).ready(function () {
 
             // console.log($("#refList").children("span[name='chunk']:lt(4)"))
             let container = ""
-            $("#refList").children("span[name='chunk']:lt(50)").toArray().forEach((val)=>{
-                
+            $("#refList").children("span[name='chunk']:lt(50)").toArray().forEach((val) => {
+
                 // console.log($(val).prop('outerHTML'))
-                container = container+$(val).prop('outerHTML')
+                container = container + $(val).prop('outerHTML')
             })
             // console.log(container)
             localStorage.setItem('BibtexHistory', container);
@@ -619,6 +826,34 @@ $(document).ready(function () {
         let format = $(objdiv).find("span[name='format']").text().trim()
         $("#format").val(format)
 
+        if(format == 'customization'){
+            $('#customization-form').show()
+
+            // rowback settings
+            $("#comCandidate").empty()
+            $(objdiv).find("[name='settings'] [type='abandon'] li").each( (index, element) => {
+                $("#comCandidate").append(
+                    '<div class="list-group-item">\
+                    <div value="' + $(element).attr('value') + '">'
+                    + $(element).attr('text') +
+                   '</div>\
+                    <input type="text" size="10" value="' + $(element).attr('connecter') + '">\
+                </div>'
+                )
+            })
+
+            $("#comItem").empty()
+            $(objdiv).find("[name='settings'] [type='used'] li").each( (index, element) => {
+                $("#comItem").append(
+                    '<div class="list-group-item">\
+                    <div value="' + $(element).attr('value') + '">'
+                    + $(element).attr('text') +
+                   '</div>\
+                    <input type="text" size="10" value="' + $(element).attr('connecter') + '">\
+                </div>'
+                )
+            })  
+        }
 
         $("#frameTextarear").addClass("border border-primary")
         setTimeout(() => {
@@ -627,6 +862,88 @@ $(document).ready(function () {
 
     })
 
+    // customization
+    $('#format').on('change', () => {
+        let format = $("#format").val();
+        if (format == 'customization') {
+            $('#customization-form').show()
+        } else {
+            $('#customization-form').hide()
+        }
+        // console.log("form changed : ", format)
+
+    })
+
+    Sortable.create(comCandidate, {
+        animation: 100,
+        group: 'list-1',
+        draggable: '.list-group-item',
+        handle: '.list-group-item',
+        sort: true,
+        filter: '.sortable-disabled',
+        chosenClass: 'active'
+    });
+
+    Sortable.create(comItem, {
+        animation: 100,
+        group: 'list-1',
+        draggable: '.list-group-item',
+        handle: '.list-group-item',
+        sort: true,
+        filter: '.sortable-disabled',
+        chosenClass: 'active'
+    });
+
+    $("#folding").on("click", () => {
+        //   console.log('click ... ')
+        if ($('#customization-list').is(':visible')) {
+            $('#customization-list').hide()
+        } else {
+            $('#customization-list').show()
+        }
+
+        if ($('#customization-button [name="cite-all"]').is(':visible')) {
+            $('#customization-button [name="cite-all"]').hide()
+        } else {
+            $('#customization-button [name="cite-all"]').show()
+        }
+    })
+
+    $("#preview").on("click", () => {
+        //   console.log('click ... ')
+        // 读取
+        let arrayItem = new Array()
+        $('#comItem .list-group-item').each((index, element) => {
+            console.log('value : ', $(element).find('div').attr('value'), 'connecter : ', $(element).find('input').val())
+            arrayItem.push({ 'value': $(element).find('div').attr('value'), 'connecter': $(element).find('input').val() })
+        })
+
+        // 全部
+        let allBibtex = $("textarea#bibtex").val();
+        // 切割
+        let listSlideBibtex = splitAllBibtex(allBibtex);
+
+        let strSlide = convertCustomization(arrayItem, listSlideBibtex[0]);
+
+        let insertStr = ''
+        // 插入
+        if (strSlide.indexOf("<b> Not Supported</b>") > -1) {
+            // $("#refError").prepend(
+            //     "<p style='color:red'>" + strSlide + "</p>"
+            // );
+            insertStr = insertStr + "<p style='color:red' name='error'>" + strSlide + "</p>"
+        } else {
+
+            // $("#refList").prepend(
+            //     "<p name='cite'>" +strSlide+  "</p>"
+            // );
+            insertStr = insertStr + "<p name='cite-slide'>" + strSlide + "</p>"
+        }
+        $("#customization-button > [name='cite-all']").empty()
+        $("#customization-button > [name='cite-all']").append(insertStr)
+
+
+    })
 
 })
 

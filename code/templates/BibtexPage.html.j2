@@ -23,6 +23,7 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/popper-v1.12.5.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/gh/RubaXa/Sortable/Sortable.min.js"></script>
 
 
     <!-- our own scripts -->
@@ -69,7 +70,8 @@
             </div>
             <div class="col-auto align-self-end px-1">
                 <a href="{{url_for('AboutUsPage')}}">
-                    <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
+                    <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30"
+                        height="30">
                 </a>
             </div>
         </div>
@@ -86,7 +88,8 @@
         <div class="row mb-1">
             <div class="col">
                 <div id="frameTextarear" class="input-group">
-                    <textarea id="bibtex" rows="10" class="form-control rounded-0" placeholder="paste Bibtex here. @article{...."></textarea>
+                    <textarea id="bibtex" rows="10" class="form-control rounded-0"
+                        placeholder="paste Bibtex here. @article{...."></textarea>
 
                 </div>
             </div>
@@ -101,6 +104,7 @@
                     <select class="custom-select" id="format">
                         <option value="APS">APS</option>
                         <option value="Nature Physics">Nature Physics</option>
+                        <option value="customization">customization</option>
                     </select>
                     <div class="input-group-append">
                         <button id="confirm" class="btn btn-primary"> confirm </button>
@@ -113,6 +117,104 @@
                 <a class="btn btn-link" href="http://latex2png.com/"> Latex math to png</a>
             </div>
         </div>
+
+        {# #}
+
+        <div id='customization-form' style='display:none;'>
+
+            <div id='customization-button'>
+                <p name="customization-preview">
+                    <span style="color:green">customization</span> |
+                    <button id="folding" type="button" class="btn-xs btn-outline-secondary" title="folding">
+                        <i class="fa fa-compress"></i>
+                    </button> |
+                    <button id="preview" type="button" class="btn-xs btn-outline-secondary" title="preview">
+                        <i class="fa fa-eye"></i>
+                    </button>
+
+                </p>
+                <div name="cite-all">
+
+                </div>
+            </div>
+
+            <div class="row mb-3" id='customization-list'>
+                <div class="col">
+                    <ul class="list-group" id="comCandidate">
+                        <h2>Candidate List</h2>
+                        <div class="list-group-item">
+                            <div value='title'>
+                                Title
+                            </div>
+                            <input type="text" size="10">
+                        </div>
+                        <div class="list-group-item">
+                            <div value='issue'>
+                                issue/number
+                            </div>
+                            <input type="text" size="10">
+                        </div>
+                        <div class="list-group-item">
+                            <div value='author:np'>
+                                author: Nature Physics
+                            </div>
+                            <input type="text" size="10">
+                        </div>
+                        <div class="list-group-item">
+                            <div value='author:fn'>
+                                author: Full Name
+                            </div>
+                            <input type="text" size="10">
+                        </div>
+                        <div class="list-group-item">
+                            <div value='pages:full'>
+                                start page - end page
+                            </div>
+                            <input type="text" size="10">
+                        </div>
+                    </ul>
+                </div>
+                <div class="col">
+                    <ul class="list-group mt-4" id="comItem">
+                        <h2>Used Items List</h2>
+                        <div class="list-group-item">
+                            <div value='author:aps'>
+                                author: APS
+                            </div>
+                            <input type="text" size="10" value=", ">
+                        </div>
+                        <div class="list-group-item">
+                            <div value='journal'>
+                                Journal
+                            </div>
+                            <input type="text" size="10" value=" ">
+                        </div>
+
+                        <div class="list-group-item">
+                            <div value='volume'>
+                                volume
+                            </div>
+                            <input type="text" size="10" value=", ">
+                        </div>
+
+                        <div class="list-group-item">
+                            <div value='pages:start'>
+                                start page
+                            </div>
+                            <input type="text" size="10" value=" (">
+                        </div>
+                        <div class="list-group-item">
+                            <div value='year'>
+                                year
+                            </div>
+                            <input type="text" size="10" value=").">
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
 
         <div class="row justify-content-center">
             <div class="col">
