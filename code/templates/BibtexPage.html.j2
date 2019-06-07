@@ -123,27 +123,25 @@
         <div id='customization-form' style='display:none;'>
 
             <div id='customization-button'>
-                <p name="customization-preview"> 
+                <p name="customization-preview">
                     <span style="color:green">customization</span> |
-                    <button id="folding" type="button" class="btn-xs btn-outline-secondary"
-                        title="folding">
+                    <button id="folding" type="button" class="btn-xs btn-outline-secondary" title="folding">
                         <i class="fa fa-compress"></i>
-                    </button> |                
-                    <button id="preview" type="button" class="btn-xs btn-outline-secondary"
-                        title="preview">
+                    </button> |
+                    <button id="preview" type="button" class="btn-xs btn-outline-secondary" title="preview">
                         <i class="fa fa-eye"></i>
                     </button>
 
                 </p>
                 <div name="cite-all">
-                    
+
                 </div>
             </div>
 
             <div class="row mb-3" id='customization-list'>
                 <div class="col">
                     <ul class="list-group" id="comCandidate">
-
+                        <h2>Candidate List</h2>
                         <div class="list-group-item">
                             <div value='title'>
                                 Title
@@ -173,42 +171,43 @@
                                 start page - end page
                             </div>
                             <input type="text" size="10">
-                        </div>                        
+                        </div>
                     </ul>
                 </div>
                 <div class="col">
                     <ul class="list-group mt-4" id="comItem">
+                        <h2>Used Items List</h2>
                         <div class="list-group-item">
                             <div value='author:aps'>
                                 author: APS
                             </div>
-                            <input type="text" size="10">
+                            <input type="text" size="10" value=", ">
                         </div>
                         <div class="list-group-item">
                             <div value='journal'>
                                 Journal
                             </div>
-                            <input type="text" size="10">
+                            <input type="text" size="10" value=" ">
                         </div>
 
                         <div class="list-group-item">
                             <div value='volume'>
                                 volume
                             </div>
-                            <input type="text" size="10">
+                            <input type="text" size="10" value=", ">
                         </div>
 
                         <div class="list-group-item">
                             <div value='pages:start'>
                                 start page
                             </div>
-                            <input type="text" size="10">
+                            <input type="text" size="10" value=" (">
                         </div>
                         <div class="list-group-item">
                             <div value='year'>
                                 year
                             </div>
-                            <input type="text" size="10">
+                            <input type="text" size="10" value=").">
                         </div>
                     </ul>
                 </div>

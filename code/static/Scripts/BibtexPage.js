@@ -567,7 +567,23 @@ function convertCustomization(arrayItem, slide) {
 
 }
 
+function storeCusSettings(arrayItemUsed, arrayItemAbandon){
+    strSettings = '<ul type="used">'
 
+    arrayItemUsed.forEach(element => {
+        strSettings = strSettings +
+        '<li value="'+element.value+'" connecter="'+element.connecter+'" text="' + element.text + '"></li>'
+    })
+    strSettings = strSettings + '</ul><ul type="abandon">'
+
+    arrayItemAbandon.forEach(element => {
+        strSettings = strSettings +
+        '<li value="'+element.value+'" connecter="'+element.connecter+'" text="' + element.text + '"></li>'
+    })  
+    strSettings = strSettings + '</ul>'  
+
+    return strSettings
+}
 
 
 Date.prototype.format = function (fmt) {
@@ -671,6 +687,18 @@ $(document).ready(function () {
         // 切割
         let listSlideBibtex = splitAllBibtex(allBibtex);
 
+        // 读取
+        let arrayItemUsed = new Array()
+        $('#comItem .list-group-item').each((index, element) => {
+            // console.log('value : ', $(element).find('div').attr('value'), 'connecter : ', $(element).find('input').val())
+            arrayItemUsed.push({ 'value': $(element).find('div').attr('value'), 'connecter': $(element).find('input').val(), 'text': $(element).find('div').text() })
+        })
+
+        let arrayItemAbandon = new Array()
+        $('#comCandidate .list-group-item').each((index, element) => {
+            // console.log('value : ', $(element).find('div').attr('value'), 'connecter : ', $(element).find('input').val())
+            arrayItemAbandon.push({ 'value': $(element).find('div').attr('value'), 'connecter': $(element).find('input').val(), 'text': $(element).find('div').text() })
+        })        
 
         let insertStr = ''
         listSlideBibtex.reverse().forEach(function (slideBibtex, i) {
@@ -685,13 +713,8 @@ $(document).ready(function () {
                 strSlide = convertNature(slideBibtex);
             }
             if (format == "customization") {
-                // 读取
-                let arrayItem = new Array()
-                $('#comItem .list-group-item').each((index, element) => {
-                    console.log('value : ', $(element).find('div').attr('value'), 'connecter : ', $(element).find('input').val())
-                    arrayItem.push({ 'value': $(element).find('div').attr('value'), 'connecter': $(element).find('input').val() })
-                })
-                strSlide = convertCustomization(arrayItem, slideBibtex);
+
+                strSlide = convertCustomization(arrayItemUsed, slideBibtex);
             }
 
             // 插入
@@ -711,7 +734,9 @@ $(document).ready(function () {
         })
         insertStr = "<div name='cite-all'>" + insertStr + "</div>"
         insertStr = insertStr + "<div name='rawCite' style='display: none;'>" + allBibtex + "</div>"
-
+        if (format == "customization") {
+            insertStr = insertStr + "<div name='settings' style='display: none;'>" +  storeCusSettings(arrayItemUsed, arrayItemAbandon) + "</div>"
+        }
 
         let strbuttonCopy = "<button id='cp2Clipboard' type='button' class='btn-xs btn-outline-secondary' title='copy to clipboard'><i class='fa fa-clipboard'></i></button>"
         let strbuttonBack = "<button id='rollBack' type='button' class='btn-xs btn-outline-secondary'  title='rall back the BibTex content'><i class='fas fa-backward'></i></button>"
@@ -801,6 +826,34 @@ $(document).ready(function () {
         let format = $(objdiv).find("span[name='format']").text().trim()
         $("#format").val(format)
 
+        if(format == 'customization'){
+            $('#customization-form').show()
+
+            // rowback settings
+            $("#comCandidate").empty()
+            $(objdiv).find("[name='settings'] [type='abandon'] li").each( (index, element) => {
+                $("#comCandidate").append(
+                    '<div class="list-group-item">\
+                    <div value="' + $(element).attr('value') + '">'
+                    + $(element).attr('text') +
+                   '</div>\
+                    <input type="text" size="10" value="' + $(element).attr('connecter') + '">\
+                </div>'
+                )
+            })
+
+            $("#comItem").empty()
+            $(objdiv).find("[name='settings'] [type='used'] li").each( (index, element) => {
+                $("#comItem").append(
+                    '<div class="list-group-item">\
+                    <div value="' + $(element).attr('value') + '">'
+                    + $(element).attr('text') +
+                   '</div>\
+                    <input type="text" size="10" value="' + $(element).attr('connecter') + '">\
+                </div>'
+                )
+            })  
+        }
 
         $("#frameTextarear").addClass("border border-primary")
         setTimeout(() => {
@@ -817,7 +870,7 @@ $(document).ready(function () {
         } else {
             $('#customization-form').hide()
         }
-        console.log("form changed : ", format)
+        // console.log("form changed : ", format)
 
     })
 
