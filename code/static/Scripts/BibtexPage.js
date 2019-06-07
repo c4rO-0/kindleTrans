@@ -853,6 +853,8 @@ $(document).ready(function () {
                 </div>'
                 )
             })  
+        }else{
+            $('#customization-form').hide()
         }
 
         $("#frameTextarear").addClass("border border-primary")
