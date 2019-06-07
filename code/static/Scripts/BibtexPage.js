@@ -49,7 +49,7 @@ function splitAllBibtex(allBibtex) {
 
 }
 
-function journalAbbreviation(journal) {
+function journalAbbreviationDict(journal) {
 
     if (journal.split(" ").length == 1) {
         return journal
@@ -91,6 +91,47 @@ function journalAbbreviation(journal) {
         }
 
     }
+
+    return reName;
+}
+
+
+function journalAbbreviation(journal) {
+
+    
+    if (journal.split(" ").length == 1) {
+        return journal
+    }
+    let searchJournal = journal.trim().toLowerCase()
+    if(searchJournal.indexOf('the') == 0){
+        searchJournal = searchJournal.substr(3).trim()
+    }
+    console.log(journal, searchJournal)
+
+    let reName = journal
+
+    let abbreviation = ''
+    let fullName = ''
+    $('#journal-list tr').each((index, element) =>{
+        let obj = $(element).find("td").get(0)
+
+        if($(element).find("td").length == 1){
+            fullName = $(obj).contents().get(0).textContent.trim().toLowerCase()
+        }else{
+            abbreviation = $(obj).contents().get(0).textContent.trim()
+            if($(obj).contents().length == 3){
+                fullName = $(obj).contents().get(2).textContent.trim().toLowerCase()
+            }else{
+                fullName = abbreviation.toLowerCase()
+            }            
+        }
+        // console.log(fullName)
+
+        if(fullName == searchJournal){
+            console.log("found! ", abbreviation)
+            reName = abbreviation
+        }
+    })
 
     return reName;
 }
