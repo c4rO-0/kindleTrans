@@ -52,13 +52,68 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-119134846-1');
+
+        function toggleNewFeatures() {
+            let target = document.getElementById('newFeatures')
+            if (target.classList.contains('newFeaturesHide')) {
+                target.classList.remove('newFeaturesHide')
+            } else {
+                target.classList.add('newFeaturesHide')
+            }
+        }
+
+        $( function() {
+            $( "#sortable1, #sortable2" ).sortable({
+            connectWith: ".connectedSortable"
+            }).disableSelection();
+        } );
     </script>
+    <style>
+        .newFeaturesHide {
+            transform: translate(100%, 0);
+        }
+        /* #sortable1 li, #sortable2 li{
+            display: inline;
+        } */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 6px;
+            background: #e8e8e8;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c0c0c0;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+    </style>
 
 
 </head>
 
-<body>
+<body style="overflow-x: hidden">
     <div class="container">
+        <div id="newFeatures" class="py-5 newFeaturesHide"
+            style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
+            <div onclick="toggleNewFeatures()" class="alert-primary px-2"
+                style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
+                <p class="m-0">New Features</p>
+            </div>
+
+            {# ==================== update log =================== #}
+            <div class="alert-secondary px-2" style="height: 100%; width: 100%; overflow-y: auto">
+                <h3 class="text-center">2019.06.12</h3>
+                <p>- new Feartures List</p>
+                <h3 class="text-center">2019.06.08</h3>
+                <p>- customization support(in Format)</p>
+                <p>- Use <a href="http://www.cas.org/expertise/cascontent/caplus/corejournals.html">CAS Core Journal
+                        Abbreviations</a></p>
+            </div>
+        </div>
         <div class="row justify-content-center">
             <div class="col-auto align-self-center px-0">
                 <h1 style="font-size:4rem; color:dimgray">Bibtex<span style="color:red">
@@ -78,7 +133,7 @@
 
         <div class="row justify-content-center">
             <div class="col align-self-end px-1">
-                <p class="align-text-bottom" style="font-size:1.5rem;">
+                <p class="align-text-bottom" style="font-size:1.4rem;">
                     <!-- The website is still updating. Please use '<b>ctrl+F5</b>' to reload script.</p> -->
                     We are keeping improving this tool. </br>
                     Please use '<b>ctrl+F5</b>' frequently to load latest scripts.</p>
@@ -113,7 +168,8 @@
                 </div>
             </div>
             <div class="col">
-                <a class="btn btn-link" href="https://cassi.cas.org/search.jsp"> CAS Source Index (CASSI) Search Tool </a>
+                <a class="btn btn-link" href="https://cassi.cas.org/search.jsp"> CAS Source Index (CASSI) Search Tool
+                </a>
                 <a class="btn btn-link" href="http://latex2png.com/"> Latex math to png</a>
             </div>
         </div>
@@ -138,78 +194,86 @@
                 </div>
             </div>
 
-            <div class="row mb-3" id='customization-list'>
-                <div class="col">
-                    <ul class="list-group" id="comCandidate">
-                        <h2>Candidate List</h2>
-                        <div class="list-group-item">
-                            <div value='title'>
-                                Title
-                            </div>
-                            <input type="text" size="10">
-                        </div>
-                        <div class="list-group-item">
-                            <div value='issue'>
-                                issue/number
-                            </div>
-                            <input type="text" size="10">
-                        </div>
-                        <div class="list-group-item">
-                            <div value='author:np'>
-                                author: Nature Physics
-                            </div>
-                            <input type="text" size="10">
-                        </div>
-                        <div class="list-group-item">
-                            <div value='author:fn'>
-                                author: Full Name
-                            </div>
-                            <input type="text" size="10">
-                        </div>
-                        <div class="list-group-item">
-                            <div value='pages:full'>
-                                start page - end page
-                            </div>
-                            <input type="text" size="10">
-                        </div>
-                    </ul>
-                </div>
-                <div class="col">
-                    <ul class="list-group mt-4" id="comItem">
+            <div class="container mb-3" id='customization-list'>
+                <div class="row">
+                    <div class="row w-100">
                         <h2>Used Items List</h2>
-                        <div class="list-group-item">
-                            <div value='author:aps'>
-                                author: APS
+                    </div>
+                    <div class="row">
+                        <ul class="list-group list-group-horizontal flex-wrap" id="comItem">
+                            <div class="list-group-item">
+                                <div value='author:aps'>
+                                    author: APS
+                                </div>
+                                <input type="text" size="10" value=", ">
                             </div>
-                            <input type="text" size="10" value=", ">
-                        </div>
-                        <div class="list-group-item">
-                            <div value='journal'>
-                                Journal
+                            <div class="list-group-item">
+                                <div value='journal'>
+                                    Journal
+                                </div>
+                                <input type="text" size="10" value=" ">
                             </div>
-                            <input type="text" size="10" value=" ">
-                        </div>
-
-                        <div class="list-group-item">
-                            <div value='volume'>
-                                volume
+                    
+                            <div class="list-group-item">
+                                <div value='volume'>
+                                    volume
+                                </div>
+                                <input type="text" size="10" value=", ">
                             </div>
-                            <input type="text" size="10" value=", ">
-                        </div>
-
-                        <div class="list-group-item">
-                            <div value='pages:start'>
-                                start page
+                    
+                            <div class="list-group-item">
+                                <div value='pages:start'>
+                                    start page
+                                </div>
+                                <input type="text" size="10" value=" (">
                             </div>
-                            <input type="text" size="10" value=" (">
-                        </div>
-                        <div class="list-group-item">
-                            <div value='year'>
-                                year
+                            <div class="list-group-item">
+                                <div value='year'>
+                                    year
+                                </div>
+                                <input type="text" size="10" value=").">
                             </div>
-                            <input type="text" size="10" value=").">
-                        </div>
-                    </ul>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="row w-100">
+                        <h2>Candidate List</h2>
+                    </div>
+                    <div class="row">
+                        <ul class="list-group list-group-horizontal flex-wrap" id="comCandidate">
+                            <div class="list-group-item">
+                                <div value='title'>
+                                    Title
+                                </div>
+                                <input type="text" size="10">
+                            </div>
+                            <div class="list-group-item">
+                                <div value='issue'>
+                                    issue/number
+                                </div>
+                                <input type="text" size="10">
+                            </div>
+                            <div class="list-group-item">
+                                <div value='author:np'>
+                                    author: Nature Physics
+                                </div>
+                                <input type="text" size="10">
+                            </div>
+                            <div class="list-group-item">
+                                <div value='author:fn'>
+                                    author: Full Name
+                                </div>
+                                <input type="text" size="10">
+                            </div>
+                            <div class="list-group-item">
+                                <div value='pages:full'>
+                                    start page - end page
+                                </div>
+                                <input type="text" size="10">
+                            </div>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
