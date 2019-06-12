@@ -62,16 +62,17 @@
             }
         }
 
-        $( function() {
-            $( "#sortable1, #sortable2" ).sortable({
-            connectWith: ".connectedSortable"
+        $(function () {
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
             }).disableSelection();
-        } );
+        });
     </script>
     <style>
         .newFeaturesHide {
             transform: translate(100%, 0);
         }
+
         /* #sortable1 li, #sortable2 li{
             display: inline;
         } */
@@ -87,6 +88,7 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #c0c0c0;
         }
+
         ::-webkit-scrollbar-track {
             background: #ffffff;
         }
@@ -106,6 +108,8 @@
 
             {# ==================== update log =================== #}
             <div class="alert-secondary px-2" style="height: 100%; width: 100%; overflow-y: auto">
+                <h3 class="text-center">2019.06.13</h3>
+                <p>- update customization UI</p>
                 <h3 class="text-center">2019.06.12</h3>
                 <p>- new Feartures List</p>
                 <h3 class="text-center">2019.06.08</h3>
@@ -213,14 +217,14 @@
                                 </div>
                                 <input type="text" size="10" value=" ">
                             </div>
-                    
+
                             <div class="list-group-item">
                                 <div value='volume'>
                                     volume
                                 </div>
                                 <input type="text" size="10" value=", ">
                             </div>
-                    
+
                             <div class="list-group-item">
                                 <div value='pages:start'>
                                     start page
