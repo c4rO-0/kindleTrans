@@ -62,11 +62,19 @@
             }
         }
 
-        $(function () {
-            $("#sortable1, #sortable2").sortable({
-                connectWith: ".connectedSortable"
-            }).disableSelection();
-        });
+        function hideNewFeature(event){
+            let  target = document.getElementById('newFeatures')
+            if(!event.target.closest('#newFeatures')&&!target.classList.contains('newFeaturesHide')){
+                target.classList.add('newFeaturesHide')
+            }
+        }
+
+        function showNewFeatures(){
+            let target = document.getElementById('newFeatures')
+            if(target.classList.contains('newFeaturesHide')){
+                target.classList.remove('newFeaturesHide')
+            }
+        }
     </script>
     <style>
         .newFeaturesHide {
@@ -97,12 +105,10 @@
 
 </head>
 
-<body style="overflow-x: hidden">
+<body style="overflow-x: hidden" onclick="hideNewFeature(event)">
     <div class="container">
-        <div id="newFeatures" class="py-5 newFeaturesHide"
-            style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
-            <div onclick="toggleNewFeatures()" class="alert-primary px-2"
-                style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
+        <div id="newFeatures" class="py-5 newFeaturesHide" style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
+            <div onclick="showNewFeatures()" class="alert-primary px-2" style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
                 <p class="m-0">New Features</p>
             </div>
 
