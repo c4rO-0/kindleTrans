@@ -46,7 +46,7 @@ class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
     author = StringField('作者')
     upload = SubmitField('upload')
-    share = BooleanField('agreed to share',default="checked")
+    # share = BooleanField('agreed to share',default="checked")
 
 
     def validate_file(self, field):
@@ -127,7 +127,7 @@ def TransformEbook():
                 with open(os.path.abspath(os.path.join(filePath, '.project.ini')), 'a+', encoding='UTF-8') as f:
                     # print(os.path.abspath(os.path.join(filePath, '.project.ini')))
                     # print("========写入==========")
-                    f.write("\nshare="+str(form.share.data)+"\n")
+                    f.write("\nshare="+str(False)+"\n")
                     f.close()
                 
                 

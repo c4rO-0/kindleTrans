@@ -81,21 +81,19 @@
         </div>
 
         <hr />
-        <div class="row justify-content-center mb-5">
-            <div class="col-auto">
-                <a href="{{url_for('TransformEbook')}}" class="btn btn-outline-primary"> 继续转化</a>
-            </div>
-        </div>
-
-
-        <hr />
-        <h3 >微信扫一扫支持我们 o(〃'▽'〃)o</h3>
+        <h3 >小工具运营不容易, 如果帮到了您, 请微信赞赏我们! 非常感谢!</h3>
         <div class="row justify-content-center">
             <div class="col-auto align-self-end px-1">
                 <img  class="mb-3" src="{{ url_for('static', filename='images/wechat.png') }}" width="229" height="266">
             </div> 
         </div>
 
+        <hr />
+        <div class="row justify-content-center mb-5">
+            <div class="col-auto">
+                <a href="{{url_for('TransformEbook')}}" class="btn btn-outline-primary"> 继续转化</a>
+            </div>
+        </div>
 
     {% else %}  {# 没有 'bookCount' 说明还没有确认转化#}
         <div class="row justify-content-center mb-5">
