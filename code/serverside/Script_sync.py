@@ -31,7 +31,10 @@ for dir in dirs:
                         if(len(line) > 6 and line[0:6] == 'title='):
                             title = line.strip('\n')[6:]    
                         if(len(line) > 6 and line[0:6] == 'share='):
-                            share = bool(line.strip('\n')[6:] )   
+                            if(line.strip('\n')[6:] == 'true'):
+                                share = True
+                            else:
+                                share = False
 
             # print(title , share)
             # print((title is not None) and share == True)
@@ -54,6 +57,6 @@ for dir in dirs:
                     f.close()
 
         # 归档完成, 删除文件夹
-        # os.system('rm -rf ' + os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir)))
+        os.system('rm -rf ' + os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir)))
 
    
