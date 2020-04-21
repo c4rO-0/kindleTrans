@@ -57,6 +57,6 @@ for dir in dirs:
                     f.close()
 
         # 归档完成, 删除文件夹
-        os.system('rm -rf ' + os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir)))
+        os.system('rm -rf "' + os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir))+'"')
 
    
