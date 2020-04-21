@@ -106,20 +106,24 @@ def TransformEbook():
                 #-----------------
                 # 统一文件编码
                 print("--------coding---------", file=sys.stderr)
-                info_o = os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
-                if(info_o == 512):
+                # info_o = os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
+                # if(info_o == 512):
                     # print("----自动转码失败, 转用遍历匹配")
-                    # fileCode = get_encoding(os.path.join(filePath , saveFileName))
-                    # if(fileCode == None):
-                    #     info_o = os.system('cd ' + filePath + ';' 
-                    #     + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName )
-                    # else:
-                    #     info_o = os.system('cd ' + filePath + ';' 
-                    #     + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName + ' ' + fileCode )                        
-                    # if(info_o != 0):
-                    #     #转换失败
-                    #     print("转换失败. 失败码 : ", info_o)
+                fileCode = get_encoding(os.path.join(filePath , saveFileName))
+                if(fileCode == None):
+                    # info_o = os.system('cd ' + filePath + ';' 
+                    # + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName )
                     return redirect("/404/转码失败,请手动转换为gdb或utf-8")
+                else:
+                    with open(os.path.join(filePath , saveFileName+'.code'), 'a') as wf:  
+                        with open(os.path.join(filePath , saveFileName), 'rb') as rf:  
+                            while True: 
+                                line = rf.readline() 
+                                wf.write(line.decode(fileCode))
+                                if not line: 
+                                    break
+                    # os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
+                    shutil.move(os.path.join(filePath , saveFileName+'.code'), os.path.join(filePath , saveFileName))
                 #-----------------              
 
                 # 初始化图书
