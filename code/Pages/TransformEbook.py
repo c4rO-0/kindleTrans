@@ -69,6 +69,8 @@ def TransformEbook():
         print("访问ip : ",request.environ['HTTP_X_FORWARDED_FOR'], file=sys.stderr) # if behind a proxy
         visitIP = request.environ['HTTP_X_FORWARDED_FOR']
 
+    visitIP = ''.join(visitIP.split())
+
     #上传文件
     form = UploadForm()
     TOC = None
