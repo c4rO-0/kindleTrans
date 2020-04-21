@@ -137,6 +137,15 @@ def sessionQueryTitleFilter():
 
     return session.get('TitleFilter', DEFAULT_TITLE_FILTER)
 
+def sessionQueryChapterMaxLength():
+    """
+    查询最长目录限制
+
+    out :
+        _   ChapterMaxLength 正则表达式
+    """
+
+    return session.get('ChapterMaxLength', 25)
 
 
 def sessionSaveTitleFilter(TitleFilter):
@@ -149,6 +158,17 @@ def sessionSaveTitleFilter(TitleFilter):
     """
 
     session['TitleFilter'] = TitleFilter
+
+def sessionSaveChapterMaxLength(ChapterMaxLength):
+    """
+    保存最长目录限制
+
+    in :
+        ChapterMaxLength 长度
+    out :
+    """
+
+    session['ChapterMaxLength'] = ChapterMaxLength
 
 def sessionDelTitleFilter():
     """

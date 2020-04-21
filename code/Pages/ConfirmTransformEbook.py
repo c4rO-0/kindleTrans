@@ -24,7 +24,7 @@ from txt2html import Book, Chapter
 
 #--------------------------------
 # 引入session
-from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, sessionDelFileUpload, sessionSaveTOC, sessionQueryTitleFilter, sessionSaveTitleFilter
+from Script_UserSession import sessionQueryFileUpload, sessionSaveFileUpload, sessionDelFileUpload, sessionSaveTOC, sessionQueryTitleFilter, sessionSaveTitleFilter, sessionSaveChapterMaxLength, sessionQueryChapterMaxLength
 #--------------------------------
 # 运行shell
 # import commands
@@ -72,7 +72,7 @@ def ConfirmTransformEbook():
     formTran = TransformForm()
 
 
-    book , TOC = genTOC(sessionQueryTitleFilter(), fileDict['filePath'], fileDict['saveFileName'], fileDict['ChapterMaxLength'])
+    book , TOC = genTOC(sessionQueryTitleFilter(), fileDict['filePath'], fileDict['saveFileName'], sessionQueryChapterMaxLength())
     if(book is None):
         return redirect("/TransformEbook")
 
@@ -89,6 +89,7 @@ def ConfirmTransformEbook():
 
             # book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'])
             sessionSaveTitleFilter(titleFilter)
+            sessionSaveChapterMaxLength(ChapterMaxLength)
 
             # book , TOC = genTOC(None, filePath, saveFileName)
             
@@ -122,7 +123,7 @@ def ConfirmTransformEbook():
             if(titleFilter == None):
                 titleFilter = DEFAULT_TITLE_FILTER
 
-            book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'], fileDict['ChapterMaxLength'])
+            book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'], sessionQueryChapterMaxLength())
 
             if(book == None):
                 print("没有检测到上传的书", file=sys.stderr)

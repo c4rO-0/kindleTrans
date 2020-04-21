@@ -96,7 +96,7 @@ def TransformEbook():
             # 保存session
             sessionDelFileUpload()
             print(filename, file=sys.stderr)
-            info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath, 'ChapterMaxLength':25} )
+            info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath} )
             if info != 0:
                 print("储存文件错误 : ", info, file=sys.stderr)
                 return redirect("/TransformEbook")

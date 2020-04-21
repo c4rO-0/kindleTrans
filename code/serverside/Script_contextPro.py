@@ -45,6 +45,18 @@ def sessionUtilityProcessor():
         """
         return sessionQueryTOC()
 
+
+    def J2sessionQueryChapterMaxLength():
+        """
+        查询最长目录限制
+
+        out :
+            _   ChapterMaxLength 查询最长目录限制
+        """
+
+        
+        return sessionQueryChapterMaxLength()
+
     def J2sessionQueryTitleFilter():
         """
         查询目录匹配字符串
@@ -57,6 +69,7 @@ def sessionUtilityProcessor():
         return sessionQueryTitleFilter()
 
 
+
     def J2FunQueryNumTran():
         """
             查询转化的书的数目
@@ -67,6 +80,7 @@ def sessionUtilityProcessor():
     return dict(\
     J2SessionQueryFileUpload=J2SessionQueryFileUpload, \
     J2SessionQueryTOC=J2SessionQueryTOC, \
+    J2sessionQueryChapterMaxLength = J2sessionQueryChapterMaxLength, \
     J2sessionQueryTitleFilter=J2sessionQueryTitleFilter, \
     J2FunQueryNumTran=J2FunQueryNumTran \
     )
