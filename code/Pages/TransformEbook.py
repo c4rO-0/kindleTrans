@@ -80,7 +80,7 @@ def TransformEbook():
         if(form.upload.data):
             
             # print("共享 : ", form.share.data, file=sys.stderr)
-            filename = form.file.data.filename
+            filename = ''.join(form.file.data.filename.split()) 
             # secureFilename = secure_filename(filename)
             saveFileName = str(time.time()) + '-' + visitIP +'.txt'
             filePath = os.path.join(app.config['UPLOAD_FOLDER'],saveFileName)
