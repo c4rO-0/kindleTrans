@@ -1,3 +1,7 @@
 .custom-file-label::after {
     content: "浏览";
 }
+
+.newFeaturesHide {
+    transform: translate(100%, 0);
+}

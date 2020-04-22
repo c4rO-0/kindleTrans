@@ -14,7 +14,7 @@
 
     <script src="{{ url_for('static', filename='Scripts/jquery-3.3.1.js') }}"></script>
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/TransformEbook.css') }}?v={{ jsV }}" rel="stylesheet" type="text/css">
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>
@@ -40,10 +40,25 @@
 
 </head>
 
-<body>
+<body style="overflow-x: hidden" onclick="hideNewFeature(event)">
     {# 得到file #}
     {% set fileDict = J2SessionQueryFileUpload() %}
     <div class="container">
+        <div id="newFeatures" class="py-5 newFeaturesHide"
+            style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
+            <div onclick="toggleNewFeatures()" class="alert-primary px-2"
+                style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
+                <p class="m-0">New Features</p>
+            </div>
+
+            {# ==================== update log =================== #}
+            <div class="alert-secondary px-2" style="height: 100%; width: 100%; overflow-y: auto">
+                <h3 class="text-center">2020.4.21</h3>
+                <p>- 自动转码</p>
+                <h3 class="text-center">2020.4.22</h3>
+                <p>- 多服务器跳转</p>
+            </div>
+        </div>
         <div class="row justify-content-center">
             <div class="col-auto align-self-center">
                 <h1 style="font-size:4rem; color:dimgray">txt<span style="color:red">2</span>mobi</h1>

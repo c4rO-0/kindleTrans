@@ -1,4 +1,28 @@
 
+
+function toggleNewFeatures() {
+    let target = document.getElementById('newFeatures')
+    if (target.classList.contains('newFeaturesHide')) {
+        target.classList.remove('newFeaturesHide')
+    } else {
+        target.classList.add('newFeaturesHide')
+    }
+}
+
+function hideNewFeature(event) {
+    let target = document.getElementById('newFeatures')
+    if (!event.target.closest('#newFeatures') && !target.classList.contains('newFeaturesHide')) {
+        target.classList.add('newFeaturesHide')
+    }
+}
+
+function showNewFeatures() {
+    let target = document.getElementById('newFeatures')
+    if (target.classList.contains('newFeaturesHide')) {
+        target.classList.remove('newFeaturesHide')
+    }
+}
+
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
 
@@ -14,8 +38,8 @@ function httpGetAsync(theUrl, callback) {
 $(document).ready(function () {
 
     let urlList = {
-        'BJ': { ipUrl: "http://60.205.168.178/", url:'http://60.205.168.178/TransformEbook', resTime: undefined, name: '中国', id:'server-zh', host: ['60.205.168.178'] },
-        'JK': { ipUrl: "http://81.2.242.163/", url:'http://papercomment.tech/TransformEbook', resTime: undefined, name: '欧洲', id:'server-eu', host: ['81.2.242.163', 'papercomment.tech', 'tool.papercomment.tech'] }
+        'BJ': { ipUrl: "http://60.205.168.178/", url: 'http://60.205.168.178/TransformEbook', resTime: undefined, name: '中国', id: 'server-zh', host: ['60.205.168.178'] },
+        'JK': { ipUrl: "http://81.2.242.163/", url: 'http://papercomment.tech/TransformEbook', resTime: undefined, name: '欧洲', id: 'server-eu', host: ['81.2.242.163', 'papercomment.tech', 'tool.papercomment.tech'] }
     }
 
     // console.log("准备");
@@ -25,16 +49,16 @@ $(document).ready(function () {
     })
 
     // current
-    let host = location.hostname 
+    let host = location.hostname
 
     for (let loc of Object.keys(urlList)) {
-        if(urlList[loc].id ){
+        if (urlList[loc].id) {
             $('#server-list').append('<a class="btn btn-outline-secondary text-dark" \
-            id="'+ urlList[loc].id +'" \
-            href="'+urlList[loc].url+'">'+ urlList[loc].name +'</a>')
+            id="'+ urlList[loc].id + '" \
+            href="'+ urlList[loc].url + '">' + urlList[loc].name + '</a>')
         }
-        if(urlList[loc].host.includes(host)){
-            $('#'+urlList[loc].id).addClass('bg-success')
+        if (urlList[loc].host.includes(host)) {
+            $('#' + urlList[loc].id).addClass('bg-success')
         }
     }
 
@@ -63,12 +87,12 @@ $(document).ready(function () {
         let minPingKey = 'BJ'
         // let minPing = urlList[minPingKey].resTime
         for (let loc of Object.keys(urlList)) {
-            if(urlList[minPingKey].resTime > urlList[loc].resTime){
+            if (urlList[minPingKey].resTime > urlList[loc].resTime) {
                 minPingKey = loc
             }
         }
 
-        $('#server-suggest').append('推荐您使用<a href="'+urlList[minPingKey].url+'">'+urlList[minPingKey].name+'</a>服务器')
+        $('#server-suggest').append('推荐您使用<a href="' + urlList[minPingKey].url + '">' + urlList[minPingKey].name + '</a>服务器')
 
     })
 
