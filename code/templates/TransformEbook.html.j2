@@ -14,7 +14,8 @@
 
     <script src="{{ url_for('static', filename='Scripts/jquery-3.3.1.js') }}"></script>
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ url_for('static', filename='css/TransformEbook.css') }}?v={{ jsV }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/TransformEbook.css') }}?v={{ jsV }}" rel="stylesheet"
+        type="text/css">
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>
@@ -72,15 +73,6 @@
                         height="30">
                 </a>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-                <p class="btn bg-light">服务器列表</p>
-                <p class="btn" id='server-suggest'></p>
-                <div class="mb-3 bg-light" id='server-list'>
-                </div>
-            </div>
-
         </div>
 
         <div class="row justify-content-center">
@@ -164,7 +156,16 @@
         </div>
         {% endfor %}
     </form> -->
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <p class="btn bg-light">服务器列表</p>
+                <p class="btn" id='server-suggest'></p>
+                <div class="mb-3 bg-light" id='server-list'>
+                </div>
+            </div>
 
+        </div>
+        
         <div class="row justify-content-center my-4">
             <div class="col-md-9 bg-light">
                 <p style="color:rgb(129, 3, 3)">电子书只支持utf-8的txt文本, 如果提交后弹出错误, 请先手动<a target="_blank"
