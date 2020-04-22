@@ -15,4 +15,4 @@ import os
 def BibtexPage():
 
 
-    return render_template('BibtexPage.html.j2', app = app)
+    return render_template('BibtexPage.html.j2', app = app, jsV=jsV)
