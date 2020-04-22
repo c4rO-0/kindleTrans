@@ -143,4 +143,4 @@ def TransformEbook():
         return redirect("/ConfirmTransformEbook")
 
 
-    return render_template('TransformEbook.html.j2', app = app, form=form)
+    return render_template('TransformEbook.html.j2', app = app, form=form, jsV=jsV)

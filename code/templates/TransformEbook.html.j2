@@ -20,7 +20,7 @@
     <script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>
 
     <!-- our own scripts -->
-    <script src="{{ url_for('static', filename='Scripts/TransformEbook.js') }}"></script>
+    <script src="{{ url_for('static', filename='Scripts/TransformEbook.js') }}?v={{ jsV }}"></script>
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     {# 广告 #}
@@ -58,13 +58,22 @@
                 </a>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <p class="btn bg-light">服务器列表</p>
+                <p class="btn" id='server-suggest'></p>
+                <div class="mb-3 bg-light" id='server-list'>
+                </div>
+            </div>
+
+        </div>
 
         <div class="row justify-content-center">
             <div class="col-md-7">
                 <h5> txt转mobi(kindle识别的格式),可自动生成目录 </h5>
-                <p>使用说明：</p>
+                <!-- <p>使用说明：</p>
                 <p>单击"浏览"选择txt文件，点击"提交"开始上传</p>
-                <p>上传和初步处理后核实目录, 完成转化</p>
+                <p>上传和初步处理后核实目录, 完成转化</p> -->
             </div>
         </div>
         <form id="formUpload" method="POST" enctype="multipart/form-data">
@@ -143,7 +152,8 @@
 
         <div class="row justify-content-center my-4">
             <div class="col-md-9 bg-light">
-                <p style="color:rgb(129, 3, 3)">电子书只支持utf-8的txt文本, 如果提交后弹出错误, 请先手动<a target="_blank" href="https://subtitletools.com/convert-text-files-to-utf8-online">转化为utf-8</a>.</p>
+                <p style="color:rgb(129, 3, 3)">电子书只支持utf-8的txt文本, 如果提交后弹出错误, 请先手动<a target="_blank"
+                        href="https://subtitletools.com/convert-text-files-to-utf8-online">转化为utf-8</a>.</p>
                 <p>电子书将会在服务器上保留一天后删除</p>
                 <div class="w-100"></div>
                 <p>每天北京时间22:00-24:00网站进行维护</p>

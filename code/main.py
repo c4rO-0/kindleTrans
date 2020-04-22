@@ -54,6 +54,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+import time
+jsV = int(time.time())
+
 from Script_dbModel import manageMoney
 if(not os.path.exists(os.path.join(Project_path, "db") )):
     os.makedirs(os.path.join(Project_path, "db"))
