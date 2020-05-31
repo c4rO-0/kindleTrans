@@ -61,6 +61,7 @@ class UploadForm(FlaskForm):
 @app.route('/TransformEbook' , methods = ['GET', 'POST']  )
 def TransformEbook():
     #....
+    error = None
 
     if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
         print("访问ip : ",request.environ['REMOTE_ADDR'], file=sys.stderr)
@@ -110,37 +111,46 @@ def TransformEbook():
                 # if(info_o == 512):
                     # print("----自动转码失败, 转用遍历匹配")
                 fileCode = get_encoding(os.path.join(filePath , saveFileName))
+                print(fileCode)
                 if(fileCode == None):
                     # info_o = os.system('cd ' + filePath + ';' 
                     # + os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'serverside/conver.sh')) + ' ' + saveFileName )
-                    return redirect("/404/转码失败,请手动转换为gdb或utf-8")
+                    return redirect("/404/转码失败,请手动转换为gdb或utf-8. ")
                 else:
-                    with open(os.path.join(filePath , saveFileName+'.code'), 'a') as wf:  
-                        with open(os.path.join(filePath , saveFileName), 'rb') as rf:  
-                            while True: 
-                                line = rf.readline() 
-                                wf.write(line.decode(fileCode))
-                                if not line: 
-                                    break
-                    # os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
-                    shutil.move(os.path.join(filePath , saveFileName+'.code'), os.path.join(filePath , saveFileName))
+                    try:
+                        with open(os.path.join(filePath , saveFileName+'.code'), 'a') as wf:  
+                            with open(os.path.join(filePath , saveFileName), 'rb') as rf:  
+                                while True: 
+                                    line = rf.readline() 
+                                    wf.write(line.decode(fileCode))
+                                    if not line: 
+                                        break
+                        # os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
+                        shutil.move(os.path.join(filePath , saveFileName+'.code'), os.path.join(filePath , saveFileName))
+                    except:
+                        error = '转码失败,请手动转换为gdb或utf-8.'
+                        # return redirect("/404/转码失败,请手动转换为gdb或utf-8.")
+                        # return redirect("/TransformEbook")
                 #-----------------              
-
-                # 初始化图书
-                init_project(filePath, filename, form.author.data)
-                # 储存是否保存
-                # print("========准备写入==========")
-                with open(os.path.abspath(os.path.join(filePath, '.project.ini')), 'a+', encoding='UTF-8') as f:
-                    # print(os.path.abspath(os.path.join(filePath, '.project.ini')))
-                    # print("========写入==========")
-                    f.write("\nshare="+str(False)+"\n")
-                    f.close()
+                if(not error):
+                    # 初始化图书
+                    init_project(filePath, filename, form.author.data)
+                    # 储存是否保存
+                    # print("========准备写入==========")
+                    with open(os.path.abspath(os.path.join(filePath, '.project.ini')), 'a+', encoding='UTF-8') as f:
+                        # print(os.path.abspath(os.path.join(filePath, '.project.ini')))
+                        # print("========写入==========")
+                        f.write("\nshare="+str(False)+"\n")
+                        f.close()
                 
                 
                 
         else:
             print("unknown submit", file=sys.stderr)
-        return redirect("/ConfirmTransformEbook")
+            error = "unknown submit"
+
+        if(not error):
+            return redirect("/ConfirmTransformEbook")
 
 
-    return render_template('TransformEbook.html.j2', app = app, form=form, jsV=jsV)
+    return render_template('TransformEbook.html.j2', app = app, form=form, jsV=jsV, error=error)
