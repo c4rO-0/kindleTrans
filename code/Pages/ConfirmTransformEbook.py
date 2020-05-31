@@ -55,6 +55,17 @@ class TransformForm(FlaskForm):
         if(self.confirmtitleFilter.data):
             if(field.data == None or len(field.data) == 0):
                 raise ValidationError(gettext('需要目录过滤规则'))
+            
+            titleFilter = field.data 
+        else:
+            titleFilter = sessionQueryTitleFilter()
+
+        try:
+            re.compile(titleFilter)
+        except:
+            # sessionSaveTitleFilter(titleFilter)
+            raise ValidationError(gettext('目录过滤规则有误. 建议在 : https://regex101.com/ 选择python进行尝试.'))
+
 
 
 
@@ -71,10 +82,12 @@ def ConfirmTransformEbook():
     # 确认转换
     formTran = TransformForm()
 
-
-    book , TOC = genTOC(sessionQueryTitleFilter(), fileDict['filePath'], fileDict['saveFileName'], sessionQueryChapterMaxLength())
+    try:
+        book , TOC = genTOC(sessionQueryTitleFilter(), fileDict['filePath'], fileDict['saveFileName'], sessionQueryChapterMaxLength())
+    except:
+        return redirect("/404/转换失败,请联系网站管理员.")
     if(book is None):
-        return redirect("/TransformEbook")
+        return redirect("/404/没有检测到上传的书.")
 
 
     print("----formTran----", file=sys.stderr)
@@ -94,7 +107,7 @@ def ConfirmTransformEbook():
             # book , TOC = genTOC(None, filePath, saveFileName)
             
             if(book is None):
-                return redirect("/TransformEbook")
+                return redirect("/404/没有检测到上传的书.")
             # 链接目录
             # 创建目录
             # if (not os.path.exists(os.path.join(app.config['UPLOAD_FOLDERTOC'],fileDict['saveFileName']) )):
@@ -123,12 +136,14 @@ def ConfirmTransformEbook():
             if(titleFilter == None):
                 titleFilter = DEFAULT_TITLE_FILTER
 
-            book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'], sessionQueryChapterMaxLength())
-
+            try:
+                book , TOC = genTOC(titleFilter, fileDict['filePath'], fileDict['saveFileName'], sessionQueryChapterMaxLength())
+            except:
+                return redirect("/404/转换失败,请联系网站管理员.")
             if(book == None):
                 print("没有检测到上传的书", file=sys.stderr)
                 sessionDelFileUpload()
-                return redirect("/TransformEbook")
+                return redirect("/404/没有检测到上传的书.")
                 
             #-----------------
             # 删除目录
