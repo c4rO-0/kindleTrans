@@ -71,6 +71,9 @@ from Pages import *
 if __name__ == '__main__':
     # app.run(host='127.0.0.1', port=8081   , debug=True)
     # socketio.run(app, host='0.0.0.0', port=8081, debug=True)
-    socketio.run(app, host='0.0.0.0', debug=True)
+    if('debug' in str(sys.argv)):
+        socketio.run(app, host='0.0.0.0', debug=True)
+    else:
+        socketio.run(app, host='0.0.0.0', debug=False)
 
 
