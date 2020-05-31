@@ -139,7 +139,11 @@
 
         <div class="row justify-content-center mb-5">
             <div class="col-md-8">
-                <p>若生成目录不符，可更改通配符选择重新生成目录</p>
+
+                <div class="col-md-9 bg-light">
+                    <p>若生成目录不符，可更改通配符选择重新生成目录.</p>
+                </div>
+
                 <form id="formTranTitle" method="POST" enctype="multipart/form-data">
                     {{ formTran.hidden_tag() }}
                     <div class="input-group">
@@ -163,7 +167,9 @@
                     </div>
                     {% endfor %}
                 </form>
-
+                <div class="col-md-9 bg-light">
+                    <p>通配符可以在 <a target="_blank" href="https://regex101.com/">regex101</a>进行测试.(左侧FLAVOR选择Python)</p>
+                </div>
 
             </div>
         </div>
@@ -187,6 +193,7 @@
             {% endfor %}
         </form>
         {% endif %}
+
         <div class="row justify-content-center my-4">
             <div class="col-md-9 bg-light">
                 <p>欢迎在知乎给<a target="_blank" href="https://www.zhihu.com/people/c4rO-0/activities">我们</a>私信</p>

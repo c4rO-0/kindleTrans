@@ -64,7 +64,7 @@ class TransformForm(FlaskForm):
             re.compile(titleFilter)
         except:
             # sessionSaveTitleFilter(titleFilter)
-            raise ValidationError(gettext('目录过滤规则有误. 建议在 : https://regex101.com/ 选择python进行尝试.'))
+            raise ValidationError(gettext('目录过滤规则有误.'))
 
 
 
