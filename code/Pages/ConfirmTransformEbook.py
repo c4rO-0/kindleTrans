@@ -35,7 +35,26 @@ from Script_socketio import *
 import shutil
 
 import re
+
+import random
 #=================================
+
+def readSlogan():
+    
+    lines = []
+    with open(os.path.join(Txt2mobiPath,'resources','slogan.dat')) as f:
+        for line in f:
+            li=line.strip()
+            if (not li.startswith("#")) and len(li) > 0:
+                lines.append(li)
+    
+    if(len(lines) == 0):
+        return ''
+    else:
+        r_l = random.randint(0,len(lines)-1)
+        # print('debug : rand ', r_l,len(lines), file=sys.stderr)
+        return lines[r_l]
+
 
 class TransformForm(FlaskForm):
 
@@ -156,6 +175,11 @@ def ConfirmTransformEbook():
 
             # 转化封面
             coverFontFlag = ' -font \'' + os.path.join(Txt2mobiPath,'resources','STHeiti.ttf') + '\''
+            # 添加乞讨语
+            coverFlag = coverFontFlag + ' -gravity South -pointsize 30 -annotate +0+100 '
+            coverName = readSlogan()
+            info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\' ' +os.path.join(fileDict['filePath'] , "cover.png"))
+            # 书名
             coverFlag = coverFontFlag + ' -gravity North -pointsize 50 -annotate +0+100 '
             coverName = (fileDict['filename'].rsplit('.',1)[0]).replace('\'','').replace('\\','').replace('\"','')
             
