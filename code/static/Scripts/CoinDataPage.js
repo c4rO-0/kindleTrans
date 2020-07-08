@@ -61,7 +61,7 @@ function showBar(data){
         strTime = (data.lastNailOrder/60./24.).toFixed(1) +'d'  
     }
 
-    $('#Nail-order-last').text(strTime)
+    $('#nail-order-last').text(strTime)
 
     if(p_buy_hook){
         $('#p-hook-left .progress-bar').css('width', (p_close - p_buy_hook)/p_lRange*100. + '%')
@@ -117,7 +117,7 @@ function showBar(data){
 
 function runStatus(data){
     
-    running = Math.abs(Date.now()/ 1000. - data.time) <= 5.*60 + 5
+    running = Math.abs(Date.now()/ 1000. - data.time) <= 6.*60
 
     if(running){
        $('#status-run').show()
