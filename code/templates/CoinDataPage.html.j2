@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <title>{{ gettext("Bibtex2Text") }}</title>
+    <title>{{ gettext("CoinData") }}</title>
 
     {# 标签logo #}
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">
@@ -28,7 +28,6 @@
 
     <!-- our own scripts -->
     <script src="{{ url_for('static', filename='Scripts/CoinDataPage.js') }}?v={{ jsV }}"></script>
-    <script src="{{ url_for('static', filename='js/fuzzyset.js') }}"></script>
 
 
     <style>
@@ -60,32 +59,28 @@
 
 </head>
 
-<body style="overflow-x: hidden" onclick="hideNewFeature(event)">
+<body style="overflow-x: hidden">
     <div class="container">
-        <div id="newFeatures" class="py-5 newFeaturesHide" style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
-            <div onclick="toggleNewFeatures()" class="alert-primary px-2" style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
+        <div id="newFeatures" class="py-5 newFeaturesHide"
+            style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
+            <div onclick="toggleNewFeatures()" class="alert-primary px-2"
+                style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
                 <p class="m-0">New Features</p>
             </div>
 
             {# ==================== update log =================== #}
             <div class="alert-secondary px-2" style="height: 100%; width: 100%; overflow-y: auto">
-                <h3 class="text-center">2019.06.13</h3>
-                <p>- update customization UI</p>
-                <h3 class="text-center">2019.06.12</h3>
-                <p>- new Feartures List</p>
-                <h3 class="text-center">2019.06.08</h3>
-                <p>- customization support(in Format)</p>
-                <p>- Use <a href="http://www.cas.org/expertise/cascontent/caplus/corejournals.html">CAS Core Journal
-                        Abbreviations</a></p>
+                <h3 class="text-center">2020.07.08</h3>
+                <p>- try UI</p>
             </div>
         </div>
 
         <!-- title -->
         <div class="row justify-content-center">
             <div class="col-auto align-self-center px-0">
-                <h1 style="font-size:4rem; color:dimgray">Bibtex<span style="color:red">
-                        <font>2</font>
-                    </span>Cite</h1>
+                <h1 style="font-size:4rem; color:dimgray">Coin<span style="color:red">
+                        <font>D</font>
+                    </span>ata</h1>
             </div>
             <div class="col-auto align-self-end px-1">
                 <p class="align-text-bottom">Powered by</p>
@@ -98,18 +93,234 @@
             </div>
         </div>
 
+        <!-- status -->
 
-        <div class="row mb-1">
-            <div class="col">
-                <div id="frameTextarear" class="input-group">
-                    <textarea id="rawInfo" rows="10" class="form-control rounded-0"
-                        placeholder="paste Bibtex here. @article{...."></textarea>
+        <div class='row container'>
+            <button id='status-run' type="button" class="btn btn-success"></button>
+            <button id='status-stop' type="button" class="btn btn-danger"></button>
+            <!-- <p id='status-content'>content</p> -->
+        </div>
 
+
+        <!-- price bar -->
+        <!-- <div class="container">
+            <div class="row">
+                <div id='p-buy-1' class="container px-md-0" style='width:25%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-header">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-buy-2' class="container px-md-0" style='width:20%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-header">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-av' class="container px-md-0" style='width:10%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-header">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-sell-1' class="container px-md-0" style='width:20%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-header">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-sell-2' class="container px-md-0" style='width:25%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-header"></div>
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> -->
+
+        <div class="container">
+            <div class="row">
+                <div id='info' class="container px-md-0" style='width:10%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <p class="card-text">Info</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='price' class="container px-md-0" style='width:45%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-header">
+                                Featured
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='n-eff' class="container px-md-0" style='width:45%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-header">
+                                Featured
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div id='hook-order' class="container px-md-0" style='width:10%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <span>
+                                    Hook
+                                </span>
+                                <span id='hook-order-filled' style="color:DarkGreen">24</span>
+                                <span id='hook-order-last' style="color:DarkSlateBlue">3m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-hook-left' class="container px-md-0" style='width:45%'>
+                    <div class="col px-md-0">
+                        <div class="progress" style="transform: rotate(180deg);">
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-hook-right' class="container px-md-0" style='width:45%'>
+                    <div class="col px-md-0">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%"
+                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div id='av-order' class="container px-md-0" style='width:10%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <span>
+                                    av
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-av-left' class="container px-md-0" style='width:45%'>
+                    <div class="col px-md-0">
+                        <div class="progress" style="transform: rotate(180deg);">
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-av-right' class="container px-md-0" style='width:45%'>
+                    <div class="col px-md-0">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%"
+                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div id='nail-order' class="container px-md-0" style='width:10%'>
+                    <div class="col px-md-0">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <span>
+                                    Nail
+                                </span>
+                                <span id='nail-order-filled' style="color:DarkGreen">24</span>
+                                <span id='nail-order-last' style="color:DarkSlateBlue">3m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-nail-left' class="container px-md-0" style='width:45%'>
+                    <div class="col px-md-0">
+                        <div class="progress" style="transform: rotate(180deg);">
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='p-nail-right' class="container px-md-0" style='width:45%'>
+                    <div class="col px-md-0">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%"
+                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <p class="card-text"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        {# #}
 
 
 </body>

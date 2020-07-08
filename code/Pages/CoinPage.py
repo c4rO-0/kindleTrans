@@ -15,8 +15,14 @@ import os
 def getCoinData():
 
     # Opening JSON file 
-    # path = '/home/public/autoDigiCoin/log/coinData.json'
-    path = '../example/coinData.json'
+    
+    path_server = '/home/public/autoDigiCoin/log/coinData.json'
+    path_local = '../example/coinData.json'
+    if(os.path.isfile(path_server) ):
+        path = path_server
+    else:
+        path = path_local
+
     with open(path,'r') as f:
         orderInfo = json.load(f) 
         # {
