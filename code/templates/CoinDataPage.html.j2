@@ -108,22 +108,22 @@
                     <div class="col px-md-0">
                         <div class="card text-center">
                             <div class="card-body">
-                                <p class="card-text">Info</p>
+                                <span>Info</span>
+                                <span id='n-eff' style="color:DarkGreen">1.9</span>     
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id='price' class="container px-md-0" style='width:40%'>
+                <div id='price' class="container px-md-0" style='width:80%'>
                     <div class="col px-md-0">
-                        <div class="card text-center">
-                            <div class="card-header">
-                                Featured
-                            </div>
+                        <div id='n-eff-prg' class="progress">
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>                            
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
+                                style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%"
+                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                    </div>
-                </div>
-                <div id='n-eff' class="container px-md-0" style='width:40%'>
-                    <div class="col px-md-0">
                         <div class="card text-center">
                             <div class="card-header">
                                 Featured
@@ -150,7 +150,10 @@
                 <div id='p-hook-left' class="container px-md-0" style='width:40%'>
                     <div class="col px-md-0">
                         <div class="progress" style="transform: rotate(180deg);">
-                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                            <div class="progress-bar progress-bar-striped bg-warning" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
                                 style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
                                 aria-valuemax="100"></div>
                         </div>
@@ -164,6 +167,8 @@
                 <div id='p-hook-right' class="container px-md-0" style='width:40%'>
                     <div class="col px-md-0">
                         <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-warning" role="progressbar"
+                                style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                             <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%"
                                 aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
@@ -176,7 +181,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <!-- <div class="row">
                 <div id='av-order' class="container px-md-0" style='width:20%'>
                     <div class="col px-md-0">
                         <div class="card text-center">
@@ -215,7 +220,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="row">
                 <div id='nail-order' class="container px-md-0" style='width:20%'>
@@ -234,7 +239,10 @@
                 <div id='p-nail-left' class="container px-md-0" style='width:40%'>
                     <div class="col px-md-0">
                         <div class="progress" style="transform: rotate(180deg);">
-                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                            <div class="progress-bar progress-bar-striped bg-warning" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
                                 style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
                                 aria-valuemax="100"></div>
                         </div>
@@ -243,11 +251,18 @@
                                 <p class="card-text"></p>
                             </div>
                         </div>
+                        <div id='buy-limit' class="progress" style="transform: rotate(180deg);">
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                        </div>
                     </div>
                 </div>
                 <div id='p-nail-right' class="container px-md-0" style='width:40%'>
                     <div class="col px-md-0">
                         <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-warning" role="progressbar"
+                                style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                             <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%"
                                 aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
@@ -255,6 +270,11 @@
                             <div class="card-body">
                                 <p class="card-text"></p>
                             </div>
+                        </div>
+                        <div id='sell-limit' class="progress">
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>
