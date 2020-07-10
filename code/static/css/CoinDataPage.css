@@ -13,3 +13,11 @@
 .bg-info-dark {
     background-color: #0099CC;
 }
+
+.custom-file-label::after {
+    content: "浏览";
+}
+
+.newFeaturesHide {
+    transform: translate(100%, 0);
+}

@@ -1,3 +1,26 @@
+function toggleNewFeatures() {
+    let target = document.getElementById('newFeatures')
+    if (target.classList.contains('newFeaturesHide')) {
+        target.classList.remove('newFeaturesHide')
+    } else {
+        target.classList.add('newFeaturesHide')
+    }
+}
+
+function hideNewFeature(event) {
+    let target = document.getElementById('newFeatures')
+    if (!event.target.closest('#newFeatures') && !target.classList.contains('newFeaturesHide')) {
+        target.classList.add('newFeaturesHide')
+    }
+}
+
+function showNewFeatures() {
+    let target = document.getElementById('newFeatures')
+    if (target.classList.contains('newFeaturesHide')) {
+        target.classList.remove('newFeaturesHide')
+    }
+}
+
 function showBar(data) {
     let p_close = data.marketInfo.kline.close
     let p_av_up = data.marketInfo.p_average_up
@@ -13,55 +36,65 @@ function showBar(data) {
     let p_buy_nail_high = null
     let p_buy_nail_low = null
     if (data.unprocNailInfo.n_buy + data.cutNailInfo.n_buy > 0) {
-        p_buy_nail_high = Math.max(
-            data.unprocNailInfo.p_buy_high == null ? -1. : data.unprocNailInfo.p_buy_high,
-            data.cutNailInfo.p_buy_high == null ? -1. : data.cutNailInfo.p_buy_high)
-
-
-        p_buy_nail_low = Math.min(
-            data.unprocNailInfo.p_buy_low == null ? 1.E8 : data.unprocNailInfo.p_buy_low,
-            data.cutNailInfo.p_buy_low == null ? 1.E8 : data.cutNailInfo.p_buy_low)
+        p_buy_nail_high = data.unprocNailInfo.p_buy_high
+        p_buy_nail_low = data.unprocNailInfo.p_buy_low
     }
+
+    let p_buy_cut_nail_high = null
+    let p_buy_cut_nail_low = null
+    if (data.cutNailInfo.n_buy > 0) {
+        p_buy_cut_nail_high = data.cutNailInfo.p_buy_high
+        p_buy_cut_nail_low = data.cutNailInfo.p_buy_low
+    }    
 
 
     let p_sell_nail_low = null
     let p_sell_nail_high = null
-    if (data.unprocNailInfo.n_sell + data.cutNailInfo.n_sell > 0) {
+    if (data.unprocNailInfo.n_sell> 0) {
+        p_sell_nail_low = data.unprocNailInfo.p_sell_low
+        p_sell_nail_high = data.unprocNailInfo.p_sell_high
+    }
 
-        p_sell_nail_low = Math.min(
-            data.unprocNailInfo.p_sell_low == null ? 1.E8 : data.unprocNailInfo.p_sell_low,
-            data.cutNailInfo.p_sell_low == null ? 1.E8 : data.cutNailInfo.p_sell_low)
-
-        p_sell_nail_high = Math.max(
-            data.unprocNailInfo.p_sell_high == null ? -1. : data.unprocNailInfo.p_sell_high,
-            data.cutNailInfo.p_sell_high == null ? -1. : data.cutNailInfo.p_sell_high)
+    let p_sell_cut_nail_low = null
+    let p_sell_cut_nail_high = null
+    if (data.cutNailInfo.n_sell > 0) {
+        p_sell_cut_nail_low = data.cutNailInfo.p_sell_low
+        p_sell_cut_nail_high = data.cutNailInfo.p_sell_high
     }
 
 
     let p_min = Math.min(p_close,
-        p_av_up == null ? 1.E8 : p_av_up,
-        p_av_dn == null ? 1.E8 : p_av_dn,
-        p_buy_hook_low == null ? 1.E8 : p_buy_hook_low,
-        p_buy_nail_low == null ? 1.E8 : p_buy_nail_low,
-        p_buy_hook_high == null ? 1.E8 : p_buy_hook_high,
-        p_buy_nail_high == null ? 1.E8 : p_buy_nail_high,
-        p_sell_hook_low == null ? 1.E8 : p_sell_hook_low,
-        p_sell_nail_low == null ? 1.E8 : p_sell_nail_low,
-        p_sell_hook_high == null ? 1.E8 : p_sell_hook_high,
-        p_sell_nail_high == null ? 1.E8 : p_sell_nail_high,
+        p_av_up              == null ? 1.E8 : p_av_up              ,
+        p_av_dn              == null ? 1.E8 : p_av_dn              ,
+        p_buy_hook_low       == null ? 1.E8 : p_buy_hook_low       ,
+        p_buy_nail_low       == null ? 1.E8 : p_buy_nail_low       ,
+        p_buy_cut_nail_low   == null ? 1.E8 : p_buy_cut_nail_low   ,
+        p_buy_hook_high      == null ? 1.E8 : p_buy_hook_high      ,
+        p_buy_nail_high      == null ? 1.E8 : p_buy_nail_high      ,
+        p_buy_cut_nail_high  == null ? 1.E8 : p_buy_cut_nail_high  ,
+        p_sell_hook_low      == null ? 1.E8 : p_sell_hook_low      ,
+        p_sell_nail_low      == null ? 1.E8 : p_sell_nail_low      ,
+        p_sell_cut_nail_low  == null ? 1.E8 : p_sell_cut_nail_low  ,
+        p_sell_hook_high     == null ? 1.E8 : p_sell_hook_high     ,
+        p_sell_nail_high     == null ? 1.E8 : p_sell_nail_high     ,
+        p_sell_cut_nail_high == null ? 1.E8 : p_sell_cut_nail_high ,
     )
 
     let p_max = Math.max(
-        p_av_up == null ? -1. : p_av_up,
-        p_av_dn == null ? -1. : p_av_dn,
-        p_buy_hook_low == null ? -1. : p_buy_hook_low,
-        p_buy_nail_low == null ? -1. : p_buy_nail_low,
-        p_buy_hook_high == null ? -1. : p_buy_hook_high,
-        p_buy_nail_high == null ? -1. : p_buy_nail_high,
-        p_sell_hook_low == null ? -1. : p_sell_hook_low,
-        p_sell_nail_low == null ? -1. : p_sell_nail_low,
-        p_sell_hook_high == null ? -1. : p_sell_hook_high,
-        p_sell_nail_high == null ? -1. : p_sell_nail_high,
+        p_av_up              == null ? -1. : p_av_up                ,
+        p_av_dn              == null ? -1. : p_av_dn                ,
+        p_buy_hook_low       == null ? -1. : p_buy_hook_low         ,
+        p_buy_nail_low       == null ? -1. : p_buy_nail_low         ,
+        p_buy_cut_nail_low   == null ? -1. : p_buy_cut_nail_low     ,
+        p_buy_hook_high      == null ? -1. : p_buy_hook_high        ,
+        p_buy_nail_high      == null ? -1. : p_buy_nail_high        ,
+        p_buy_cut_nail_high  == null ? -1. : p_buy_cut_nail_high    ,
+        p_sell_hook_low      == null ? -1. : p_sell_hook_low        ,
+        p_sell_nail_low      == null ? -1. : p_sell_nail_low        ,
+        p_sell_cut_nail_low  == null ? -1. : p_sell_cut_nail_low    ,
+        p_sell_hook_high     == null ? -1. : p_sell_hook_high       ,
+        p_sell_nail_high     == null ? -1. : p_sell_nail_high       ,
+        p_sell_cut_nail_high == null ? -1. : p_sell_cut_nail_high   ,
     )
 
     let p_lRange = p_close - p_min
@@ -148,30 +181,78 @@ function showBar(data) {
         $('#p-hook-right .card-text').text('None | ' + data.unprocHookInfo.n_sell)
     }
 
-    n_nail_buy = data.unprocNailInfo.n_buy + data.cutNailInfo.n_buy
+    n_nail_buy = data.unprocNailInfo.n_buy
     if (n_nail_buy) {
-        $('#p-nail-left .progress-bar:eq(0)').css('width', (p_close - p_buy_nail_high) / p_maxRange * 100. + '%')
-        $('#p-nail-left .progress-bar:eq(1)').css('width', (p_buy_nail_high - p_buy_nail_low) / p_maxRange * 100. + '%')
+        $('#p-nail-left .progress:eq(0) .progress-bar:eq(0)').css('width', (p_close - p_buy_nail_high) / p_maxRange * 100. + '%')
+        $('#p-nail-left .progress:eq(0) .progress-bar:eq(1)').css('width', (p_buy_nail_high - p_buy_nail_low) / p_maxRange * 100. + '%')
 
-        $('#p-nail-left .card-text').text(n_nail_buy + ' | ' + (p_buy_nail_high).toFixed(6))
+        // $('#p-nail-left .card-text').text(n_nail_buy + ' | ' + (p_buy_nail_high).toFixed(6))
 
     } else {
-        $('#p-nail-left .progress-bar').css('width', '0%')
-        $('#p-nail-left .card-text').text(n_nail_buy + ' | None')
+        $('#p-nail-left .progress:eq(0) .progress-bar').css('width', '0%')
+        // $('#p-nail-left .card-text').text(n_nail_buy + ' | None')
     }
 
-    n_nail_sell = data.unprocNailInfo.n_sell + data.cutNailInfo.n_sell
+    n_cut_nail_buy = data.cutNailInfo.n_buy
+    if (n_cut_nail_buy) {
+        $('#p-nail-left .progress:eq(1) .progress-bar:eq(0)').css('width', (p_close - p_buy_cut_nail_high) / p_maxRange * 100. + '%')
+        $('#p-nail-left .progress:eq(1) .progress-bar:eq(1)').css('width', (p_buy_cut_nail_high - p_buy_cut_nail_low) / p_maxRange * 100. + '%')
+
+        // $('#p-nail-left .card-text').text(n_cut_nail_buy + ' | ' + (p_buy_cut_nail_high).toFixed(6))
+
+    } else {
+        $('#p-nail-left .progress:eq(1) .progress-bar').css('width', '0%')
+        // $('#p-nail-left .card-text').text(n_cut_nail_buy + ' | None')
+    } 
+    
+    if(n_nail_buy+n_cut_nail_buy){
+        p_max_nail = Math.max(
+            p_buy_nail_high     == null ? -1. : p_buy_nail_high ,
+            p_buy_cut_nail_high == null ? -1. : p_buy_cut_nail_high)
+
+        $('#p-nail-left .card-text').text((n_nail_buy+n_cut_nail_buy) + ' | ' + (p_max_nail.toFixed(6)))
+    }else{
+        $('#p-nail-left .card-text').text( (n_nail_buy + n_cut_nail_buy) + ' | None')
+    }
+
+
+
+    n_nail_sell = data.unprocNailInfo.n_sell
     if (n_nail_sell) {
 
-        $('#p-nail-right .progress-bar:eq(0)').css('width', (p_sell_nail_low - p_close) / p_maxRange * 100. + '%')
-        $('#p-nail-right .progress-bar:eq(1)').css('width', (p_sell_nail_high - p_sell_nail_low) / p_maxRange * 100. + '%')
+        $('#p-nail-right .progress:eq(0) .progress-bar:eq(0)').css('width', (p_sell_nail_low - p_close) / p_maxRange * 100. + '%')
+        $('#p-nail-right .progress:eq(0) .progress-bar:eq(1)').css('width', (p_sell_nail_high - p_sell_nail_low) / p_maxRange * 100. + '%')
 
-        $('#p-nail-right .card-text').text((p_sell_nail_low).toFixed(6) + ' | ' + n_nail_sell)
+        // $('#p-nail-right .card-text').text((p_sell_nail_low).toFixed(6) + ' | ' + n_nail_sell)
 
     } else {
-        $('#p-nail-right .progress-bar').css('width', '0%')
-        $('#p-nail-right .card-text').text('None | ' + n_nail_sell)
+        $('#p-nail-right .progress:eq(0) .progress-bar').css('width', '0%')
+        // $('#p-nail-right .card-text').text('None | ' + n_nail_sell)
     }
+
+    n_cut_nail_sell = data.cutNailInfo.n_sell
+    if (n_cut_nail_sell) {
+
+        $('#p-nail-right .progress:eq(1) .progress-bar:eq(0)').css('width', (p_sell_cut_nail_low - p_close) / p_maxRange * 100. + '%')
+        $('#p-nail-right .progress:eq(1) .progress-bar:eq(1)').css('width', (p_sell_cut_nail_high - p_sell_cut_nail_low) / p_maxRange * 100. + '%')
+
+        // $('#p-nail-right .card-text').text((p_sell_cut_nail_low).toFixed(6) + ' | ' + n_cut_nail_sell)
+
+    } else {
+        $('#p-nail-right .progress:eq(1) .progress-bar').css('width', '0%')
+        // $('#p-nail-right .card-text').text('None | ' + n_cut_nail_sell)
+    }
+
+    if(n_nail_sell+n_cut_nail_sell){
+        p_min_nail = Math.min(
+            p_sell_nail_low     == null ? 1.E6 : p_sell_nail_low ,
+            p_sell_cut_nail_low == null ? 1.E6 : p_sell_cut_nail_low)
+
+        $('#p-nail-right .card-text').text((n_nail_sell+n_cut_nail_sell) + ' | ' + (p_min_nail.toFixed(6)))
+    }else{
+        $('#p-nail-right .card-text').text( (n_nail_sell+n_cut_nail_sell) + ' | None')
+    }
+
 
     // if(p_av_dn){
     //     $('#p-av-left .progress-bar').css('width', (p_close - p_av_dn)/p_maxRange*100. + '%')
@@ -190,29 +271,37 @@ function showBar(data) {
     // }
 
     // console.log(data.unprocNailInfo.n_buy, data.config)
-    $('#buy-limit .progress-bar').css('width', (n_nail_buy) / (data.config.n_buy_limit_stop_sell) * 100. + '%')
-    if (n_nail_buy >= data.config.n_buy_limit_stop_sell) {
-        $('#buy-limit .progress-bar').removeClass('bg-danger', 'bg-warning', 'bg-success')
-        $('#buy-limit .progress-bar').addClass('bg-danger')
-    } else if (n_nail_buy >= 0.6 * data.config.n_buy_limit_stop_sell) {
-        $('#buy-limit .progress-bar').removeClass('bg-danger', 'bg-warning', 'bg-success')
-        $('#buy-limit .progress-bar').addClass('bg-warning')
+    $('#buy-limit .progress-bar:eq(0)').css('width', (n_cut_nail_buy) / (data.config.n_buy_limit_stop_sell) * 100. + '%')
+    $('#buy-limit .progress-bar:eq(1)').css('width', (n_nail_buy) / (data.config.n_buy_limit_stop_sell) * 100. + '%')
+
+    $('#buy-limit .progress-bar:eq(0)').removeClass('bg-danger-dark', 'bg-warning-dark', 'bg-success-dark') 
+    $('#buy-limit .progress-bar:eq(1)').removeClass('bg-danger', 'bg-warning', 'bg-success')
+    if (n_nail_buy+n_cut_nail_buy >= data.config.n_buy_limit_stop_sell) {
+        $('#buy-limit .progress-bar:eq(0)').addClass('bg-danger-dark')
+        $('#buy-limit .progress-bar:eq(1)').addClass('bg-danger')
+    } else if (n_nail_buy+n_cut_nail_buy >= 0.6 * data.config.n_buy_limit_stop_sell) {
+        $('#buy-limit .progress-bar:eq(0)').addClass('bg-warning-dark')
+        $('#buy-limit .progress-bar:eq(1)').addClass('bg-warning')
     } else {
-        $('#buy-limit .progress-bar').removeClass('bg-danger', 'bg-warning', 'bg-success')
-        $('#buy-limit .progress-bar').addClass('bg-success')
+        $('#buy-limit .progress-bar:eq(0)').addClass('bg-success-dark')
+        $('#buy-limit .progress-bar:eq(1)').addClass('bg-success')
     }
 
 
-    $('#sell-limit .progress-bar').css('width', (n_nail_sell) / (data.config.n_sell_limit_stop_buy) * 100. + '%')
-    if (n_nail_sell >= data.config.n_sell_limit_stop_buy) {
-        $('#buy-limit .progress-bar').removeClass('bg-danger', 'bg-warning', 'bg-success')
-        $('#buy-limit .progress-bar').addClass('bg-danger')
-    } else if (n_nail_sell >= 0.6 * data.config.n_sell_limit_stop_buy) {
-        $('#buy-limit .progress-bar').removeClass('bg-danger', 'bg-warning', 'bg-success')
-        $('#buy-limit .progress-bar').addClass('bg-warning')
+    $('#sell-limit .progress-bar:eq(0)').css('width', (n_cut_nail_sell) / (data.config.n_sell_limit_stop_buy) * 100. + '%')
+    $('#sell-limit .progress-bar:eq(1)').css('width', (n_nail_sell) / (data.config.n_sell_limit_stop_buy) * 100. + '%')
+
+    $('#sell-limit .progress-bar:eq(0)').removeClass('bg-danger-dark', 'bg-warning-dark', 'bg-success-dark') 
+    $('#sell-limit .progress-bar:eq(1)').removeClass('bg-danger', 'bg-warning', 'bg-success')
+    if (n_nail_sell+n_cut_nail_sell >= data.config.n_sell_limit_stop_buy) {
+        $('#sell-limit .progress-bar:eq(0)').addClass('bg-danger-dark')
+        $('#sell-limit .progress-bar:eq(1)').addClass('bg-danger')
+    } else if (n_nail_sell+n_cut_nail_sell >= 0.6 * data.config.n_sell_limit_stop_buy) {
+        $('#sell-limit .progress-bar:eq(0)').addClass('bg-warning-dark')
+        $('#sell-limit .progress-bar:eq(1)').addClass('bg-warning')
     } else {
-        $('#buy-limit .progress-bar').removeClass('bg-danger', 'bg-warning', 'bg-success')
-        $('#buy-limit .progress-bar').addClass('bg-success')
+        $('#sell-limit .progress-bar:eq(0)').addClass('bg-success-dark')
+        $('#sell-limit .progress-bar:eq(1)').addClass('bg-success')
     }
 
 }
@@ -233,38 +322,29 @@ function runStatus(data) {
     $('[id^="status"]').text((Math.abs(Date.now() / 1000. - data.time) / 60.).toFixed(2) + 'm')
 }
 
+function refreshData(){
+    $.getJSON("/_getCoinData", (data) => {
+        showBar(data);
+        runStatus(data);
+        window.coinData = data
+    });
+}
 
 $(document).ready(() => {
     $('#status-run').on('click', () => {
         console.log('reload')
-        $.getJSON("/_getCoinData", (data) => {
-            showBar(data);
-            runStatus(data);
-        });
-
-
+        refreshData()
     })
 
     $('#status-stop').on('click', () => {
         console.log('reload')
-        $.getJSON("/_getCoinData", (data) => {
-            showBar(data);
-            runStatus(data);
-        });
-
-        status - stop
+        refreshData()
     })
 
-    $.getJSON("/_getCoinData", (data) => {
-        showBar(data);
-        runStatus(data);
-    });
+    refreshData()
 
     setInterval(function() {
-        $.getJSON("/_getCoinData", (data) => {
-            showBar(data);
-            runStatus(data);
-        });
+        refreshData()
     }, 10 * 1000); // 60 * 1000 milsec
 
 
