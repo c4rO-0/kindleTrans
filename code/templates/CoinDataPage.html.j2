@@ -34,24 +34,25 @@
         .newFeaturesHide {
             transform: translate(100%, 0);
         }
+
         /* #sortable1 li, #sortable2 li{
             display: inline;
         } */
-        
-         ::-webkit-scrollbar {
+
+        ::-webkit-scrollbar {
             width: 12px;
         }
-        
-         ::-webkit-scrollbar-thumb {
+
+        ::-webkit-scrollbar-thumb {
             border-radius: 6px;
             background: #e8e8e8;
         }
-        
-         ::-webkit-scrollbar-thumb:hover {
+
+        ::-webkit-scrollbar-thumb:hover {
             background: #c0c0c0;
         }
-        
-         ::-webkit-scrollbar-track {
+
+        ::-webkit-scrollbar-track {
             background: #ffffff;
         }
     </style>
@@ -61,8 +62,10 @@
 
 <body style="overflow-x: hidden">
     <div class="container">
-        <div id="newFeatures" class="py-5 newFeaturesHide" style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
-            <div onclick="toggleNewFeatures()" class="alert-primary px-2" style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
+        <div id="newFeatures" class="py-5 newFeaturesHide"
+            style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
+            <div onclick="toggleNewFeatures()" class="alert-primary px-2"
+                style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
                 <p class="m-0">New Features</p>
             </div>
 
@@ -76,7 +79,7 @@
         <!-- title -->
         <div class="row justify-content-center">
             <div class="col-auto align-self-center px-0">
-                <h1 style="font-size:4rem; color:dimgray">Coin<span style="color:red">
+                <h1 style="color:dimgray">Coin<span style="color:red">
                         <font>D</font></span>ata</h1>
             </div>
             <div class="col-auto align-self-end px-1">
@@ -84,16 +87,36 @@
             </div>
             <div class="col-auto align-self-end px-1">
                 <a href="{{url_for('AboutUsPage')}}">
-                    <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30" height="30">
+                    <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30"
+                        height="30">
                 </a>
             </div>
         </div>
 
         <!-- status -->
-        <div class='row container'>
-            <button id='status-run' type="button" class="btn btn-success"></button>
-            <button id='status-stop' type="button" class="btn btn-danger"></button>
-            <!-- <p id='status-content'>content</p> -->
+        <div class="container">
+            <div class='row'>
+                <div class="container px-md-0" style='width:20%'>
+                    <button id='status-run' type="button" class="btn btn-block btn-success"></button>
+                    <button id='status-stop' type="button" class="btn btn-block btn-danger"></button>
+                </div>
+                <!-- <p id='status-content'>content</p> -->
+                <div id='billInfo-left' class="container px-md-0" style='width:40%'>
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <p class="card-text"></p>
+                        </div>
+                    </div>
+                </div>
+                <div id='billInfo-right' class="container px-md-0" style='width:40%'>
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <p class="card-text"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
 
@@ -113,13 +136,18 @@
                     <div class="col px-md-0">
                         <div id='n-eff-prg' class="progress">
 
-                            <div class="progress-bar progress-bar-striped bg-success-dark" role="progressbar" style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar" style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="50"></div>
-                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="50"></div>
+                            <div class="progress-bar progress-bar-striped bg-success-dark" role="progressbar"
+                                style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar"
+                                style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="50"></div>
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 00%"
+                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="50"></div>
 
 
-                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
 
 
                         </div>
@@ -149,8 +177,12 @@
                 <div id='p-hook-left' class="container px-md-0" style='width:40%'>
                     <div class="col px-md-0">
                         <div class="progress" style="transform: rotate(180deg);">
-                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
                         </div>
                         <div class="card text-center">
                             <div class="card-body">
@@ -162,8 +194,10 @@
                 <div id='p-hook-right' class="container px-md-0" style='width:40%'>
                     <div class="col px-md-0">
                         <div class="progress">
-                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%"
+                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="card text-center">
                             <div class="card-body">
@@ -232,12 +266,20 @@
                 <div id='p-nail-left' class="container px-md-0" style='width:40%'>
                     <div class="col px-md-0">
                         <div class="progress" style="transform: rotate(180deg);">
-                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
                         </div>
                         <div class="progress" style="transform: rotate(180deg);">
-                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
                         </div>
 
                         <div class="card text-center">
@@ -246,30 +288,53 @@
                             </div>
                         </div>
                         <div id='buy-limit' class="progress" style="transform: rotate(180deg);">
-                            <div class="progress-bar progress-bar-striped bg-success-dark" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>                            
+                            <div class="progress-bar progress-bar-striped bg-success-dark" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                        </div>
+                        <div id='unpaired-buy' class="progress" style="transform: rotate(180deg);">
+                                <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                    style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                    aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>
                 <div id='p-nail-right' class="container px-md-0" style='width:40%'>
                     <div class="col px-md-0">
                         <div class="progress">
-                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%"
+                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="progress">
-                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>                        
+                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar"
+                                style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
                         <div class="card text-center">
                             <div class="card-body">
                                 <p class="card-text"></p>
                             </div>
                         </div>
                         <div id='sell-limit' class="progress">
-                            <div class="progress-bar progress-bar-striped bg-success-dark" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-success-dark" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                aria-valuemax="100"></div>
                         </div>
+                        <div  id='unpaired-sell' class="progress">
+                                <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                                    style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
+                                    aria-valuemax="100"></div>
+                        </div>
+
                     </div>
                 </div>
             </div>

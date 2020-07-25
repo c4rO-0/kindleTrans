@@ -22,6 +22,7 @@ function showNewFeatures() {
 }
 
 function showBar(data) {
+
     let p_close = data.marketInfo.kline.close
     let p_av_up = data.marketInfo.p_average_up
     let p_av_dn = data.marketInfo.p_average_dn
@@ -133,8 +134,10 @@ function showBar(data) {
     $('#n-eff-prg .progress-bar:eq(4)').text((n_max - n_eff).toFixed(6))
 
     $('#n-eff').text(n_eff.toFixed(4))
-
-
+    
+    // billInfo
+    $('#billInfo-left .card-text').text( (data.billInfo.tran.n_eth+data.billInfo.tran.n_btc/p_close).toFixed(6) )
+    $('#billInfo-right .card-text').text( (data.billInfo.earn.n_eth+data.billInfo.earn.n_btc/p_close).toFixed(6) )
 
     $('#hook-order-filled').text(data.filledHookOrderInfo.n_buy + '+' + data.filledHookOrderInfo.n_sell)
 
@@ -161,25 +164,27 @@ function showBar(data) {
     $('#nail-order-last').text(strTime)
 
     if (data.unprocHookInfo.n_buy) {
-        $('#p-hook-left .progress-bar:eq(0)').css('width', (p_close - p_buy_hook_high) / p_maxRange * 100. + '%')
-        $('#p-hook-left .progress-bar:eq(1)').css('width', (p_buy_hook_high - p_buy_hook_low) / p_maxRange * 100. + '%')
+        $('#p-hook-left .progress:eq(0) .progress-bar:eq(0)').css('width', (p_close - p_buy_hook_high) / p_maxRange * 100. + '%')
+        $('#p-hook-left .progress:eq(0) .progress-bar:eq(1)').css('width', (p_buy_hook_high - p_buy_hook_low) / p_maxRange * 100. + '%')
 
         $('#p-hook-left .card-text').text(data.unprocHookInfo.n_buy + ' | ' + (p_buy_hook_high).toFixed(6))
     } else {
-        $('#p-hook-left .progress-bar').css('width', '0%')
+        $('#p-hook-left .progress:eq(0) .progress-bar').css('width', '0%')
         $('#p-hook-left .card-text').text(data.unprocHookInfo.n_buy + ' | None')
     }
 
+
     if (data.unprocHookInfo.n_sell) {
-        $('#p-hook-right .progress-bar:eq(0)').css('width', (p_sell_hook_low - p_close) / p_maxRange * 100. + '%')
-        $('#p-hook-right .progress-bar:eq(1)').css('width', (p_sell_hook_high - p_sell_hook_low) / p_maxRange * 100. + '%')
+        $('#p-hook-right .progress:eq(0) .progress-bar:eq(0)').css('width', (p_sell_hook_low - p_close) / p_maxRange * 100. + '%')
+        $('#p-hook-right .progress:eq(0) .progress-bar:eq(1)').css('width', (p_sell_hook_high - p_sell_hook_low) / p_maxRange * 100. + '%')
 
         $('#p-hook-right .card-text').text((p_sell_hook_low).toFixed(6) + ' | ' + data.unprocHookInfo.n_sell)
 
     } else {
-        $('#p-hook-right .progress-bar').css('width', '0%')
+        $('#p-hook-right .progress:eq(0) .progress-bar').css('width', '0%')
         $('#p-hook-right .card-text').text('None | ' + data.unprocHookInfo.n_sell)
     }
+
 
     n_nail_buy = data.unprocNailInfo.n_buy
     if (n_nail_buy) {
@@ -250,7 +255,7 @@ function showBar(data) {
 
         $('#p-nail-right .card-text').text((n_nail_sell+n_cut_nail_sell) + ' | ' + (p_min_nail.toFixed(6)))
     }else{
-        $('#p-nail-right .card-text').text( (n_nail_sell+n_cut_nail_sell) + ' | None')
+        $('#p-nail-right .card-text').text('None | ' + (n_nail_sell+n_cut_nail_sell) )
     }
 
 
@@ -270,16 +275,31 @@ function showBar(data) {
     //     $('#p-av-right .card-text').text('None' )   
     // }
 
-    // console.log(data.unprocNailInfo.n_buy, data.config)
-    $('#buy-limit .progress-bar:eq(0)').css('width', (n_cut_nail_buy) / (data.config.n_buy_limit_stop_sell) * 100. + '%')
-    $('#buy-limit .progress-bar:eq(1)').css('width', (n_nail_buy) / (data.config.n_buy_limit_stop_sell) * 100. + '%')
 
-    $('#buy-limit .progress-bar:eq(0)').removeClass('bg-danger-dark', 'bg-warning-dark', 'bg-success-dark') 
-    $('#buy-limit .progress-bar:eq(1)').removeClass('bg-danger', 'bg-warning', 'bg-success')
-    if (n_nail_buy+n_cut_nail_buy >= data.config.n_buy_limit_stop_sell) {
+
+    let n_limit_trade_stop = Math.max(
+        data.config.n_buy_limit_stop_sell, data.config.n_buy_limit_stop_sell, 
+        n_cut_nail_buy+n_nail_buy, 
+        n_cut_nail_sell+n_nail_sell) 
+
+    // hook
+
+
+    // console.log(data.unprocNailInfo.n_buy, data.config)
+    $('#buy-limit .progress-bar:eq(0)').css('width', (n_cut_nail_buy) / n_limit_trade_stop * 100. + '%')
+    $('#buy-limit .progress-bar:eq(1)').css('width', (n_nail_buy) / n_limit_trade_stop * 100. + '%')
+
+    // $('#buy-limit .progress-bar:eq(0)').text(n_cut_nail_buy)
+    // $('#buy-limit .progress-bar:eq(1)').text(n_nail_buy)    
+
+    $('#buy-limit .progress-bar:eq(0)').removeClass('bg-danger-dark bg-warning-dark bg-success-dark') 
+    $('#buy-limit .progress-bar:eq(1)').removeClass('bg-danger bg-warning bg-success')
+
+
+    if (n_nail_buy+n_cut_nail_buy >= 0.8 * data.config.n_buy_limit_stop_sell) {
         $('#buy-limit .progress-bar:eq(0)').addClass('bg-danger-dark')
         $('#buy-limit .progress-bar:eq(1)').addClass('bg-danger')
-    } else if (n_nail_buy+n_cut_nail_buy >= 0.6 * data.config.n_buy_limit_stop_sell) {
+    } else if (n_nail_buy+n_cut_nail_buy >= 0.4 * data.config.n_buy_limit_stop_sell) {
         $('#buy-limit .progress-bar:eq(0)').addClass('bg-warning-dark')
         $('#buy-limit .progress-bar:eq(1)').addClass('bg-warning')
     } else {
@@ -288,21 +308,28 @@ function showBar(data) {
     }
 
 
-    $('#sell-limit .progress-bar:eq(0)').css('width', (n_cut_nail_sell) / (data.config.n_sell_limit_stop_buy) * 100. + '%')
-    $('#sell-limit .progress-bar:eq(1)').css('width', (n_nail_sell) / (data.config.n_sell_limit_stop_buy) * 100. + '%')
+    $('#sell-limit .progress-bar:eq(0)').css('width', (n_cut_nail_sell) / n_limit_trade_stop * 100. + '%')
+    $('#sell-limit .progress-bar:eq(1)').css('width', (n_nail_sell) / n_limit_trade_stop * 100. + '%')
 
-    $('#sell-limit .progress-bar:eq(0)').removeClass('bg-danger-dark', 'bg-warning-dark', 'bg-success-dark') 
-    $('#sell-limit .progress-bar:eq(1)').removeClass('bg-danger', 'bg-warning', 'bg-success')
-    if (n_nail_sell+n_cut_nail_sell >= data.config.n_sell_limit_stop_buy) {
+    // $('#sell-limit .progress-bar:eq(0)').text(n_cut_nail_sell)
+    // $('#sell-limit .progress-bar:eq(1)').text(n_nail_sell)
+
+    $('#sell-limit .progress-bar:eq(0)').removeClass('bg-danger-dark bg-warning-dark bg-success-dark') 
+    $('#sell-limit .progress-bar:eq(1)').removeClass('bg-danger bg-warning bg-success')
+
+    if (n_nail_sell+n_cut_nail_sell >= 0.8 * data.config.n_sell_limit_stop_buy) {
         $('#sell-limit .progress-bar:eq(0)').addClass('bg-danger-dark')
         $('#sell-limit .progress-bar:eq(1)').addClass('bg-danger')
-    } else if (n_nail_sell+n_cut_nail_sell >= 0.6 * data.config.n_sell_limit_stop_buy) {
+    } else if (n_nail_sell+n_cut_nail_sell >= 0.4 * data.config.n_sell_limit_stop_buy) {
         $('#sell-limit .progress-bar:eq(0)').addClass('bg-warning-dark')
         $('#sell-limit .progress-bar:eq(1)').addClass('bg-warning')
     } else {
         $('#sell-limit .progress-bar:eq(0)').addClass('bg-success-dark')
         $('#sell-limit .progress-bar:eq(1)').addClass('bg-success')
     }
+
+    $('#unpaired-buy .progress-bar').css('width', (data.unpairedHookOrderInfo.n_sell) / n_limit_trade_stop * 100. + '%')
+    $('#unpaired-sell .progress-bar').css('width', (data.unpairedHookOrderInfo.n_buy) / n_limit_trade_stop * 100. + '%')
 
 }
 
