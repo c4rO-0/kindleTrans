@@ -138,8 +138,14 @@ function showBar(data) {
     $('#n-eff').text(n_eff.toFixed(4))
     
     // billInfo
-    $('#billInfo-left .card-text').text( (data.billInfo.tran.n_eth+data.billInfo.tran.n_btc/p_close).toFixed(6) )
-    $('#billInfo-right .card-text').text( (data.billInfo.earn.n_eth+data.billInfo.earn.n_btc/p_close).toFixed(6) )
+    $('#billInfo-left .card-text').text( 
+        (data.billInfo.tran.hook.n_buy + data.billInfo.tran.hook.n_sell) 
+        + ' | '
+        + (data.billInfo.tran.n_eth+data.billInfo.tran.n_btc/p_close).toFixed(6) )
+    $('#billInfo-right .card-text').text( 
+        (data.billInfo.earn.n_eth+data.billInfo.earn.n_btc/p_close).toFixed(6) 
+        + ' | '
+        + (data.billInfo.earn.hook.n_buy + data.billInfo.earn.hook.n_sell) )
 
     $('#hook-order-filled').text(data.filledHookOrderInfo.n_buy + '+' + data.filledHookOrderInfo.n_sell)
 
