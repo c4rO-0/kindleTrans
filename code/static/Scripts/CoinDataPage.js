@@ -104,7 +104,9 @@ function showBar(data) {
 
     // cal the distance to p_close
 
-    $('#price .card-header').text(p_close.toFixed(6))
+    $('#price .card-header').text(p_close.toFixed(6) 
+    + (data.marketInfo.line_k > 0. ? '+' : '-' )
+    + Math.abs(data.marketInfo.line_k).toExponential(1))
 
 
     n_max = Math.ceil(data.marketInfo.balance.n_eth_eff)
