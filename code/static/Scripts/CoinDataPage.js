@@ -261,7 +261,7 @@ function showBar(data) {
             p_sell_nail_low     == null ? 1.E6 : p_sell_nail_low ,
             p_sell_cut_nail_low == null ? 1.E6 : p_sell_cut_nail_low)
 
-        $('#p-nail-right .card-text').text((n_nail_sell+n_cut_nail_sell) + ' | ' + (p_min_nail.toFixed(6)))
+        $('#p-nail-right .card-text').text((p_min_nail.toFixed(6))+ ' | ' + (n_nail_sell+n_cut_nail_sell) )
     }else{
         $('#p-nail-right .card-text').text('None | ' + (n_nail_sell+n_cut_nail_sell) )
     }
