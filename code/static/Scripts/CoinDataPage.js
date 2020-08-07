@@ -106,7 +106,10 @@ function showBar(data) {
 
     $('#price .card-header').text(p_close.toFixed(6) 
     + (data.marketInfo.line_k > 0. ? '+' : '-' )
-    + Math.abs(data.marketInfo.line_k).toExponential(1))
+    + Math.abs(data.marketInfo.line_k).toExponential(1)
+    + ' | '+ data.marketInfoUSDT.kline.close.toFixed(2) + ' USDT')
+
+    $('#status span').text(data.msg)
 
 
     n_max = Math.ceil(data.marketInfo.balance.n_eth_eff)
@@ -297,8 +300,8 @@ function showBar(data) {
     $('#buy-limit .progress-bar:eq(0)').css('width', (n_cut_nail_buy) / n_limit_trade_stop * 100. + '%')
     $('#buy-limit .progress-bar:eq(1)').css('width', (n_nail_buy) / n_limit_trade_stop * 100. + '%')
 
-    // $('#buy-limit .progress-bar:eq(0)').text(n_cut_nail_buy)
-    // $('#buy-limit .progress-bar:eq(1)').text(n_nail_buy)    
+    $('#buy-limit .progress-bar:eq(0) span').text(n_cut_nail_buy)
+    $('#buy-limit .progress-bar:eq(1) span').text(n_nail_buy)    
 
     $('#buy-limit .progress-bar:eq(0)').removeClass('bg-danger-dark bg-warning-dark bg-success-dark') 
     $('#buy-limit .progress-bar:eq(1)').removeClass('bg-danger bg-warning bg-success')
@@ -319,8 +322,8 @@ function showBar(data) {
     $('#sell-limit .progress-bar:eq(0)').css('width', (n_cut_nail_sell) / n_limit_trade_stop * 100. + '%')
     $('#sell-limit .progress-bar:eq(1)').css('width', (n_nail_sell) / n_limit_trade_stop * 100. + '%')
 
-    // $('#sell-limit .progress-bar:eq(0)').text(n_cut_nail_sell)
-    // $('#sell-limit .progress-bar:eq(1)').text(n_nail_sell)
+    $('#sell-limit .progress-bar:eq(0)  span').text(n_cut_nail_sell)
+    $('#sell-limit .progress-bar:eq(1)  span').text(n_nail_sell)
 
     $('#sell-limit .progress-bar:eq(0)').removeClass('bg-danger-dark bg-warning-dark bg-success-dark') 
     $('#sell-limit .progress-bar:eq(1)').removeClass('bg-danger bg-warning bg-success')
@@ -339,6 +342,9 @@ function showBar(data) {
     $('#unpaired-buy .progress-bar').css('width', (data.unpairedHookOrderInfo.n_sell) / n_limit_trade_stop * 100. + '%')
     $('#unpaired-sell .progress-bar').css('width', (data.unpairedHookOrderInfo.n_buy) / n_limit_trade_stop * 100. + '%')
 
+    $('#unpaired-buy .progress-bar span').text(data.unpairedHookOrderInfo.n_sell)
+    $('#unpaired-sell .progress-bar span').text(data.unpairedHookOrderInfo.n_buy)
+
 }
 
 function runStatus(data) {
@@ -354,7 +360,7 @@ function runStatus(data) {
         $('#status-stop').show()
     }
 
-    $('[id^="status"]').text((Math.abs(Date.now() / 1000. - data.time) / 60.).toFixed(2) + 'm')
+    $('[id^="status-"]').text((Math.abs(Date.now() / 1000. - data.time) / 60.).toFixed(2) + 'm')
 }
 
 function refreshData(){
