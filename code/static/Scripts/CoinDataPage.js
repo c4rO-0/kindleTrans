@@ -109,7 +109,7 @@ function showBar(data) {
     + Math.abs(data.marketInfo.line_k).toExponential(1)
     + ' | '+ data.marketInfoUSDT.kline.close.toFixed(2) + ' USDT')
 
-    $('#status span').text(data.msg)
+    $('#msg').text(data.msg)
 
 
     n_max = Math.ceil(data.marketInfo.balance.n_eth_eff)
