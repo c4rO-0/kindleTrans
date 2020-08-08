@@ -101,15 +101,15 @@
                 </div>
                 <!-- <p id='status-content'>content</p> -->
                 <div id='billInfo-left' class="container px-0" style='width:40%'>
-                    <div class="card text-center" style="font-size:2vw;">
-                        <div class="card-body">
+                    <div class="card text-center" style="font-size:2vw;height: 100%;">
+                        <div class="card-body" style="height: 100%;">
                             <p class="card-text"></p>
                         </div>
                     </div>
                 </div>
                 <div id='billInfo-right' class="container px-0" style='width:40%'>
-                    <div class="card text-center" style="font-size:2vw;">
-                        <div class="card-body">
+                    <div class="card text-center" style="font-size:2vw;height: 100%;">
+                        <div class="card-body" style="height: 100%;">
                             <p class="card-text"></p>
                         </div>
                     </div>
@@ -120,62 +120,60 @@
 
 
         <div class="container">                    
-            <div class="row">
+            <div class="row justify-content-center">
                 <div id='info' class="container px-0" style='width:20%'>
-                    <div class="col px-0">
-                        <div class="card text-center" style="font-size:2vw;">
-                            <div class="card-body">
-                                <span>Info</span>
-                                <span id='n-eff' style="color:DarkGreen">1.9</span>
-                            </div>
+                    <div class="card text-center" style="font-size:2vw;height: 100%;">
+                        <div class="card-body" style="height: 100%;">
+                            <span style="white-space: nowrap">Info</span>
+                            <span id='n-eff' style="color:DarkGreen;white-space: nowrap">1.9</span>
                         </div>
                     </div>
                 </div>
                 <div id='price' class="container px-0" style='width:80%'>
-                    <div class="col px-0">
-                        <div id='n-eff-prg' class="progress">
 
-                            <div class="progress-bar progress-bar-striped bg-success-dark" role="progressbar"
-                                style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
-                                style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar"
-                                style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="50"></div>
-                            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 00%"
-                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="50"></div>
+                    <div id='n-eff-prg' class="progress">
 
-
-                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
-                                style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar progress-bar-striped bg-success-dark" role="progressbar"
+                            style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                            style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar"
+                            style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="50"></div>
+                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 00%"
+                            aria-valuenow="10" aria-valuemin="0" aria-valuemax="50"></div>
 
 
-                        </div>
-                        <div class="card text-center" style="font-size:2vw;">
-                            <div class="card-header">
-                                Featured
-                            </div>
+                        <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                            style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+
+
+                    </div>
+                    <div class="card text-center" style="font-size:2vw;height: 80%;">
+                        <div class="card-header" style="height: 100%;">
+                            Featured
                         </div>
                     </div>
+
                 </div>
 
             </div>
             <div class="row">
                 <div id='hook-order' class="container px-0" style='width:20%'>
-                    <div class="col px-0">
-                        <div class="card text-center" style="font-size:2vw;">
-                            <div class="card-body">
-                                <span>
+                    <div class="col px-0"  style="height: 100%;">
+                        <div class="card text-center" style="font-size:2vw;height: 100%;">
+                            <div class="card-body" style="height: 100%;">
+                                <span style="white-space: nowrap">
                                     Hook
                                 </span>
-                                <span id='hook-order-filled' style="color:DarkGreen">24</span>
-                                <span id='hook-order-last' style="color:DarkSlateBlue">3m</span>
+                                <span id='hook-order-filled' style="color:DarkGreen;white-space: nowrap">24</span>
+                                <span id='hook-order-last' style="color:DarkSlateBlue;white-space: nowrap">3m</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id='p-hook-left' class="container px-0" style='width:40%'>
-                    <div class="col px-0">
-                        <div class="progress" style="transform: rotate(180deg);">
+                    <div class="col px-0"  style="height: 100%;">
+                        <div class="progress" style="transform: rotate(180deg);height: 20%;">
                             <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
                                 style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
                                 aria-valuemax="100"></div>
@@ -183,23 +181,23 @@
                                 style="width: 10%;float: right" aria-valuenow="10" aria-valuemin="0"
                                 aria-valuemax="100"></div>
                         </div>
-                        <div class="card text-center" style="font-size:2vw;">
-                            <div class="card-body">
+                        <div class="card text-center" style="font-size:2vw;height: 80%;">
+                            <div class="card-body" style="height: 100%;">
                                 <p class="card-text"></p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id='p-hook-right' class="container px-0" style='width:40%'>
-                    <div class="col px-0">
-                        <div class="progress">
+                    <div class="col px-0" style="height: 100%;">
+                        <div class="progress" style="height: 20%;">
                             <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
                                 style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                             <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 10%"
                                 aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <div class="card text-center" style="font-size:2vw;">
-                            <div class="card-body">
+                        <div class="card text-center" style="font-size:2vw;height: 80%;">
+                            <div class="card-body" style="height: 100%;">
                                 <p class="card-text"></p>
                             </div>
                         </div>
@@ -251,13 +249,13 @@
             <div class="row">
                 <div id='nail-order' class="container px-0" style='width:20%'>
                     <div class="col px-0">
-                        <div class="card text-center" style="font-size:2vw;">
-                            <div class="card-body">
-                                <span>
+                        <div class="card text-center" style="font-size:2vw;height: 100%;">
+                            <div class="card-body" style="height: 100%;">
+                                <span style="white-space: nowrap">
                                     Nail
                                 </span>
-                                <span id='nail-order-filled' style="color:DarkGreen">24</span>
-                                <span id='nail-order-last' style="color:DarkSlateBlue">3m</span>
+                                <span id='nail-order-filled' style="color:DarkGreen;white-space: nowrap">24</span>
+                                <span id='nail-order-last' style="color:DarkSlateBlue;white-space: nowrap">3m</span>
                             </div>
                         </div>
                     </div>
@@ -281,8 +279,8 @@
                                 aria-valuemax="100"></div>
                         </div>
 
-                        <div class="card text-center" style="font-size:2vw;">
-                            <div class="card-body">
+                        <div class="card text-center" style="font-size:2vw;height: 100%;">
+                            <div class="card-body" style="height: 100%;">
                                 <p class="card-text"></p>
                             </div>
                         </div>
@@ -327,8 +325,8 @@
                             <div class="progress-bar progress-bar-striped bg-info-dark" role="progressbar"
                                 style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <div class="card text-center" style="font-size:2vw;">
-                            <div class="card-body">
+                        <div class="card text-center" style="font-size:2vw;height: 100%;">
+                            <div class="card-body" style="height: 100%;">
                                 <p class="card-text"></p>
                             </div>
                         </div>
