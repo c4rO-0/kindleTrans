@@ -10,3 +10,5 @@ code/templates/uploads/
 code/serverside/__pycache__/
 
 code/archive/
+
+code/log/
