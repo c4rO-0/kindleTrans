@@ -109,7 +109,15 @@ function showBar(data) {
     + Math.abs(data.marketInfo.line_k).toExponential(1)
     + ' | '+ data.marketInfoUSDT.kline.close.toFixed(2) + ' USDT')
 
-    $('#msg').text(data.msg)
+    
+
+    $('#msg').empty()
+    $('#msg').append(data.msg)
+    
+
+    // data.msg.split(/\r?\n/).forEach(element => {
+    //     // $('#msg').append('<p class="row m-0 p-0">'+ element +'</p>')
+    // });
 
 
     n_max = Math.ceil(data.marketInfo.balance.n_eth_eff)
