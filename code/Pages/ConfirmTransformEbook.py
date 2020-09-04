@@ -37,10 +37,15 @@ import shutil
 import re
 
 import random
+
+import subprocess
 #=================================
 
 def readSlogan():
     
+    if(not os.path.exists(os.path.join(Txt2mobiPath,'resources','slogan.dat'))):
+        return ''
+
     lines = []
     with open(os.path.join(Txt2mobiPath,'resources','slogan.dat')) as f:
         for line in f:
@@ -195,14 +200,17 @@ def ConfirmTransformEbook():
 
 
             # 生成项目文件        
-            gen_project(book, titleFilter, fileDict['filePath'], fileDict['saveFileName'])
-
+            try:
+                gen_project(book, titleFilter, fileDict['filePath'], fileDict['saveFileName'])
+            except subprocess.TimeoutExpired:
+                return redirect("/404/转化超时,请减小电子书大小")
+            
 
             sessionDelFileUpload()
             info = sessionSaveFileUpload(fileDict)
             if info != 0:
                 print("储存文件错误 : ", info, file=sys.stderr)
-                return redirect("/404")
+                return redirect("/404/转存错误")
             
             return redirect("/ConfirmTransformEbook")
 
