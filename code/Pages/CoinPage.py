@@ -41,8 +41,6 @@ def getCoinDataList():
 def getCoinData(symbol):
 
     # Opening JSON file 
-
-    print('ask symbol : ', symbol)
     
     rootpath_server = '/home/public/autoDigiCoin/'
 

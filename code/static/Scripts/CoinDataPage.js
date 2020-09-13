@@ -120,27 +120,27 @@ function showBar(data) {
     // });
 
 
-    n_max = Math.ceil(data.marketInfo.balance.n_eth_eff)
+    n_max = Math.ceil(data.marketInfo.balance.n_base_eff)
 
-    n_eff = data.marketInfo.balance.n_eth_eff
-    n_eth_f = data.marketInfo.balance.n_eth_f
-    n_eth_t = data.marketInfo.balance.n_eth_t
-    n_eth = n_eth_f + n_eth_t
-    $('#n-eff-prg .progress-bar:eq(0)').css('width', n_eth_f / n_max * 100. + '%')
-    $('#n-eff-prg .progress-bar:eq(0)').text(n_eth_f.toFixed(6))
-    $('#n-eff-prg .progress-bar:eq(1)').css('width', n_eth_t / n_max * 100. + '%')
-    $('#n-eff-prg .progress-bar:eq(1)').text(n_eth_t.toFixed(6))
+    n_eff = data.marketInfo.balance.n_base_eff
+    n_base_f = data.marketInfo.balance.n_base_f
+    n_base_t = data.marketInfo.balance.n_base_t
+    n_base = n_base_f + n_base_t
+    $('#n-eff-prg .progress-bar:eq(0)').css('width', n_base_f / n_max * 100. + '%')
+    $('#n-eff-prg .progress-bar:eq(0)').text(n_base_f.toFixed(6))
+    $('#n-eff-prg .progress-bar:eq(1)').css('width', n_base_t / n_max * 100. + '%')
+    $('#n-eff-prg .progress-bar:eq(1)').text(n_base_t.toFixed(6))
 
 
-    n_btc2eth = n_eff - n_eth
-    n_btc = data.marketInfo.balance.n_btc_t + data.marketInfo.balance.n_btc_f
-    n_btc2eth_t = n_btc2eth * data.marketInfo.balance.n_btc_t / n_btc
-    n_btc2eth_f = n_btc2eth * data.marketInfo.balance.n_btc_f / n_btc
+    n_quote2base = n_eff - n_base
+    n_quote = data.marketInfo.balance.n_quote_t + data.marketInfo.balance.n_quote_f
+    n_quote2base_t = n_quote2base * data.marketInfo.balance.n_quote_t / n_quote
+    n_quote2base_f = n_quote2base * data.marketInfo.balance.n_quote_f / n_quote
 
-    $('#n-eff-prg .progress-bar:eq(2)').css('width', (n_btc2eth_f / n_max * 100.) + '%')
-    $('#n-eff-prg .progress-bar:eq(2)').text(n_btc2eth_f.toFixed(6))
-    $('#n-eff-prg .progress-bar:eq(3)').css('width', (n_btc2eth_t / n_max * 100.) + '%')
-    $('#n-eff-prg .progress-bar:eq(3)').text(n_btc2eth_t.toFixed(6))
+    $('#n-eff-prg .progress-bar:eq(2)').css('width', (n_quote2base_f / n_max * 100.) + '%')
+    $('#n-eff-prg .progress-bar:eq(2)').text(n_quote2base_f.toFixed(6))
+    $('#n-eff-prg .progress-bar:eq(3)').css('width', (n_quote2base_t / n_max * 100.) + '%')
+    $('#n-eff-prg .progress-bar:eq(3)').text(n_quote2base_t.toFixed(6))
 
 
     $('#n-eff-prg .progress-bar:eq(4)').css('width', (100. - n_eff / n_max * 100.) + '%')
@@ -152,9 +152,9 @@ function showBar(data) {
     $('#billInfo-left .card-text').text( 
         (data.billInfo.tran.hook.n_buy + data.billInfo.tran.hook.n_sell) 
         + ' | '
-        + (data.billInfo.tran.n_eth+data.billInfo.tran.n_btc/p_close).toFixed(6) )
+        + (data.billInfo.tran.n_base+data.billInfo.tran.n_quote/p_close).toFixed(6) )
     $('#billInfo-right .card-text').text( 
-        (data.billInfo.earn.n_eth+data.billInfo.earn.n_btc/p_close).toFixed(6) 
+        (data.billInfo.earn.n_base+data.billInfo.earn.n_quote/p_close).toFixed(6) 
         + ' | '
         + (data.billInfo.earn.hook.n_buy + data.billInfo.earn.hook.n_sell) )
 
@@ -410,9 +410,10 @@ function refreshTrade(){
     return new Promise((resolve, reject)=>{
         symbol = $('#symbolList').val()
 
-        // console.log('ask symbol', symbol)
+        console.log('ask symbol', symbol)
         $.getJSON("/_getCoinData/"+symbol, (data) => {
             window.coinData = data
+            // console.log('refreshTrade : ', data.marketInfo.kline.close)
             resolve(data)
         });
 
@@ -450,6 +451,7 @@ $(document).ready(() => {
 
     setInterval(function() {
         refreshTrade().then((data)=>{
+            // console.log('get data', data.marketInfo.kline.close)
             showBar(data);
             runStatus(data);
         })
