@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <title>{{ gettext("MonkeySetting") }}</title>
+
+    {# æ ‡ç­¾logo #}
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">
+
+    <script src="{{ url_for('static', filename='Scripts/jquery-3.3.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui-v1.12.1.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
+    <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+    <!-- <link href="{{ url_for('static', filename='css/TransformEbook.css') }}" rel="stylesheet" type="text/css">	 -->
+
+    <link href="{{ url_for('static', filename='css/jquery-ui-v1.12.1.css') }}" rel="stylesheet" type="text/css">
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{{ url_for('static', filename='js/popper-v1.12.5.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/RubaXa/Sortable/Sortable.min.js"></script> -->
+
+
+    <style>
+        .newFeaturesHide {
+            transform: translate(100%, 0);
+        }
+
+        /* #sortable1 li, #sortable2 li{
+            display: inline;
+        } */
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 6px;
+            background: #e8e8e8;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c0c0c0;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+
+
+    </style>
+
+
+</head>
+
+<body style="overflow-x: hidden">
+    <div class="container">
+        <!-- <div id="newFeatures" class="py-5 newFeaturesHide"
+            style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
+            <div onclick="toggleNewFeatures()" class="alert-primary px-2"
+                style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
+                <p class="m-0">New Features</p>
+            </div>
+
+            {# ==================== update log =================== #}
+            <div class="alert-secondary px-2" style="height: 100%; width: 100%; overflow-y: auto">
+                <h3 class="text-center">2020.07.08</h3>
+                <p>- try UI</p>
+            </div>
+        </div> -->
+
+        <!-- title -->
+        <div class="row justify-content-center">
+            <div class="col-auto align-self-center px-0">
+                <h1 onclick="window.location.href = '/'" style="color:dimgray">Monkey<span style="color:red"><font>S</font></span>etting</h1>
+            </div>
+            <div class="col-auto align-self-end px-1">
+                <p class="align-text-bottom">Powered by</p>
+            </div>
+            <div class="col-auto align-self-end px-1">
+                <a href="{{url_for('AboutUsPage')}}">
+                    <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30"
+                        height="30">
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

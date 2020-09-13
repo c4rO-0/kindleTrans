@@ -28,5 +28,9 @@ from BibtexPage import *
 from CoinPage import *
 
 #----------------------------------------------------
+#  Monkey 
+from MonkeyPage import *
+
+#----------------------------------------------------
 #  about us   
 from AboutUsPage import *
