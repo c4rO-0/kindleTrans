@@ -12,12 +12,12 @@ import os
 
 #=================================
 
-@app.route('/_getCoinData' , methods = ['GET', 'POST']  )
-def getCoinData():
+@app.route('/_getCoinData/<symbol>' , methods = ['GET', 'POST']  )
+def getCoinData(symbol):
 
     # Opening JSON file 
     
-    path_server = '/home/public/autoDigiCoin/log/coinData.json'
+    path_server = '/home/public/autoDigiCoin/log/'+symbol+'/coinData.json'
     # path_local = '../example/coinData.json'
     if(os.path.isfile(path_server) ):
         path = path_server
@@ -44,7 +44,7 @@ def getCoinData():
             return jsonify(orderInfo)        
     else:
         # path = path_local
-        with urllib.request.urlopen("http://papercomment.tech/_getCoinData") as url:
+        with urllib.request.urlopen("http://papercomment.tech/_getCoinData/"+symbol) as url:
             data = json.loads(url.read().decode())
             return jsonify(data)      
 
