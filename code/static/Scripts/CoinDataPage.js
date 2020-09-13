@@ -371,12 +371,68 @@ function runStatus(data) {
     $('[id^="status-"]').text((Math.abs(Date.now() / 1000. - data.time) / 60.).toFixed(2) + 'm')
 }
 
+function refreshList(){
+
+    return new Promise((resolve, reject)=>{
+        $.getJSON("/_getCoinDataList", (data) => {
+            window.coinDataList = data.list_symbol
+            resolve(data.list_symbol)
+        });  
+    })
+}
+
+function updateList(list_symbol){
+    list_symbol.forEach((symbol)=>{
+        if($('#symbolList').has("option[name='"+symbol+"']")){
+
+        }else{
+            $('#symbolList').append("<option symbol='"+symbol+"' selected>"+symbol+"</option>")
+        }
+    })
+
+    list_symbol_page = []
+    
+    $('#symbolList option').each((index,oEle) =>{
+        list_symbol_page.push($(oEle).attr('symbol'))
+    })
+
+    list_symbol_page.forEach(symbol =>{
+        if(list_symbol.indexOf(symbol) < 0 ){
+            console.log('not find ', symbol)
+            $("#symbolList option[symbol='"+symbol+"']").remove()
+        }
+    })
+
+}
+
+function refreshTrade(){
+    
+    return new Promise((resolve, reject)=>{
+        symbol = $('#symbolList').val()
+
+        // console.log('ask symbol', symbol)
+        $.getJSON("/_getCoinData/"+symbol, (data) => {
+            window.coinData = data
+            resolve(data)
+        });
+
+    })
+
+}
+
 function refreshData(){
-    $.getJSON("/_getCoinData", (data) => {
-        showBar(data);
-        runStatus(data);
-        window.coinData = data
-    });
+
+    return new Promise((resolve, reject)=>{
+        refreshList().then((list_symbol)=>{
+            updateList(list_symbol)
+
+            refreshTrade().then((data)=>{
+                showBar(data);
+                runStatus(data);
+                resolve()
+            })
+        })
+    })
 }
 
 $(document).ready(() => {
@@ -393,7 +449,10 @@ $(document).ready(() => {
     refreshData()
 
     setInterval(function() {
-        refreshData()
+        refreshTrade().then((data)=>{
+            showBar(data);
+            runStatus(data);
+        })
     }, 10 * 1000); // 60 * 1000 milsec
 
 
