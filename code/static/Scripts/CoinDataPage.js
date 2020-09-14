@@ -476,4 +476,11 @@ $(document).ready(() => {
     }, 10 * 1000); // 60 * 1000 milsec
 
 
+    setInterval(function() {
+        showBar(window.coinData);
+        runStatus(window.coinData);
+        
+    }, 6 * 1000); // 60 * 1000 milsec    
+
+
 })
