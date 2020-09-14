@@ -419,7 +419,7 @@ function refreshTrade(){
     return new Promise((resolve, reject)=>{
         symbol = $('#symbolList').val()
 
-        console.log('ask symbol', symbol)
+        // console.log('ask symbol', symbol)
         $.getJSON("/_getCoinData/"+symbol, (data) => {
             window.coinData = data
             // console.log('refreshTrade : ', data.marketInfo.kline.close)
@@ -454,6 +454,15 @@ $(document).ready(() => {
     $('#status-stop').on('click', () => {
         console.log('reload')
         refreshData()
+    })
+
+    $( "#symbolList" ).change(function () {
+
+        refreshTrade().then((data)=>{
+            // console.log('get data', data.marketInfo.kline.close)
+            showBar(data);
+            runStatus(data);
+        })
     })
 
     refreshData()
