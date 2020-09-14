@@ -159,25 +159,34 @@ function showBar(data) {
         + (data.billInfo.earn.hook.n_buy + data.billInfo.earn.hook.n_sell) )
 
     $('#hook-order-filled').text(data.filledHookOrderInfo.n_buy + '+' + data.filledHookOrderInfo.n_sell)
+    
+    if(data.lastHookOrder){
+        strTime = data.lastHookOrder.toFixed(1) + 'm'
+        if (data.lastHookOrder > 60.) {
+            strTime = (data.lastHookOrder / 60.).toFixed(1) + 'h'
+        }
+        if (data.lastHookOrder > 60. * 24) {
+            strTime = (data.lastHookOrder / 60. / 24.).toFixed(1) + 'd'
+        }
+    }else{
+        strTime = 'Nm'
+    }
 
-    strTime = data.lastHookOrder.toFixed(1) + 'm'
-    if (data.lastHookOrder > 60.) {
-        strTime = (data.lastHookOrder / 60.).toFixed(1) + 'h'
-    }
-    if (data.lastHookOrder > 60. * 24) {
-        strTime = (data.lastHookOrder / 60. / 24.).toFixed(1) + 'd'
-    }
 
     $('#hook-order-last').text(strTime)
 
     $('#nail-order-filled').text(data.filledNailOrderInfo.n_buy + '+' + data.filledNailOrderInfo.n_sell)
 
-    strTime = data.lastNailOrder.toFixed(1) + 'm'
-    if (data.lastNailOrder > 60.) {
-        strTime = (data.lastNailOrder / 60.).toFixed(1) + 'h'
-    }
-    if (data.lastNailOrder > 60. * 24) {
-        strTime = (data.lastNailOrder / 60. / 24.).toFixed(1) + 'd'
+    if(data.lastNailOrder){
+        strTime = data.lastNailOrder.toFixed(1) + 'm'
+        if (data.lastNailOrder > 60.) {
+            strTime = (data.lastNailOrder / 60.).toFixed(1) + 'h'
+        }
+        if (data.lastNailOrder > 60. * 24) {
+            strTime = (data.lastNailOrder / 60. / 24.).toFixed(1) + 'd'
+        }
+    }else{
+        strTime = 'Nm'
     }
 
     $('#nail-order-last').text(strTime)
