@@ -445,6 +445,18 @@ function refreshData(){
     })
 }
 
+function nextOption(selector, interval = 1){
+
+
+    symbolIndex = $( selector ).prop('selectedIndex') //index start form 0
+
+    nextIndex = (symbolIndex + interval) % $( selector+" option" ).length 
+
+    $( selector ).val(
+            $( selector + " option:eq("+(nextIndex)+")" ).text()
+        ).change()
+}
+
 $(document).ready(() => {
     $('#status-run').on('click', () => {
         console.log('reload')
@@ -468,19 +480,85 @@ $(document).ready(() => {
     refreshData()
 
     setInterval(function() {
-        refreshTrade().then((data)=>{
-            // console.log('get data', data.marketInfo.kline.close)
-            showBar(data);
-            runStatus(data);
-        })
-    }, 10 * 1000); // 60 * 1000 milsec
+        if( document.visibilityState == 'visible' && (!document.hidden) ){
+
+            // console.log(document.visibilityState)
+            refreshTrade().then((data)=>{
+                // console.log('get data', data.marketInfo.kline.close)
+                showBar(data);
+                runStatus(data);
+            })
+        }
+    }, 10 * 1000); // 10 * 1000 milsec
 
 
     setInterval(function() {
-        showBar(window.coinData);
-        runStatus(window.coinData);
+        if( document.visibilityState == 'visible' && (!document.hidden) ){
+            showBar(window.coinData);
+            runStatus(window.coinData);
+        }
         
-    }, 6 * 1000); // 60 * 1000 milsec    
+    }, 6 * 1000); // 6 * 1000 milsec    
 
 
+    // rotate coins
+    setInterval(function() {
+
+        if( (!document.hasFocus() ) &&  document.visibilityState == 'visible' && (!document.hidden)){
+
+            // console.log('debug : change option')
+            // symbolIndex = $( "#symbolList" ).prop('selectedIndex') //index start form 0
+
+            // nextIndex = (symbolIndex + 1) % $( "#symbolList option" ).length 
+    
+            // $( "#symbolList" ).val(
+            //         $( "#symbolList option:eq("+(nextIndex)+")" ).attr('symbol')
+            //     ).change()
+
+            nextOption("#symbolList", 1)
+        }
+
+    }, 60*1000)
+
+    document.addEventListener('visibilitychange', function () {
+        // 用户离开了当前页面
+        if (document.visibilityState === 'hidden') {
+        //   document.title = '页面不可见';
+            console.log('hidden')
+        }
+      
+        // 用户打开或回到页面
+        if (document.visibilityState === 'visible') {
+        //   document.title = '页面可见';
+            refreshTrade().then((data)=>{
+                // console.log('get data', data.marketInfo.kline.close)
+                showBar(data);
+                runStatus(data);
+            })
+        }
+      }, false);
+
+      $(document).keydown(function (event) {
+
+        if (event.isComposing || event.keyCode === 229) {
+            return;
+        }
+
+        event = event || window.event
+        var keyCode = event.which || event.keyCode;
+
+        // console.log(event.which, event.keyCode)
+
+        if(keyCode == 37){
+            nextOption("#symbolList", -1)
+            event.stopImmediatePropagation();
+        }
+
+        if(keyCode == 39){
+
+            nextOption("#symbolList", 1)
+            event.stopImmediatePropagation();
+        }
+
+    })
 })
