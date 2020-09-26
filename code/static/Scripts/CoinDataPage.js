@@ -524,7 +524,7 @@ $(document).ready(() => {
         // 用户离开了当前页面
         if (document.visibilityState === 'hidden') {
         //   document.title = '页面不可见';
-            console.log('hidden')
+            // console.log('hidden')
         }
       
         // 用户打开或回到页面
@@ -561,4 +561,20 @@ $(document).ready(() => {
         }
 
     })
+
+
+    Hammer($('body > div.container').get(0)).on("swipeleft", function() {
+
+        // console.log('left')
+        nextOption("#symbolList", -1)
+        // event.stopImmediatePropagation();
+    });
+    
+    Hammer($('body > div.container').get(0)).on("swiperight", function() {
+
+        // console.log('right')
+        nextOption("#symbolList", 1)
+        // event.stopImmediatePropagation();
+    });
+
 })

@@ -25,6 +25,9 @@
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
     <!-- <script src="https://cdn.jsdelivr.net/gh/RubaXa/Sortable/Sortable.min.js"></script> -->
 
+    <!-- for touch -->
+    <script src="{{ url_for('static', filename='js/hammer.min-v2.0.8.js') }}"></script>
+
 
     <!-- our own scripts -->
     <script src="{{ url_for('static', filename='Scripts/CoinDataPage.js') }}?v={{ jsV }}"></script>
@@ -61,7 +64,7 @@
 </head>
 
 <body style="overflow-x: hidden">
-    <div class="container"  style="max-width:80vw;">
+    <div class="container" >
         <!-- <div id="newFeatures" class="py-5 newFeaturesHide"
             style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
             <div onclick="toggleNewFeatures()" class="alert-primary px-2"
