@@ -146,7 +146,12 @@ function showBar(data) {
     $('#n-eff-prg .progress-bar:eq(4)').css('width', (100. - n_eff / n_max * 100.) + '%')
     $('#n-eff-prg .progress-bar:eq(4)').text((n_max - n_eff).toFixed(6))
 
-    $('#n-eff').text(n_eff.toFixed(4))
+
+    n_quote_eff = data.marketInfo.balance.n_quote_t + data.marketInfo.balance.n_quote_f
+    + (data.marketInfo.balance.n_base_t + data.marketInfo.balance.n_base_f)* p_close
+
+    $('#n-eff').empty()
+    $('#n-eff').append('<p>'+n_eff.toFixed(4)+'</p><p>'+ n_quote_eff.toFixed(4)+'</p>' )
     
     // billInfo
     $('#billInfo-left .card-text').text( 
