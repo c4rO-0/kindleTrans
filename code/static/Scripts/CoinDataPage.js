@@ -150,8 +150,9 @@ function showBar(data) {
     n_quote_eff = data.marketInfo.balance.n_quote_t + data.marketInfo.balance.n_quote_f
     + (data.marketInfo.balance.n_base_t + data.marketInfo.balance.n_base_f)* p_close
 
-    $('#n-eff').empty()
-    $('#n-eff').append('<p>'+n_eff.toFixed(4)+'</p><p>'+ n_quote_eff.toFixed(4)+'</p>' )
+    // $('#n-eff')
+    $('#n-eff-base').text(n_eff.toFixed(4) )
+    $('#n-eff-quote').text(n_quote_eff.toFixed(4) )
     
     // billInfo
     $('#billInfo-left .card-text').text( 
