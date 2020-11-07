@@ -126,10 +126,10 @@ function showBar(data) {
     n_base_f = data.marketInfo.balance.n_base_f
     n_base_t = data.marketInfo.balance.n_base_t
     n_base = n_base_f + n_base_t
-    $('#n-eff-prg .progress-bar:eq(0)').css('width', n_base_f / n_max * 100. + '%')
-    $('#n-eff-prg .progress-bar:eq(0)').text(n_base_f.toFixed(6))
-    $('#n-eff-prg .progress-bar:eq(1)').css('width', n_base_t / n_max * 100. + '%')
-    $('#n-eff-prg .progress-bar:eq(1)').text(n_base_t.toFixed(6))
+    $('#n-eff-prg .progress-bar:eq(2)').css('width', n_base_f / n_max * 100. + '%')
+    $('#n-eff-prg .progress-bar:eq(2)').text(n_base_f.toFixed(6))
+    $('#n-eff-prg .progress-bar:eq(3)').css('width', n_base_t / n_max * 100. + '%')
+    $('#n-eff-prg .progress-bar:eq(3)').text(n_base_t.toFixed(6))
 
 
     n_quote2base = n_eff - n_base
@@ -137,14 +137,14 @@ function showBar(data) {
     n_quote2base_t = n_quote2base * data.marketInfo.balance.n_quote_t / n_quote
     n_quote2base_f = n_quote2base * data.marketInfo.balance.n_quote_f / n_quote
 
-    $('#n-eff-prg .progress-bar:eq(2)').css('width', (n_quote2base_f / n_max * 100.) + '%')
-    $('#n-eff-prg .progress-bar:eq(2)').text(n_quote2base_f.toFixed(6))
-    $('#n-eff-prg .progress-bar:eq(3)').css('width', (n_quote2base_t / n_max * 100.) + '%')
-    $('#n-eff-prg .progress-bar:eq(3)').text(n_quote2base_t.toFixed(6))
+    $('#n-eff-prg .progress-bar:eq(0)').css('width', (n_quote2base_f / n_max * 100.) + '%')
+    $('#n-eff-prg .progress-bar:eq(0)').text(data.marketInfo.balance.n_quote_f.toFixed(6))
+    $('#n-eff-prg .progress-bar:eq(1)').css('width', (n_quote2base_t / n_max * 100.) + '%')
+    $('#n-eff-prg .progress-bar:eq(1)').text(data.marketInfo.balance.n_quote_t.toFixed(6))
 
 
     $('#n-eff-prg .progress-bar:eq(4)').css('width', (100. - n_eff / n_max * 100.) + '%')
-    $('#n-eff-prg .progress-bar:eq(4)').text((n_max - n_eff).toFixed(6))
+    $('#n-eff-prg .progress-bar:eq(4)').text('')
 
 
     n_quote_eff = data.marketInfo.balance.n_quote_t + data.marketInfo.balance.n_quote_f
