@@ -12,8 +12,8 @@ import os
 
 #=================================
 
-@app.route('/_getCoinDataList' , methods = ['GET', 'POST']  )
-def getCoinDataList():
+@app.route('/_getCoinDataList/<user>' , methods = ['GET', 'POST']  )
+def getCoinDataList(user):
 
     # Opening JSON file 
 
@@ -21,9 +21,9 @@ def getCoinDataList():
 
     if(os.path.exists(rootpath_server)):
         
-        list_symbol = [os.path.basename(x[0]) for x in os.walk(os.path.join(rootpath_server, 'log/'))]
+        list_symbol = [f for f in os.listdir(os.path.join(rootpath_server, 'log/')) if (os.path.isdir(os.path.join(rootpath_server, 'log/', f)) and user in f)  ]
 
-        list_symbol.pop(0)
+        # list_symbol.pop(0)
 
         return jsonify({
             'list_symbol': list_symbol
