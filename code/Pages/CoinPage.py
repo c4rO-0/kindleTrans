@@ -16,8 +16,8 @@ import os
 def getCoinDataList(user):
 
     # Opening JSON file 
-
     rootpath_server = '/home/public/autoDigiCoin/'
+    # rootpath_server = '/home/bsplu/workspace/autoDigiCoin/'
 
     if(os.path.exists(rootpath_server)):
         
@@ -46,6 +46,7 @@ def getCoinData(symbol):
     # Opening JSON file 
     
     rootpath_server = '/home/public/autoDigiCoin/'
+    # rootpath_server = '/home/bsplu/workspace/autoDigiCoin/'
 
     if(os.path.exists(rootpath_server)):
         path = os.path.join(rootpath_server, 'log', symbol, 'coinData.json')
@@ -61,7 +62,7 @@ def getCoinData(symbol):
 
     return jsonify(None)
 
-@app.route('/CoinDataPage' , methods = ['GET', 'POST']  )
-def CoinDataPage():
+@app.route('/CoinDataPage/<user>' , methods = ['GET', 'POST']  )
+def CoinDataPage(user):
 
-    return render_template('CoinDataPage.html.j2', app = app, jsV=jsV)    
+    return render_template('CoinDataPage.html.j2', app = app, user=user, jsV=jsV)    

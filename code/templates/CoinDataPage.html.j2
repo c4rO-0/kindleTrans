@@ -30,6 +30,9 @@
 
 
     <!-- our own scripts -->
+    <script>
+        var user = '{{ user }}';
+    </script>
     <script src="{{ url_for('static', filename='Scripts/CoinDataPage.js') }}?v={{ jsV }}"></script>
     <link href="{{ url_for('static', filename='css/CoinDataPage.css') }}?v={{ jsV }}" rel="stylesheet" type="text/css">
 

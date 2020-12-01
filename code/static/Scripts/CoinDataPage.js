@@ -389,7 +389,7 @@ function runStatus(data) {
 function refreshList(){
 
     return new Promise((resolve, reject)=>{
-        $.getJSON("/_getCoinDataList", (data) => {
+        $.getJSON("/_getCoinDataList/"+user, (data) => {
             window.coinDataList = data.list_symbol
             resolve(data.list_symbol)
         });  
@@ -398,10 +398,12 @@ function refreshList(){
 
 function updateList(list_symbol){
     list_symbol.forEach((symbol)=>{
-        if($('#symbolList').has("option[name='"+symbol+"']")){
-
+        console.log(' symbol ', symbol)
+        if($('#symbolList option[symbol="'+symbol+'"]').length /= 0){
+            // console.log(' symbol found, not append', symbol)
         }else{
-            $('#symbolList').append("<option symbol='"+symbol+"' selected>"+symbol+"</option>")
+            // console.log('append symbol ', symbol)
+            $('#symbolList').append("<option symbol='"+symbol+"' selected>"+symbol.substring(symbol.lastIndexOf('-')+1)+"</option>")
         }
     })
 
@@ -426,7 +428,7 @@ function refreshTrade(){
         symbol = $('#symbolList').val()
 
         // console.log('ask symbol', symbol)
-        $.getJSON("/_getCoinData/"+symbol, (data) => {
+        $.getJSON("/_getCoinData/"+user+'-'+symbol, (data) => {
             window.coinData = data
             // console.log('refreshTrade : ', data.marketInfo.kline.close)
             resolve(data)
@@ -440,6 +442,7 @@ function refreshData(){
 
     return new Promise((resolve, reject)=>{
         refreshList().then((list_symbol)=>{
+            console.log('refrssh list ',list_symbol )
             updateList(list_symbol)
 
             refreshTrade().then((data)=>{
@@ -482,7 +485,7 @@ $(document).ready(() => {
             runStatus(data);
         })
     })
-
+    
     refreshData()
 
     setInterval(function() {
