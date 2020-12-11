@@ -155,8 +155,26 @@ function showBar(data) {
     $('#n-eff-quote').text(n_quote_eff.toFixed(4) )
     
     // billInfo
-    $('#billInfo-left .card-text').text( 
-        (data.billInfo.earn.rate/30.*365.*100.).toFixed(3) + '%' )
+    let totalAmount = -1.
+    let earn = 0.
+    if( window.coinDataAmount && window.coinDataList){
+        let list_stored = Object.keys(window.coinDataAmount)
+        if( window.coinDataList.every( r => list_stored.includes(r)) ){
+            for (let [symbol, amountInfo] of Object.entries(window.coinDataAmount)) {
+                totalAmount += amountInfo.total
+                earn +=  amountInfo.total * amountInfo.rate
+            }
+        }
+    }
+        
+    if(totalAmount > 0.){
+        $('#billInfo-left .card-text').text( 
+            (data.billInfo.earn.rate/30.*365.*100.).toFixed(2) + '%'+ ' | ' +  (earn/totalAmount/30.*365.*100.).toFixed(2)+ '%')
+    }else{
+        $('#billInfo-left .card-text').text( 
+            (data.billInfo.earn.rate/30.*365.*100.).toFixed(3) + '%'+ ' | NaN%' )
+    }
+
     $('#billInfo-right .card-text').text( 
         (data.billInfo.earn.n_base+data.billInfo.earn.n_quote/p_close).toFixed(6) 
         + ' | '
@@ -388,6 +406,8 @@ function refreshList(){
 
     return new Promise((resolve, reject)=>{
         $.getJSON("/_getCoinDataList/"+user, (data) => {
+
+            // console.log('get list : ', data)
             window.coinDataList = data.list_symbol
             resolve(data.list_symbol)
         });  
@@ -429,6 +449,13 @@ function refreshTrade(){
         $.getJSON("/_getCoinData/"+user+'-'+symbol, (data) => {
             window.coinData = data
             // console.log('refreshTrade : ', data.marketInfo.kline.close)
+            if(window.coinDataAmount == undefined){
+                window.coinDataAmount = {}
+            }
+            window.coinDataAmount[user+'-'+symbol] = {
+                'total':data.marketInfo.balance.n_base_eff*data.marketInfoUSDT.kline.close,
+                'rate':data.billInfo.earn.rate
+            }
             resolve(data)
         });
 

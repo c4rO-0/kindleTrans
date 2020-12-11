@@ -31,7 +31,7 @@ def getCoinDataList(user):
 
     else:
         try:
-            with urllib.request.urlopen("http://papercomment.tech/_getCoinDataList") as url:
+            with urllib.request.urlopen("http://papercomment.tech/_getCoinDataList/"+user) as url:
                 data = json.loads(url.read().decode())
                 return jsonify(data)  
         except :
