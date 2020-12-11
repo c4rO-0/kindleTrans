@@ -156,9 +156,7 @@ function showBar(data) {
     
     // billInfo
     $('#billInfo-left .card-text').text( 
-        (data.billInfo.tran.hook.n_buy + data.billInfo.tran.hook.n_sell) 
-        + ' | '
-        + (data.billInfo.tran.n_base+data.billInfo.tran.n_quote/p_close).toFixed(6) )
+        (data.billInfo.earn.rate/30.*365.*100.).toFixed(3) + '%' )
     $('#billInfo-right .card-text').text( 
         (data.billInfo.earn.n_base+data.billInfo.earn.n_quote/p_close).toFixed(6) 
         + ' | '
