@@ -169,10 +169,10 @@ function showBar(data) {
         
     if(totalAmount > 0.){
         $('#billInfo-left .card-text').text( 
-            (data.billInfo.earn.rate/30.*365.*100.).toFixed(2) + '%'+ ' | ' +  (earn/totalAmount/30.*365.*100.).toFixed(2)+ '%')
+            (data.billInfo.earn.rate*100.).toFixed(2) + '%'+ ' | ' +  (earn/totalAmount*100.).toFixed(2)+ '%')
     }else{
         $('#billInfo-left .card-text').text( 
-            (data.billInfo.earn.rate/30.*365.*100.).toFixed(3) + '%'+ ' | NaN%' )
+            (data.billInfo.earn.rate*100.).toFixed(3) + '%'+ ' | NaN%' )
     }
 
     $('#billInfo-right .card-text').text( 
