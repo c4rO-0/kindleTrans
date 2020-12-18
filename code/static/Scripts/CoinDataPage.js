@@ -447,7 +447,10 @@ function refreshTrade(){
 
         // console.log('ask symbol', symbol)
         $.getJSON("/_getCoinData/"+user+'-'+symbol, (data) => {
-            window.coinData = data
+            if(window.coinDataAll == undefined){
+                window.coinDataAll = {}
+            }
+            window.coinDataAll[user+'-'+symbol] = data
             // console.log('refreshTrade : ', data.marketInfo.kline.close)
             if(window.coinDataAmount == undefined){
                 window.coinDataAmount = {}
@@ -457,7 +460,8 @@ function refreshTrade(){
                 'rate':data.billInfo.earn.rate
             }
             resolve(data)
-        });
+        })
+        .always(function() { window.coinData = window.coinDataAll[user+'-'+symbol] })
 
     })
 
