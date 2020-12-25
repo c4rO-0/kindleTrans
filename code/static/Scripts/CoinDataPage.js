@@ -542,7 +542,7 @@ $(document).ready(() => {
     // rotate coins
     setInterval(function() {
 
-        if( (!document.hasFocus() ) &&  document.visibilityState == 'visible' && (!document.hidden)){
+        if( ( $('#anchor').is(":checked") ) (!document.hasFocus() ) &&  document.visibilityState == 'visible' && (!document.hidden)){
 
             // console.log('debug : change option')
             // symbolIndex = $( "#symbolList" ).prop('selectedIndex') //index start form 0
