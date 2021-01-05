@@ -17,11 +17,11 @@
 	<link href="{{ url_for('static', filename='css/AboutUsPage.css') }}" rel="stylesheet" type="text/css">	
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-    <script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>		
+    <!-- <script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>		 -->
     	
 	<!-- our own scripts -->  
-    <script src="{{ url_for('static', filename='Scripts/AboutUsPage.js') }}"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <!-- <script src="{{ url_for('static', filename='Scripts/AboutUsPage.js') }}"></script> -->
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script> -->
     {# 广告 #}
  <!-- Begin BidVertiser code -->
  <!-- <SCRIPT data-cfasync="false" SRC="//bdv.bidvertiser.com/BidVertiser.dbm?pid=807493&bid=1944000" TYPE="text/javascript"></SCRIPT> -->
@@ -261,6 +261,29 @@
                         </div>
                     </div>
                 </div>                     
+                <div class="row justify-content-start mb-4">
+                    <div class="col">
+                        <div class="card text-white bg-secondary c4r">
+                            <div class="card-body">
+                                <h2 class="card-title">里程碑</h2>
+                                <p class="card-text">于公元2021年01月05日.  </p>
+                                <p class="card-text">
+                                    虾米音乐宣布将于2月5日关停. 内心五味杂陈. 纪念一下早产的Mexporter项目.
+                                </p>
+                                <img  class="mb-3" src="{{ url_for('static', filename='images/Mexporter_screenshot.png') }}" width="100%" >
+                            </div>
+                            <div class="card-footer">
+                                <p>
+                                    <!-- 超前一步是先烈；落后一步是顽固 -->
+                                    世界以痛吻我, 要我报之以歌.
+                                </p>
+                                <p>
+                                    The world has kissed my soul with its pain, asking for its return in songs.
+                                </p>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>         
             </div>
             <div class="col-auto">
                 <div class="row c4r2016" style="height: 360px;">
@@ -308,7 +331,16 @@
                         <p class="c4r-year rounded-circle p-4 bg-warning">2020</p>
                     </div>
                 </div>     
-
+                <div class="row justify-content-center" style="height: 350px;">
+                    <div class="col-auto">
+                        <div class="bg-secondary h-100" style="width: 10px;"> </div>
+                    </div>
+                </div>       
+                <div class="row c4r2021">
+                    <div class="col">
+                        <p class="c4r-year rounded-circle p-4 bg-warning">2021</p>
+                    </div>
+                </div>    
             </div>
         </div>
             <!-- <div class="center">
