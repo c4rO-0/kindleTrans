@@ -156,29 +156,65 @@ function showBar(data) {
     
     // billInfo
     let totalAmount = -1.
+    let totalLedgerTranAmount = -1.
     let earn = 0.
+    let tran = 0.
+    let earn_eff = 0.
     if( window.coinDataAmount && window.coinDataList){
         let list_stored = Object.keys(window.coinDataAmount)
         if( window.coinDataList.every( r => list_stored.includes(r)) ){
             for (let [symbol, amountInfo] of Object.entries(window.coinDataAmount)) {
-                totalAmount += amountInfo.total
-                earn +=  amountInfo.total * amountInfo.rate
+                if(totalAmount == -1){
+                    totalAmount = amountInfo.total
+                }else{
+                    totalAmount += amountInfo.total
+                }
+                earn +=  amountInfo.total * amountInfo.rate_earn
+
+                tran += amountInfo.total * amountInfo.rate_tran
+
+                let ledgerTranAmount = amountInfo.total / (amountInfo.rate_eff+1.)
+                // console.log('ledger', symbol, amountInfo.total, ledgerTranAmount)
+                if(totalLedgerTranAmount == -1){
+                    totalLedgerTranAmount = ledgerTranAmount
+                }else{
+                    totalLedgerTranAmount += ledgerTranAmount
+                }
+
+                
+                earn_eff += ledgerTranAmount * amountInfo.rate_eff
             }
         }
     }
         
     if(totalAmount > 0.){
-        $('#billInfo-left .card-text').text( 
+        $('#billInfo-1 .card-text').text( 
             (data.billInfo.earn.rate*100.).toFixed(2) + '%'+ ' | ' +  (earn/totalAmount*100.).toFixed(2)+ '%')
     }else{
-        $('#billInfo-left .card-text').text( 
+        $('#billInfo-1 .card-text').text( 
             (data.billInfo.earn.rate*100.).toFixed(3) + '%'+ ' | NaN%' )
     }
 
-    $('#billInfo-right .card-text').text( 
-        (data.billInfo.earn.n_base+data.billInfo.earn.n_quote/p_close).toFixed(6) 
-        + ' | '
-        + (data.billInfo.earn.hook.n_buy + data.billInfo.earn.hook.n_sell) )
+    if(totalAmount > 0.){
+        $('#billInfo-2 .card-text').text( 
+            (data.billInfo.tran.rate*100.).toFixed(2) + '%'+ ' | ' +  (tran/totalAmount*100.).toFixed(2)+ '%')
+    }else{
+        $('#billInfo-2 .card-text').text( 
+            (data.billInfo.tran.rate*100.).toFixed(3) + '%'+ ' | NaN%' )
+    }
+
+    if(totalAmount > 0.){
+        $('#billInfo-3 .card-text').text( 
+            (data.billInfo.rate_eff*100.).toFixed(2) + '%'+ ' | ' +  (earn_eff/totalLedgerTranAmount*100.).toFixed(2)+ '%')
+    }else{
+        $('#billInfo-3 .card-text').text( 
+            (data.billInfo.rate_eff*100.).toFixed(3) + '%'+ ' | NaN%' )
+    }
+
+    // $('#billInfo-right .card-text').text( 
+    //     (data.billInfo.earn.n_base+data.billInfo.earn.n_quote/p_close).toFixed(6) 
+    //     + ' | '
+    //     + (data.billInfo.earn.hook.n_buy + data.billInfo.earn.hook.n_sell) )
 
     $('#hook-order-filled').text(data.filledHookOrderInfo.n_buy + '+' + data.filledHookOrderInfo.n_sell)
     
@@ -457,11 +493,21 @@ function refreshTrade(){
             }
             window.coinDataAmount[user+'-'+symbol] = {
                 'total':data.marketInfo.balance.n_base_eff*data.marketInfoUSDT.kline.close,
-                'rate':data.billInfo.earn.rate
+                'rate_earn':data.billInfo.earn.rate,
+                'rate_tran':data.billInfo.tran.rate,
+                'rate_eff':data.billInfo.rate_eff
             }
             resolve(data)
         })
-        .always(function() { window.coinData = window.coinDataAll[user+'-'+symbol] })
+        .always(function() { 
+            if(window.coinDataAll == undefined){
+                window.coinDataAll = {}
+            }
+
+            if( window.coinDataAll[user+'-'+symbol]){
+                window.coinData = window.coinDataAll[user+'-'+symbol] 
+            }
+        })
 
     })
 
