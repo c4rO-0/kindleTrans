@@ -23,6 +23,9 @@ function showNewFeatures() {
 
 function showBar(data) {
 
+    $('#msg').empty()
+    $('#msg').append(data.msg)
+
     let p_close = data.marketInfo.kline.close
     let p_av_up = data.marketInfo.p_average_up
     let p_av_dn = data.marketInfo.p_average_dn
@@ -111,8 +114,7 @@ function showBar(data) {
 
     
 
-    $('#msg').empty()
-    $('#msg').append(data.msg)
+
     
 
     // data.msg.split(/\r?\n/).forEach(element => {
@@ -491,12 +493,15 @@ function refreshTrade(){
             if(window.coinDataAmount == undefined){
                 window.coinDataAmount = {}
             }
-            window.coinDataAmount[user+'-'+symbol] = {
-                'total':data.marketInfo.balance.n_base_eff*data.marketInfoUSDT.kline.close,
-                'rate_earn':data.billInfo.earn.rate,
-                'rate_tran':data.billInfo.tran.rate,
-                'rate_eff':data.billInfo.rate_eff
+            if(data.marketInfo){
+                window.coinDataAmount[user+'-'+symbol] = {
+                    'total':data.marketInfo.balance.n_base_eff*data.marketInfoUSDT.kline.close,
+                    'rate_earn':data.billInfo.earn.rate,
+                    'rate_tran':data.billInfo.tran.rate,
+                    'rate_eff':data.billInfo.rate_eff
+                }
             }
+
             resolve(data)
         })
         .always(function() { 
