@@ -51,10 +51,14 @@ def getCoinData(symbol):
     if(os.path.exists(rootpath_server)):
         path = os.path.join(rootpath_server, 'log', symbol, 'coinData.json')
         if(os.path.exists(path)):
-            with open(path,'r') as f:
-                orderInfo = json.load(f) 
+            try:
+                with open(path,'r') as f:
+                    orderInfo = json.load(f) 
 
-                return jsonify(orderInfo)  
+                    return jsonify(orderInfo)  
+            except :
+                return jsonify(None)
+
     else: 
         with urllib.request.urlopen("http://papercomment.tech/_getCoinData/"+symbol) as url:
             data = json.loads(url.read().decode())
