@@ -446,8 +446,9 @@ function refreshList(){
         $.getJSON("/_getCoinDataList/"+user, (data) => {
 
             // console.log('get list : ', data)
-            window.coinDataList = data.list_symbol
-            resolve(data.list_symbol)
+            list = data.list_symbol.sort()
+            window.coinDataList = list
+            resolve(list)
         });  
     })
 }
