@@ -547,6 +547,15 @@ function nextOption(selector, interval = 1){
         ).change()
 }
 
+function getStorage(){
+    coinDataStorage = JSON.parse(localStorage.getItem('coinData') || '{}') 
+    return coinDataStorage
+}
+
+function setStorage(data){
+    localStorage.setItem('coinData', JSON.stringify(data))
+}
+
 $(document).ready(() => {
     $('#status-run').on('click', () => {
         console.log('reload')
@@ -566,6 +575,34 @@ $(document).ready(() => {
             runStatus(data);
         })
     })
+
+
+
+    
+    coinData = getStorage()
+    // console.log('get anchor ', anchorChecked, !anchorChecked)
+    if( coinData.anchorChecked != undefined && (! coinData.anchorChecked) ){
+        // console.log('anchor clicked to set')
+        $('#anchor').get(0).checked = false
+        $('#anchor').click()
+        // if(coinData.anchorSymbol){
+        //     $('#symbolList').val(coinData.anchorSymbol)
+        // }
+    }else{
+        console.log('anchor not to set')
+    }
+
+
+    $('#anchor').change(function(){
+        // console.log('anchor changed ', $('#anchor').is(":checked"))
+        // window.anchorChecked = $('#anchor').is(":checked")
+        // localStorage.setItem('anchorChecked', $('#anchor').is(":checked"))
+        coinData = getStorage()
+        coinData.anchorChecked = $('#anchor').is(":checked")
+        // coinData.anchorSymbol = $('#symbolList').val()
+        setStorage(coinData)
+    })
+
     
     refreshData()
 
