@@ -592,7 +592,6 @@ $(document).ready(() => {
         console.log('anchor not to set')
     }
 
-
     $('#anchor').change(function(){
         // console.log('anchor changed ', $('#anchor').is(":checked"))
         // window.anchorChecked = $('#anchor').is(":checked")
@@ -642,7 +641,9 @@ $(document).ready(() => {
             //         $( "#symbolList option:eq("+(nextIndex)+")" ).attr('symbol')
             //     ).change()
 
-            nextOption("#symbolList", 1)
+            if(window.coinData.lastHookOrder > 5 && window.coinData.lastNailOrder > 5){
+                nextOption("#symbolList", 1)
+            }
         }
 
     }, 60*1000)
