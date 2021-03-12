@@ -23,6 +23,10 @@ function showNewFeatures() {
 
 function showBar(data) {
 
+    if(data.marketInfo.symbol != $('#symbolList').val() ){
+        return false
+    }
+
     $('#msg').empty()
     $('#msg').append(data.msg)
 
@@ -422,6 +426,8 @@ function showBar(data) {
     $('#unpaired-buy .progress-bar span').text(data.unpairedHookOrderInfo.n_sell)
     $('#unpaired-sell .progress-bar span').text(data.unpairedHookOrderInfo.n_buy)
 
+    return true
+
 }
 
 function runStatus(data) {
@@ -527,8 +533,10 @@ function refreshData(){
             updateList(list_symbol)
 
             refreshTrade().then((data)=>{
-                showBar(data);
-                runStatus(data);
+                if(showBar(data)){
+                    runStatus(data);
+                }
+                
                 resolve()
             })
         })
@@ -571,8 +579,9 @@ $(document).ready(() => {
 
         refreshTrade().then((data)=>{
             // console.log('get data', data.marketInfo.kline.close)
-            showBar(data);
-            runStatus(data);
+            if(showBar(data)){
+                runStatus(data);
+            }
         })
     })
 
@@ -611,8 +620,9 @@ $(document).ready(() => {
             // console.log(document.visibilityState)
             refreshTrade().then((data)=>{
                 // console.log('get data', data.marketInfo.kline.close)
-                showBar(data);
-                runStatus(data);
+                if(showBar(data)){
+                    runStatus(data);
+                }
             })
         }
     }, 10 * 1000); // 10 * 1000 milsec
@@ -620,8 +630,9 @@ $(document).ready(() => {
 
     setInterval(function() {
         if( document.visibilityState == 'visible' && (!document.hidden) ){
-            showBar(window.coinData);
-            runStatus(window.coinData);
+            if(showBar(window.coinData)){
+                runStatus(window.coinData);
+            }
         }
         
     }, 6 * 1000); // 6 * 1000 milsec    
@@ -660,8 +671,9 @@ $(document).ready(() => {
         //   document.title = '页面可见';
             refreshTrade().then((data)=>{
                 // console.log('get data', data.marketInfo.kline.close)
-                showBar(data);
-                runStatus(data);
+                if(showBar(data)){
+                    runStatus(data);
+                }
             })
         }
       }, false);
