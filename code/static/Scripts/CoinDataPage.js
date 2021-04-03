@@ -112,14 +112,9 @@ function showBar(data) {
     // cal the distance to p_close
 
     $('#price .card-header').text(p_close.toFixed(6) 
-    + (data.marketInfo.line_k > 0. ? '+' : '-' )
-    + Math.abs(data.marketInfo.line_k).toExponential(1)
     + ' | '+ data.marketInfoUSDT.kline.close.toFixed(2) + ' USDT')
 
-    
 
-
-    
 
     // data.msg.split(/\r?\n/).forEach(element => {
     //     // $('#msg').append('<p class="row m-0 p-0">'+ element +'</p>')
