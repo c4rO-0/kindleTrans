@@ -153,6 +153,26 @@ function delBrace(line) {
 
 }
 
+function encodeCharacter(strRaw) {
+
+    let strReplace = strRaw
+    let isReplaceHappened = true
+    while (isReplaceHappened) {
+        isReplaceHappened = false
+        for (const [rawCode, enCodeStr] of Object.entries(specialCharacterList)) {
+            isReplaceHappened = strReplace.includes(rawCode)
+            strReplace = strReplace.replace(rawCode, enCodeStr)
+        }  
+    }
+
+    // remove '{' '}'
+    strReplace = strReplace.replace('{', '')
+    strReplace = strReplace.replace('}', '')
+
+    return strReplace
+  
+}
+
 // 作者缩写
 function shortAuthorAPS(line) {
 
@@ -161,7 +181,9 @@ function shortAuthorAPS(line) {
 
     line.trim().split(' and ').forEach(function (singleAuthorRaw, i) {
 
-        console.log(singleAuthorRaw)
+        console.log(encodeCharacter(singleAuthorRaw))
+        singleAuthorRaw = encodeCharacter(singleAuthorRaw)
+
         let shortName = '';
         // 名字分为有逗号和没逗号两种
         let listSingleName = singleAuthorRaw.trim().split(',');
@@ -225,7 +247,9 @@ function shortAuthorNature(line) {
 
     line.trim().split(' and ').forEach(function (singleAuthorRaw, i) {
 
-        console.log(singleAuthorRaw)
+        console.log(encodeCharacter(singleAuthorRaw))
+        singleAuthorRaw = encodeCharacter(singleAuthorRaw)
+        
         let shortName = '';
         // 名字分为有逗号和没逗号两种
         let listSingleName = singleAuthorRaw.trim().split(',');
@@ -990,6 +1014,50 @@ $(document).ready(function () {
 
 })
 
+
+
+let specialCharacterList ={
+    '\\`{o}'	 : 'ò'  ,	// grave accent
+    '\\\'{o}'	 : 'ó'  ,	// acute accent
+    '\\^{o}'	 : 'ô'  ,	// circumflex
+    '\\"{o}'	 : 'ö'  ,	// umlaut, trema or dieresis
+    '\\H{o}'	 : 'ő'  ,	// long Hungarian umlaut (double acute)
+    '\\~{o}'	 : 'õ'  ,	// tilde
+    '\\c{c}'	 : 'ç'  ,	// cedilla
+    '\\k{a}'	 : 'ą'  ,	// ogonek
+    '\\l{}'	     : 'ł'  ,	// barred l (l with stroke)
+    '\\={o}'	 : 'ō'  ,	// macron accent (a bar over the letter)
+    '\\b{o}'	 : 'o'  ,	// bar under the letter
+    '\\.{o}'	 : 'ȯ'  ,	// dot over the letter
+    '\\d{u}'	 : 'ụ'  ,	// dot under the letter
+    '\\r{a}'	 : 'å'  ,	// ring over the letter (for å there is also the special command \aa)
+    '\\u{o}'	 : 'ŏ'  ,	// breve over the letter
+    '\\v{s}'	 : 'š'  ,	// caron/háček ("v") over the letter
+    '\\t{oo}'    : 'o͡o',	// "tie" (inverted u) over the two letters
+    '\\o{}'	     : 'ø'  ,	// slashed o (o with stroke)
+    '{\\i}'	     : 'ı'  ,	// dotless i (i without tittle)    
+
+    '\\`o'	 : 'ò'  ,	// grave accent
+    '\\\'o'	 : 'ó'  ,	// acute accent
+    '\\^o'	 : 'ô'  ,	// circumflex
+    '\\"o'	 : 'ö'  ,	// umlaut, trema or dieresis
+    '\\Ho'	 : 'ő'  ,	// long Hungarian umlaut (double acute)
+    '\\~o'	 : 'õ'  ,	// tilde
+    '\\cc'	 : 'ç'  ,	// cedilla
+    '\\ka'	 : 'ą'  ,	// ogonek
+    '\\l'	 : 'ł'  ,	// barred l (l with stroke)
+    '\\=o'	 : 'ō'  ,	// macron accent (a bar over the letter)
+    '\\bo'	 : 'o'  ,	// bar under the letter
+    '\\.o'	 : 'ȯ'  ,	// dot over the letter
+    '\\du'	 : 'ụ'  ,	// dot under the letter
+    '\\ra'	 : 'å'  ,	// ring over the letter (for å there is also the special command \aa)
+    '\\uo'	 : 'ŏ'  ,	// breve over the letter
+    '\\vs'	 : 'š'  ,	// caron/háček ("v") over the letter
+    '\\too'  : 'o͡o',	// "tie" (inverted u) over the two letters
+    '\\o'	 : 'ø'  ,	// slashed o (o with stroke)
+    '\\i'	 : 'ı'  ,	// dotless i (i without tittle)    
+
+}
 
 
 // 缩写
