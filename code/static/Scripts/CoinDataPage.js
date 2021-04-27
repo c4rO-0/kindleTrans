@@ -198,7 +198,7 @@ function showBar(data) {
     if( window.coinDataAmount && window.coinDataList){
         let amountInfo = window.coinDataAmount[user+'-'+data.marketInfo.symbol]
         $('#billInfo-1 .card-text').text( 
-            ( amountInfo.total /(1.+data.billInfo.rate_eff) ).toFixed(2) + (data.billInfo.rate_eff > 0. ? '+' : '-') + (Math.abs(data.billInfo.rate_eff*amountInfo.total)).toFixed(2)
+            ( amountInfo.total /(1.+amountInfo.rate_eff) ).toFixed(2) + (amountInfo.rate_eff > 0. ? '+' : '-') + (Math.abs(amountInfo.rate_eff*amountInfo.total /(1.+amountInfo.rate_eff))).toFixed(2)
         )
     }
 
