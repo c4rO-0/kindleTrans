@@ -188,12 +188,18 @@ function showBar(data) {
         }
     }
         
-    if(totalAmount > 0.){
+    // if(totalAmount > 0.){
+    // $('#billInfo-1 .card-text').text( 
+    //  (data.billInfo.earn.rate*100.).toFixed(2) + '%'+ ' | ' +  (earn/totalAmount*100.).toFixed(2)+ '%')
+    // }else{
+    //     $('#billInfo-1 .card-text').text( 
+    //         (data.billInfo.earn.rate*100.).toFixed(3) + '%'+ ' | NaN%' )
+    // }
+    if( window.coinDataAmount && window.coinDataList){
+        let amountInfo = window.coinDataAmount[user+'-'+data.marketInfo.symbol]
         $('#billInfo-1 .card-text').text( 
-            (data.billInfo.earn.rate*100.).toFixed(2) + '%'+ ' | ' +  (earn/totalAmount*100.).toFixed(2)+ '%')
-    }else{
-        $('#billInfo-1 .card-text').text( 
-            (data.billInfo.earn.rate*100.).toFixed(3) + '%'+ ' | NaN%' )
+            ( amountInfo.total /(1.+data.billInfo.rate_eff) ).toFixed(2) + (data.billInfo.rate_eff > 0. ? '+' : '-') + (Math.abs(data.billInfo.rate_eff*amountInfo.total)).toFixed(2)
+        )
     }
 
     if(totalAmount > 0.){
