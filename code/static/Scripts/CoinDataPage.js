@@ -120,8 +120,7 @@ function showBar(data) {
     //     // $('#msg').append('<p class="row m-0 p-0">'+ element +'</p>')
     // });
 
-
-    n_max = Math.ceil(data.marketInfo.balance.n_base_eff)
+    n_max = data.marketInfo.balance.n_base_eff
 
     n_eff = data.marketInfo.balance.n_base_eff
     n_base_f = data.marketInfo.balance.n_base_f
