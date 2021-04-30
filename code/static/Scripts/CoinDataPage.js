@@ -21,6 +21,10 @@ function showNewFeatures() {
     }
 }
 
+function expo(x, f) {
+    return Number.parseFloat(x).toExponential(f);
+  }
+
 function showBar(data) {
 
     if(data.marketInfo.symbol != $('#symbolList').val() ){
@@ -150,10 +154,10 @@ function showBar(data) {
     n_quote_eff = data.marketInfo.balance.n_quote_t + data.marketInfo.balance.n_quote_f
     + (data.marketInfo.balance.n_base_t + data.marketInfo.balance.n_base_f)* p_close
 
-    // $('#n-eff')
-    $('#n-eff-base').text(n_eff.toFixed(4) )
-    $('#n-eff-quote').text(n_quote_eff.toFixed(4) )
-    
+    // $('#n-eff')   
+    $('#n-eff-base').text( expo(n_eff,4) )
+    $('#n-eff-quote').text( expo(n_quote_eff,4) )
+
     // billInfo
     let totalAmount = -1.
     let totalLedgerTranAmount = -1.
