@@ -155,8 +155,8 @@ function showBar(data) {
     + (data.marketInfo.balance.n_base_t + data.marketInfo.balance.n_base_f)* p_close
 
     // $('#n-eff')   
-    $('#n-eff-base').text( expo(n_eff,4) )
-    $('#n-eff-quote').text( expo(n_quote_eff,4) )
+    $('#n-eff-base').text( expo(n_eff,1) )
+    $('#n-eff-quote').text( expo(n_quote_eff,1) )
 
     // billInfo
     let totalAmount = -1.
@@ -569,6 +569,50 @@ function setStorage(data){
 }
 
 $(document).ready(() => {
+
+    // set structure 
+    if(window.innerWidth > window.innerHeight){
+        $('#container-detail').css('width','35%')
+        $('#container-summery').css('width','65%')
+        $('#container-detail .container:eq(0)').css('width','00%')
+        $('#container-detail .container:eq(1)').css('width','100%')
+        // $('#container-detail').css('max-width','500px')
+        // $('#container-summery').css('max-width','500px')
+
+    }else{
+        $('#container-detail').css('width','100%')
+        $('#container-summery').css('width','100%')
+        // $('#container-detail').css('max-width','500px')
+        // $('#container-summery').css('max-width','500px')
+        $('#container-detail .container:eq(0)').css('width','20%')
+        $('#container-detail .container:eq(1)').css('width','80%')
+
+    }
+
+    window.addEventListener("resize", function() {
+
+        console.log('resize')
+        if(window.innerWidth > window.innerHeight){
+            $('#container-detail').css('width','35%')
+            $('#container-summery').css('width','65%')
+            $('#container-detail .container:eq(0)').css('width','00%')
+            $('#container-detail .container:eq(1)').css('width','100%')
+            // $('#container-detail').css('max-width','500px')
+            // $('#container-summery').css('max-width','500px')
+    
+        }else{
+            $('#container-detail').css('width','100%')
+            $('#container-summery').css('width','100%')
+            // $('#container-detail').css('max-width','500px')
+            // $('#container-summery').css('max-width','500px')
+            $('#container-detail .container:eq(0)').css('width','20%')
+            $('#container-detail .container:eq(1)').css('width','80%')
+    
+        }
+
+    })
+
+
     $('#status-run').on('click', () => {
         console.log('reload')
         refreshData()
