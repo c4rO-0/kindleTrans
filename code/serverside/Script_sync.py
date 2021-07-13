@@ -14,9 +14,9 @@ timeCurrent = time.time()
 for dir in dirs:
    # 获取时间
    timeDot = float(dir.rsplit('-')[0])
-   # 判断时间差 超过一天
+   # 判断时间差 超过4小时
 
-   if ((timeCurrent-timeDot)/(60.*60.*24.) > 1. ):
+   if ((timeCurrent-timeDot)/(60.*60.*4.) > 1. ):
         # 文件已经超过一天, 进行归档
         ## 首先判断是否含有mobi文件
         files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__),'..','uploads', dir)) )
