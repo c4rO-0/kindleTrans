@@ -39,6 +39,8 @@ import shutil
 
 from flask import jsonify
 
+import subprocess
+
 #=================================
 
 
@@ -75,6 +77,9 @@ def TransformEbook():
     #上传文件
     form = UploadForm()
     TOC = None
+
+    diskAvailInfo = subprocess.check_output("df  / | tail -n1 | awk '{print $4}'", shell=True)
+    diskAvail = int(diskAvailInfo)
 
     if form.validate_on_submit():
         print("-------------------------", file=sys.stderr)
@@ -153,4 +158,4 @@ def TransformEbook():
             return redirect("/ConfirmTransformEbook")
 
 
-    return render_template('TransformEbook.html.j2', app = app, form=form, jsV=jsV, error=error)
+    return render_template('TransformEbook.html.j2', app = app, form=form, jsV=jsV, error=error, diskAvail=diskAvail)

@@ -37,6 +37,9 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-119134846-1');
+
+        let diskAvail = '{{ diskAvail }}';
+
     </script>
 
 </head>
@@ -85,6 +88,7 @@
         </div>
         <form id="formUpload" method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
+            {% if diskAvail > 1048576 %}
             <div class="row justify-content-center">
                 <div class="col-md-7 align-self-center">
                     <div class="input-group mb-3 border border-primary rounded">
@@ -106,22 +110,7 @@
                     </div>
                 </div>
 
-
-
             </div>
-
-            {# 
-            <div class="row justify-content-center">
-                <div class="col-auto">
-                    <div class="input-group mb-3">
-                        {{ form.share() }}
-                        <label class="form-control" id="" for="share">同意共享</label>
-                    </div>
-                    <p>同意共享后, 上传的电子书将会在服务器保留. 在未来可能会提供下载链接, 上传者的个人信息不会被泄漏.</p>
-                    <p>不勾选同意共享, 电子书将会在服务器上保留一天后删除.</p>
-                </div>
-            </div>
-            #}
 
 
             <div class="row justify-content-center">
@@ -132,6 +121,11 @@
                     </div>
                 </div>
             </div>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+                [服务器磁盘空间不足, 请稍后再试或使用其他服务器]
+            </div>
+            {% endif %}
             {% for error in form.file.errors %}
             <div class="alert alert-danger" role="alert">
                 [{{error}}]

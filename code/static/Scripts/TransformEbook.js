@@ -42,6 +42,9 @@ $(document).ready(function () {
         'JK': { ipUrl: "http://81.2.242.163/", url: 'http://papercomment.tech/TransformEbook', resTime: undefined, name: '欧洲', id: 'server-eu', host: ['81.2.242.163', 'papercomment.tech', 'tool.papercomment.tech'] }
     }
 
+    // console.log('disk available : ', diskAvail)
+    // if(diskAvail )
+
     // console.log("准备");
     $("#fileUpload").on("change", function (e) {
         let fileName = e.target.files[0].name
