@@ -101,7 +101,7 @@ $(document).ready(function () {
 
 
     // 设置磁盘空间
-    let total =  diskAvail / diskUsage - 1048576
+    let total =  diskAvail / (1.-diskUsage) - 1048576
     // console.log(diskAvail, diskUsage , total, (total- (diskAvail - 1048576))/total )
     // console.log(String((total- (diskAvail - 1048576))/total*100.)+'%')
     $('#hard-disk .progress-bar:eq(0)').css('width', String((total- (diskAvail - 1048576))/total*100.)+'%' )
