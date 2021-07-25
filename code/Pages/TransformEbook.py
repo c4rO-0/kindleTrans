@@ -78,8 +78,11 @@ def TransformEbook():
     form = UploadForm()
     TOC = None
 
-    diskAvailInfo = subprocess.check_output("df  / | tail -n1 | awk '{print $4}'", shell=True)
-    diskAvail = int(diskAvailInfo)
+    diskAvailInfo = subprocess.check_output("df  / | tail -n1 | awk '{print $4, $5}'", shell=True)
+    diskAvailInfo_list = diskAvailInfo.decode("utf-8") .split(" ")
+    diskAvail  = int(diskAvailInfo_list[0])
+    diskUsage = float((diskAvailInfo_list[1]).strip('\n').strip('%'))/100.
+    print('disk :', diskAvailInfo, diskAvailInfo_list, diskAvail, diskUsage)
 
     if form.validate_on_submit():
         print("-------------------------", file=sys.stderr)
@@ -158,4 +161,4 @@ def TransformEbook():
             return redirect("/ConfirmTransformEbook")
 
 
-    return render_template('TransformEbook.html.j2', app = app, form=form, jsV=jsV, error=error, diskAvail=diskAvail)
+    return render_template('TransformEbook.html.j2', app = app, form=form, jsV=jsV, error=error, diskAvail=diskAvail, diskUsage=diskUsage)

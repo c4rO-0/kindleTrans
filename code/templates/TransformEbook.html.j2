@@ -39,6 +39,7 @@
         gtag('config', 'UA-119134846-1');
 
         let diskAvail = '{{ diskAvail }}';
+        let diskUsage = '{{ diskUsage }}'
 
     </script>
 
@@ -171,11 +172,18 @@
                     <a target="_blank"
                         href="https://subtitletools.com/convert-text-files-to-utf8-online">-->点我进行跳转<--</a>
                     </p>
-                <p>电子书将会在服务器上保留一天后删除</p>
+                <p>电子书将会在服务器上保留4小时后删除</p>
                 <div class="w-100"></div>
-                <p style="color:#b36b01">由于未知原因, 网站最近不太稳定. </p>
-                <p style="color:#b36b01">它只是一个非常弱小服务器, 请大家善待它.</p>
+                <p style="color:#b36b01">随着用户增多, 硬盘被塞满了. 它只是一个非常弱小服务器, 请大家善待它.</p>
+                <div id='hard-disk' class="progress">
+                    <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar"
+                        style="width: 80%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar progress-bar-striped " role="progressbar"
+                        style="width: 20%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+
+                </div>
             </div>
+
         </div>
         <div class="row justify-content-center my-4">
             <div class="col-md-9 bg-light">
