@@ -104,6 +104,12 @@ $(document).ready(function () {
     let total =  diskAvail / (1.-diskUsage) - 1048576
     // console.log(diskAvail, diskUsage , total, (total- (diskAvail - 1048576))/total )
     // console.log(String((total- (diskAvail - 1048576))/total*100.)+'%')
+    if(total > 1048576*9){
+        total = 1048576*9
+    }
+    if(diskAvail > 1048576*9){
+        diskAvail = 1048576*9
+    }
     $('#hard-disk .progress-bar:eq(0)').css('width', String((total- (diskAvail - 1048576))/total*100.)+'%' )
 
     $('#hard-disk .progress-bar:eq(1)').css('width', String(100.-(total- (diskAvail - 1048576))/total*100.)+'%' )
