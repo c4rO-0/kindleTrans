@@ -101,30 +101,30 @@ $(document).ready(function () {
 
 
     // 设置磁盘空间
-    let total =  diskAvail / (1.-diskUsage + 1.E-8)
-    console.log(diskAvail, diskUsage , total, (total- (diskAvail - 1048576))/total )
-    console.log(String((total- (diskAvail - 1048576))/total*100.)+'%')
+    // let total =  diskAvail / (1.-diskUsage + 1.E-8)
+    // console.log(diskAvail, diskUsage , total, (total- (diskAvail - 1048576))/total )
+    // console.log(String((total- (diskAvail - 1048576))/total*100.)+'%')
 
-    $('#hard-disk .progress-bar:eq(0)').css('width', String((total- (diskAvail - 1048576))/total*100.)+'%' )
+    // $('#hard-disk .progress-bar:eq(0)').css('width', String((total- (diskAvail - 1048576))/total*100.)+'%' )
 
-    $('#hard-disk .progress-bar:eq(1)').css('width', String(100.-(total- (diskAvail - 1048576))/total*100.)+'%' )
+    // $('#hard-disk .progress-bar:eq(1)').css('width', String(100.-(total- (diskAvail - 1048576))/total*100.)+'%' )
 
-    if((1.-(total- (diskAvail - 1048576))/total) > 0.5 ){
+    // if((1.-(total- (diskAvail - 1048576))/total) > 0.5 ){
         
-        $('#hard-disk .progress-bar:eq(1)').text('可用硬盘'+(100.-(total- (diskAvail - 1048576))/total*100.).toFixed(2)+'%' )
-    }else{
-        $('#hard-disk .progress-bar:eq(0)').text('硬盘已使用'+((total- (diskAvail - 1048576))/total*100.).toFixed(2)+'%' )
-    }
+    //     $('#hard-disk .progress-bar:eq(1)').text('可用硬盘'+(100.-(total- (diskAvail - 1048576))/total*100.).toFixed(2)+'%' )
+    // }else{
+    //     $('#hard-disk .progress-bar:eq(0)').text('硬盘已使用'+((total- (diskAvail - 1048576))/total*100.).toFixed(2)+'%' )
+    // }
     
 
-    $('#hard-disk .progress-bar:eq(1)').removeClass("bg-danger")
-    $('#hard-disk .progress-bar:eq(1)').removeClass("bg-warning")
-    $('#hard-disk .progress-bar:eq(1)').removeClass("bg-success")
-    if(diskAvail < 1048576*2 || (1.-(total- (diskAvail - 1048576))/total) < 0.3 ){
-        $('#hard-disk .progress-bar:eq(1)').addClass("bg-danger")
-    }else if(diskAvail < 1048576*4 || (1.-(total- (diskAvail - 1048576))/total) < 0.5 ){
-        $('#hard-disk .progress-bar:eq(1)').addClass("bg-warning")
-    }else{
-        $('#hard-disk .progress-bar:eq(1)').addClass("bg-success")
-    }
+    // $('#hard-disk .progress-bar:eq(1)').removeClass("bg-danger")
+    // $('#hard-disk .progress-bar:eq(1)').removeClass("bg-warning")
+    // $('#hard-disk .progress-bar:eq(1)').removeClass("bg-success")
+    // if(diskAvail < 1048576*2 || (1.-(total- (diskAvail - 1048576))/total) < 0.3 ){
+    //     $('#hard-disk .progress-bar:eq(1)').addClass("bg-danger")
+    // }else if(diskAvail < 1048576*4 || (1.-(total- (diskAvail - 1048576))/total) < 0.5 ){
+    //     $('#hard-disk .progress-bar:eq(1)').addClass("bg-warning")
+    // }else{
+    //     $('#hard-disk .progress-bar:eq(1)').addClass("bg-success")
+    // }
 })
