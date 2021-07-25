@@ -101,20 +101,21 @@ $(document).ready(function () {
 
 
     // 设置磁盘空间
-    let total =  diskAvail / (1.-diskUsage) - 1048576
-    // console.log(diskAvail, diskUsage , total, (total- (diskAvail - 1048576))/total )
-    // console.log(String((total- (diskAvail - 1048576))/total*100.)+'%')
-    if(total > 1048576*9){
-        total = 1048576*9
-    }
-    if(diskAvail > 1048576*9){
-        diskAvail = 1048576*9
-    }
+    let total =  diskAvail / (1.-diskUsage + 1.E-8)
+    console.log(diskAvail, diskUsage , total, (total- (diskAvail - 1048576))/total )
+    console.log(String((total- (diskAvail - 1048576))/total*100.)+'%')
+
     $('#hard-disk .progress-bar:eq(0)').css('width', String((total- (diskAvail - 1048576))/total*100.)+'%' )
 
     $('#hard-disk .progress-bar:eq(1)').css('width', String(100.-(total- (diskAvail - 1048576))/total*100.)+'%' )
 
-    $('#hard-disk .progress-bar:eq(0)').text('硬盘已使用'+((total- (diskAvail - 1048576))/total*100.).toFixed(2)+'%' )
+    if((1.-(total- (diskAvail - 1048576))/total) > 0.5 ){
+        
+        $('#hard-disk .progress-bar:eq(1)').text('可用硬盘'+(100.-(total- (diskAvail - 1048576))/total*100.).toFixed(2)+'%' )
+    }else{
+        $('#hard-disk .progress-bar:eq(0)').text('硬盘已使用'+((total- (diskAvail - 1048576))/total*100.).toFixed(2)+'%' )
+    }
+    
 
     $('#hard-disk .progress-bar:eq(1)').removeClass("bg-danger")
     $('#hard-disk .progress-bar:eq(1)').removeClass("bg-warning")

@@ -82,7 +82,20 @@ def TransformEbook():
     diskAvailInfo_list = diskAvailInfo.decode("utf-8") .split(" ")
     diskAvail  = int(diskAvailInfo_list[0])
     diskUsage = float((diskAvailInfo_list[1]).strip('\n').strip('%'))/100.
-    print('disk :', diskAvailInfo, diskAvailInfo_list, diskAvail, diskUsage)
+    
+    diskTotal = diskAvail/(1.-diskUsage)
+
+    print(diskAvail/1048576. , diskTotal/1048576., diskUsage)
+    if(diskTotal > 1048576*20):
+        diskTotal = 1048576*20
+    
+    if(diskAvail > 1048576*20):
+        diskAvail = 1048576*20
+
+    diskUsage = 1.- float(diskAvail)/float(diskTotal)
+
+    print(diskAvail/1048576. , diskTotal/1048576., diskUsage)
+
 
     if form.validate_on_submit():
         print("-------------------------", file=sys.stderr)
