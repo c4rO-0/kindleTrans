@@ -115,8 +115,8 @@ function showBar(data) {
 
     // cal the distance to p_close
 
-    $('#price .card-header').text(p_close.toFixed(6) 
-    + ' | '+ data.marketInfoUSDT.kline.close.toFixed(2) + ' USDT')
+    $('#price .card-header').text(expo(p_close,4) 
+    + ' | '+ expo(data.marketInfoUSDT.kline.close,4)  + ' USDT')
 
 
 
@@ -263,7 +263,7 @@ function showBar(data) {
         $('#p-hook-left .progress:eq(0) .progress-bar:eq(0)').css('width', (p_close - p_buy_hook_high) / p_maxRange * 100. + '%')
         $('#p-hook-left .progress:eq(0) .progress-bar:eq(1)').css('width', (p_buy_hook_high - p_buy_hook_low) / p_maxRange * 100. + '%')
 
-        $('#p-hook-left .card-text').text(data.unprocHookInfo.n_buy + ' | ' + (p_buy_hook_high).toFixed(6))
+        $('#p-hook-left .card-text').text(data.unprocHookInfo.n_buy + ' | ' + expo(p_buy_hook_high,3))
     } else {
         $('#p-hook-left .progress:eq(0) .progress-bar').css('width', '0%')
         $('#p-hook-left .card-text').text(data.unprocHookInfo.n_buy + ' | None')
@@ -274,7 +274,7 @@ function showBar(data) {
         $('#p-hook-right .progress:eq(0) .progress-bar:eq(0)').css('width', (p_sell_hook_low - p_close) / p_maxRange * 100. + '%')
         $('#p-hook-right .progress:eq(0) .progress-bar:eq(1)').css('width', (p_sell_hook_high - p_sell_hook_low) / p_maxRange * 100. + '%')
 
-        $('#p-hook-right .card-text').text((p_sell_hook_low).toFixed(6) + ' | ' + data.unprocHookInfo.n_sell)
+        $('#p-hook-right .card-text').text(expo(p_sell_hook_low,3) + ' | ' + data.unprocHookInfo.n_sell)
 
     } else {
         $('#p-hook-right .progress:eq(0) .progress-bar').css('width', '0%')
@@ -311,7 +311,7 @@ function showBar(data) {
             p_buy_nail_high     == null ? -1. : p_buy_nail_high ,
             p_buy_cut_nail_high == null ? -1. : p_buy_cut_nail_high)
 
-        $('#p-nail-left .card-text').text((n_nail_buy+n_cut_nail_buy) + ' | ' + (p_max_nail.toFixed(6)))
+        $('#p-nail-left .card-text').text((n_nail_buy+n_cut_nail_buy) + ' | ' + expo(p_max_nail,3))
     }else{
         $('#p-nail-left .card-text').text( (n_nail_buy + n_cut_nail_buy) + ' | None')
     }
@@ -349,7 +349,7 @@ function showBar(data) {
             p_sell_nail_low     == null ? 1.E6 : p_sell_nail_low ,
             p_sell_cut_nail_low == null ? 1.E6 : p_sell_cut_nail_low)
 
-        $('#p-nail-right .card-text').text((p_min_nail.toFixed(6))+ ' | ' + (n_nail_sell+n_cut_nail_sell) )
+        $('#p-nail-right .card-text').text(expo(p_min_nail,3)+ ' | ' + (n_nail_sell+n_cut_nail_sell) )
     }else{
         $('#p-nail-right .card-text').text('None | ' + (n_nail_sell+n_cut_nail_sell) )
     }
