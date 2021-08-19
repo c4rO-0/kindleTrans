@@ -71,25 +71,27 @@
 </head>
 
 <body style="overflow-x: hidden">
+
+
     <div class="container">
         <!-- <div id="newFeatures" class="py-5 newFeaturesHide"
-            style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
-            <div onclick="toggleNewFeatures()" class="alert-primary px-2"
-                style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
-                <p class="m-0">New Features</p>
-            </div>
+                    style="position: fixed; right:0; height:100vh; width:23vw; min-width:256px; z-index: 4; transition: transform 0.5s ease;">
+                    <div onclick="toggleNewFeatures()" class="alert-primary px-2"
+                        style="position: absolute; left:0; transform-origin: 0 0; transform: rotate(90deg); border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; cursor: pointer;">
+                        <p class="m-0">New Features</p>
+                    </div>
 
-            {# ==================== update log =================== #}
-            <div class="alert-secondary px-2" style="height: 100%; width: 100%; overflow-y: auto">
-                <h3 class="text-center">2020.07.08</h3>
-                <p>- try UI</p>
-            </div>
-        </div> -->
+                    {# ==================== update log =================== #}
+                    <div class="alert-secondary px-2" style="height: 100%; width: 100%; overflow-y: auto">
+                        <h3 class="text-center">2020.07.08</h3>
+                        <p>- try UI</p>
+                    </div>
+                </div> -->
 
         <!-- title -->
         <div class="row justify-content-center">
-            <div class="col-auto align-self-center px-0">
-                <h1 onclick="window.location.href = '/'" style="color:dimgray">Coin<span style="color:red"><font>D</font></span>ata</h1>
+            <div class="col-auto align-self-center">
+                <h1 onclick="window.location.href = '/'" style="font-size:4rem; color:dimgray">Coin<span style="color:red">D</span>ata</h1>
             </div>
             <div class="col-auto align-self-end px-1">
                 <p class="align-text-bottom">Powered by</p>
@@ -102,7 +104,7 @@
             </div>
         </div>
 
-
+        {% if user %}
         <div class="container">
 
             <div class="row">
@@ -377,10 +379,10 @@
                             <div class="col px-0">
 
                                 <!-- <label for="inputState">symbol</label>
-                        <select id="symbolList" class="form-control">
-                            <option symbol='ethbtc' >ethbtc</option>
-                            <option symbol='ethusdt' >ethusdt</option>
-                        </select> -->
+                                    <select id="symbolList" class="form-control">
+                                        <option symbol='ethbtc' >ethbtc</option>
+                                        <option symbol='ethusdt' >ethusdt</option>
+                                    </select> -->
 
                             </div>
                         </div>
@@ -390,8 +392,8 @@
                                 style='width:100%;white-space: pre-wrap;'>
 
 
-                                msg
-                        </pre>
+                                            msg
+                                    </pre>
 
 
                         </div>
@@ -402,6 +404,41 @@
             </div>
 
         </div>
+        {% else %}
+
+        <div class="container">
+            <form id="formUpload" method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="row justify-content-center">
+                    <div class="col-md-7 align-self-center">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">User Name</span>
+                            </div>
+                            {{ form.user(class="form-control", placeholder=gettext("user Name")) }}
+                        </div>
+                    </div>
+    
+                </div>
+    
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <div class="input-group mb-3">
+                            {{ form.upload(class="btn btn-outline-primary btn-lg", value="comfirm") }}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% for error in form.user.errors %}
+            <div class="alert alert-danger" role="alert">
+                [{{error}}]
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% endif %}
+    </div>
+
 
 
 </body>

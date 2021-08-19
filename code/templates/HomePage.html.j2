@@ -91,7 +91,8 @@
                     {# 概述 #}
                     <p class="card-text">在视频右上角添加快捷按钮帮助用户在全屏和非全屏下一键投币. </p>
                     <p> </p>
-                    <a href="https://greasyfork.org/en/scripts/384160-bilibili%E4%B8%80%E9%94%AE%E6%8A%95%E5%B8%81" class="btn btn-primary">了解一下</a>
+                    <a href="https://greasyfork.org/en/scripts/384160-bilibili%E4%B8%80%E9%94%AE%E6%8A%95%E5%B8%81"
+                        class="btn btn-primary">了解一下</a>
                 </div>
             </div>
         </div>
@@ -136,21 +137,40 @@
 
         {# ====================== #}
         <div class="col-md-auto">
-                <div class="card mt-5" style="width:292px">
-                    {# 缩略图 #}
-                    <a href="{{ url_for('MonkeyPage') }}">
-                        <img class="card-img-top" src="{{ url_for('static', filename='images/tampermonkey.png') }}"
-                            alt="Card image cap">
-                    </a>
-                    <div class="card-body">
-                        {# 标题 #}
-                        <h5 class="card-title">Tampermonkey/greasemonkey Setting</h5>
-                        {# 概述 #}
-                        <p class="card-text"></p>
-                        <a href="{{ url_for('MonkeyPage') }}" class="btn btn-primary">try it</a>
-                    </div>
+            <div class="card mt-5" style="width:292px">
+                {# 缩略图 #}
+                <a href="{{ url_for('MonkeyPage') }}">
+                    <img class="card-img-top" src="{{ url_for('static', filename='images/tampermonkey.png') }}"
+                        alt="Card image cap">
+                </a>
+                <div class="card-body">
+                    {# 标题 #}
+                    <h5 class="card-title">Tampermonkey/greasemonkey Setting</h5>
+                    {# 概述 #}
+                    <p class="card-text"></p>
+                    <a href="{{ url_for('MonkeyPage') }}" class="btn btn-primary">try it</a>
                 </div>
             </div>
+        </div>
+
+
+        {# ====================== #}
+        <!-- <div class="col-md-auto">
+            <div class="card mt-5" style="width:292px">
+                {# 缩略图 #}
+                <a href="{{ url_for('CoinDataPageUndefinedUser') }}">
+                    <img class="card-img-top" src="{{ url_for('static', filename='images/tampermonkey.png') }}"
+                        alt="Card image cap">
+                </a>
+                <div class="card-body">
+                    {# 标题 #}
+                    <h5 class="card-title">Grep Wave User Page</h5>
+                    {# 概述 #}
+                    <p class="card-text"></p>
+                    <a href="{{ url_for('CoinDataPageUndefinedUser') }}" class="btn btn-primary">Check it out</a>
+                </div>
+            </div>
+        </div>         -->
 
     </div>
 </div>

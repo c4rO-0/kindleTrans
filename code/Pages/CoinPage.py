@@ -10,7 +10,29 @@ import urllib.request
 #---------------------------------
 import os
 
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired
+from wtforms import SubmitField, FieldList, IntegerField, StringField, BooleanField
+from werkzeug.utils import secure_filename
+
+from wtforms.validators import ValidationError
+
 #=================================
+
+class UploadForm(FlaskForm):
+
+    user = StringField('User')
+    upload = SubmitField('comfirm')
+
+    def validate_user(self, field):
+        print("file user", file=sys.stderr)
+
+        str_username = field.data
+        if not ('-' in str_username and \
+           str_username.rsplit('-', 1)[1].isdecimal()):
+           print("格式不对", file=sys.stderr)
+           raise ValidationError(gettext('用户名格式不对'))
+
 
 @app.route('/_getCoinDataList/<user>' , methods = ['GET', 'POST']  )
 def getCoinDataList(user):
@@ -69,4 +91,14 @@ def getCoinData(symbol):
 @app.route('/CoinDataPage/<user>' , methods = ['GET', 'POST']  )
 def CoinDataPage(user):
 
-    return render_template('CoinDataPage.html.j2', app = app, user=user, jsV=jsV)    
+    return render_template('CoinDataPage.html.j2', app = app, form=None, user=user, jsV=jsV)    
+
+
+@app.route('/CoinDataPage' , methods = ['GET', 'POST']  )
+def CoinDataPageUndefinedUser():
+
+    form = UploadForm()
+    if form.validate_on_submit():
+        return redirect("/CoinDataPage/"+form.user.data)
+
+    return render_template('CoinDataPage.html.j2', app = app, form=form, user=None, jsV=jsV)        
