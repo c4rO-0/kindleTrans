@@ -455,7 +455,7 @@ function refreshList(){
     return new Promise((resolve, reject)=>{
         $.getJSON("/_getCoinDataList/"+user, (data) => {
 
-            // console.log('get list : ', data)
+            console.log('get list : ', data)
             list = data.list_symbol.sort()
             window.coinDataList = list
             resolve(list)

@@ -25,7 +25,7 @@ class UploadForm(FlaskForm):
     upload = SubmitField('comfirm')
 
     def validate_user(self, field):
-        print("file user", file=sys.stderr)
+        # print("file user", file=sys.stderr)
 
         str_username = field.data
         if not ('-' in str_username and \
@@ -34,9 +34,7 @@ class UploadForm(FlaskForm):
            raise ValidationError(gettext('用户名格式不对'))
 
 
-@app.route('/_getCoinDataList/<user>' , methods = ['GET', 'POST']  )
-def getCoinDataList(user):
-
+def getCoinDataDirectList(user):
     # Opening JSON file 
     rootpath_server = '/home/public/autoDigiCoin/'
     # rootpath_server = '/home/bsplu/workspace/autoDigiCoin/'
@@ -47,19 +45,24 @@ def getCoinDataList(user):
 
         # list_symbol.pop(0)
 
-        return jsonify({
+        return {
             'list_symbol': list_symbol
-        })
+        }
 
     else:
         try:
             with urllib.request.urlopen("http://papercomment.tech/_getCoinDataList/"+user) as url:
                 data = json.loads(url.read().decode())
-                return jsonify(data)  
+                return data
         except :
-            return jsonify(None)
+            return None
 
-    return jsonify(None)
+    return None
+
+@app.route('/_getCoinDataList/<user>' , methods = ['GET', 'POST']  )
+def getCoinDataList(user):
+
+    return jsonify(getCoinDataDirectList(user))
 
 
 @app.route('/_getCoinData/<symbol>' , methods = ['GET', 'POST']  )
@@ -99,6 +102,7 @@ def CoinDataPageUndefinedUser():
 
     form = UploadForm()
     if form.validate_on_submit():
-        return redirect("/CoinDataPage/"+form.user.data)
+        if(getCoinDataDirectList(form.user.data) and getCoinDataDirectList(form.user.data)['list_symbol']):
+            return redirect("/CoinDataPage/"+form.user.data)
 
-    return render_template('CoinDataPage.html.j2', app = app, form=form, user=None, jsV=jsV)        
+    return render_template('CoinDataPage.html.j2', app = app, form=form, user=None, jsV=jsV)
