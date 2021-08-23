@@ -1,0 +1,364 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <title>{{ gettext("关于我们") }}</title>
+
+    {# 标签logo #}
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/c4r_logo.png') }}">
+
+    <script src="{{ url_for('static', filename='Scripts/jquery-3.3.1.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css">
+
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+
+
+    <link href="{{ url_for('static', filename='css/AboutUsPage.v2.css') }}?v={{ jsV }}" rel="stylesheet"
+        type="text/css">
+
+    <!-- our own scripts -->
+    <!-- <script src="{{ url_for('static', filename='Scripts/AboutUsPage.js') }}"></script> -->
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script> -->
+    {# 广告 #}
+    <!-- Begin BidVertiser code -->
+    <!-- <SCRIPT data-cfasync="false" SRC="//bdv.bidvertiser.com/BidVertiser.dbm?pid=807493&bid=1944000" TYPE="text/javascript"></SCRIPT> -->
+    <!-- End BidVertiser code -->
+    {# 添加谷歌分析 #}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="{{ url_for('static', filename='js/googleAnalytics.js') }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-119134846-1');
+    </script>
+</head>
+
+
+<body>
+    <div class="app-bg"></div>
+    <div class="container">
+        <div class="row justify-content-center mb-4">
+            <div class="col-auto align-self-center">
+                <h1 onclick="window.location.href = '/'" style="font-size:4rem; color:dimgray">About<span
+                        style="color:red">Us</span></h1>
+            </div>
+            <div class="col-auto align-self-end px-1">
+                <p class="align-text-bottom">we are</p>
+            </div>
+            <div class="col-auto align-self-end px-1">
+                <a href="{{url_for('AboutUsPage')}}">
+                    <img class="mb-3" src="{{ url_for('static', filename='images/c4r_logo.png') }}" width="30"
+                        height="30">
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-start mb-4">
+            <div class="col">
+                <div class="card text-white bg-secondary c4r">
+                    E-mail :
+                    <p>
+                        c4rO-0@outlook.com
+                    </p>
+                    <p>
+                        c4rOA0@126.com
+                    </p>
+                </div>
+                <div class="card text-white bg-secondary c4r">
+                    <p>
+                        知乎 : https://www.zhihu.com/people/c4rO-0
+                    </p>
+                    <p>
+                        bilibili : https://space.bilibili.com/543518262/
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- timeline start here -->
+    <div class="page">
+        <div class="timeline">
+
+            <!-- group cards in one year -->
+            <div class="timeline__group">
+                <span class="timeline__year time" aria-hidden="true">2021</span>
+                <div class="timeline__cards">
+
+                    <!-- single card -->
+                    <div class="timeline__card card">
+                        <header class="card__header">
+                            <time class="time" datetime="2021-08-22">
+                                <span class="time__month">8月</span>
+                                <span class="time__day">22日</span>
+                            </time>
+                            <h3 class="card__title r-title">里程碑</h2>
+                        </header>
+
+                        <div class="card__content">
+                            <p>
+                                简单概括一下时隔半年的进展: 没有进展. 
+                            </p>
+                            <p>
+                                看着周围人飞速向qian, 仿佛C4r被按了暂停键. 
+                            </p>
+                            <p>
+                                GrepWave已经稳定, 但是不出意外的效果不理想.
+                            </p>
+                        </div>
+                        <div class="card__footer">
+                            <p>
+                                <a style="color:rgb(0, 0, 0)" href="https://www.youtube.com/watch?v=dLB42B08N5k">
+                                    我们会永远"活在阴影中"吗?</a>
+                            </p>
+                            <p>
+                                <a style="color:rgb(0, 0, 0)" href="https://www.youtube.com/watch?v=dLB42B08N5k">
+                                    Will we be "Living in the Shadows" forever?</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- single card -->
+                    <div class="timeline__card card">
+                        <header class="card__header">
+                            <time class="time" datetime="2021-01-05">
+                                <span class="time__month">01月</span>
+                                <span class="time__day">05日</span>
+                            </time>
+                            <h3 class="card__title r-title">里程碑</h2>
+                        </header>
+
+                        <div class="card__content">
+                            <p>
+                                虾米音乐宣布将于2月5日关停. 内心五味杂陈. 纪念一下早产的Mexporter项目.
+                            </p>
+                            <img class="mb-3" src="{{ url_for('static', filename='images/Mexporter_screenshot.png') }}"
+                                width="100%">
+                        </div>
+                        <div class="card__footer">
+                            <p>
+                                <!-- 超前一步是先烈；落后一步是顽固 -->
+                                世界以痛吻我, 要我报之以歌.
+                            </p>
+                            <p>
+                                The world has kissed my soul with its pain, asking for its return in songs.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- group cards in one year -->
+            <div class="timeline__group">
+                <span class="timeline__year time" aria-hidden="true">2020</span>
+                <div class="timeline__cards">
+                    <!-- single card -->
+                    <div class="timeline__card card">
+                        <header class="card__header">
+                            <time class="time" datetime="2020-12-17">
+                                <span class="time__month">12月</span>
+                                <span class="time__day">17日</span>
+                            </time>
+                            <h3 class="card__title r-title">里程碑</h2>
+                        </header>
+
+                        <div class="card__content">
+                            <p>
+                                于公元2020年12月17日. 这一年是魔幻的一年, 大环境各种意外, 我们团队也不是那么顺利.
+                            </p>
+                            <p>
+                                B站投币插件也凉凉了, 除了做完了插件, 后续的交涉任务一点进展都没有.
+                                失败的原因, 除了因为B站自己更新了页面脚本支持投币, 可能还和我们团队一贯的经营模式有关, 看来我们还是更擅长不需要人际关系的项目.
+                                Tr项目开发了一个预览版, 自己用着倒是不错, 可惜在找赞助的阶段又一次的卡住了. 每周的组会也渐渐地变成了关心组员的八卦大会.
+                            </p>
+                            <p>
+                                不过, 好消息也是有一些的, 随手开发的PIP播放插件安装量已经达到11966了, 这个是没想到的.
+                                Txt2mobi项目月活动量大概在800, 打赏时断时续, 好的时候能抵一抵服务器开销, 不过这个项目又很吃资源, 真的不划算啊.
+                            </p>
+                            <p>
+                                一直以来我们做的项目很大一部分都是为了自己服务, 也是方便其他人.
+                                在误打误撞的情况下在BS的带领下开始了GrepWave项目, 该项目尝试利用我们自己的技术单纯地进行赚钱.
+                                不需要社交, 不需要别人的认可, 只需要我们自己的头脑和技术.
+                            </p>
+                            <p>
+                                我们还没有忘记初心, 只不过希望能先活下去.
+                            </p>
+                            <p class="text-right">
+                                玩不起2077的C4r
+                            </p>
+                        </div>
+                        <div class="card__footer">
+                            <p>
+                                所有这些时刻，终将流失在时光中，一如眼泪消失在雨中.
+                            </p>
+                            <p>
+                                All those moments will be lost in time, like tears in rain.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- group cards in one year -->
+            <div class="timeline__group">
+                <span class="timeline__year time" aria-hidden="true">2019</span>
+                <div class="timeline__cards">
+                    <!-- single card -->
+                    <div class="timeline__card card">
+                        <header class="card__header">
+                            <time class="time" datetime="2019-06-05">
+                                <span class="time__month">06月</span>
+                                <span class="time__day">05日</span>
+                            </time>
+                            <h3 class="card__title r-title">里程碑</h2>
+                        </header>
+
+                        <div class="card__content">
+                            <p>
+                                于公元2019年06月05日, 在"导出网易云音乐"项目的基础上尝试众筹, 不出意外失败了.
+                                但意外的是一点点钱都没筹到, 对士气打击很大. Mexporter打算就烂在git里吧, 下一个项目也快要搁置了.
+                                最近发布了B站投币插件, 尝试新的模式, 但愿能顺利吧...
+                            </p>
+                        </div>
+                        <div class="card__footer">
+                            愿我们凝视深渊的时候, 深渊不要注意到我们.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- group cards in one year -->
+            <div class="timeline__group">
+                <span class="timeline__year time" aria-hidden="true">2018</span>
+                <div class="timeline__cards">
+
+                    <!-- single card -->
+                    <div class="timeline__card card">
+                        <header class="card__header">
+                            <time class="time" datetime="2018-06-10">
+                                <span class="time__month">06月</span>
+                                <span class="time__day">10日</span>
+                            </time>
+                            <h3 class="card__title r-title">里程碑</h2>
+                        </header>
+
+                        <div class="card__content">
+                            <p>
+                                于公元2018年06月10日, c4r服务器添加P2P传送文件功能. 该功能会更加方便我们的日常交流.
+                            </p>
+                        </div>
+                        <div class="card__footer">
+                            愿我们能保持创意和实践的热情, 让纷繁的世界变得更简单.
+                        </div>
+                    </div>
+
+                    <!-- single card -->
+                    <div class="timeline__card card">
+                        <header class="card__header">
+                            <time class="time" datetime="2018-04-17">
+                                <span class="time__month">04月</span>
+                                <span class="time__day">17日</span>
+                            </time>
+                            <h3 class="card__title r-title">里程碑</h2>
+                        </header>
+
+                        <div class="card__content">
+                            <p>
+                                嘿! 我是bs.
+                                <br> 于公元2018年04月17日, 为运行Txt2mobi项目, 重启了c4r服务器. 很高兴我们又回来了. 本次主要贡献人 : bs.
+                                <br> 但是在这段时间我们并没有空闲, 以无组织流浪者的身份开发了 : YoutubeFilter和网易云导出歌词两个浏览器插件.
+                            </p>
+                        </div>
+                        <div class="card__footer">
+                            愿我们坚持初衷, 不再投机倒把
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- group cards in one year -->
+            <div class="timeline__group">
+                <span class="timeline__year time" aria-hidden="true">2017</span>
+                <div class="timeline__cards">
+                    <!-- single card -->
+                    <div class="timeline__card card">
+                        <header class="card__header">
+                        </header>
+                        <div class="card__content">
+                            <div class="row bg-dark mb-4">
+                                <div class="col-auto pr-0">
+                                    <pre>Connection established.</pre>
+                                    <pre class="mb-4">To escape to local shell, press 'Ctrl+Alt+]'.</pre>
+                                    <pre>Last login: Tue Jun 27 16:11:46 2017</pre>
+                                    <pre>#############################################</pre>
+                                    <pre>#            欢迎来到c4r临时服务器            </pre>
+                                    <pre>#            我们的目标是星辰大海             </pre>
+                                    <pre>#--------------------------------------------</pre>
+                                    <pre>#                                          </pre>
+                                    <pre>#===================英雄碑====================</pre>
+                                    <pre>#                                          </pre>
+                                    <pre># 于公元2016年2月23日19时31分，我们团队重要的一员 </pre>
+                                    <pre># ，"大小眼"，离世，享年1年（大概）。            </pre>
+                                    <pre># 它用自己生命诠释了坚韧不拔的精神，与环境保护的重  </pre>
+                                    <pre># 要性。感谢它为我们带来了欢乐。                 </pre>
+                                    <pre>#                                          </pre>
+                                    <pre>#............................................</pre>
+                                    <pre># 愿后人能够继承前辈们的意志, 继续在油腻的世界里寻找</pre>
+                                    <pre>#============================================</pre>
+                                    <pre>#                                          </pre>
+                                    <pre>#===================里程碑====================</pre>
+                                    <pre>#                                          </pre>
+                                    <pre># 于公元2016年4月24日00时08分，我们团队终于跨出了 </pre>
+                                    <pre># 重要的一步----拥有了自己的视频串流服务器。这是继 </pre>
+                                    <pre># 实现BT服务器后的又一次重大飞跃。本次主要贡献人：l</pre>
+                                    <pre>#                                          </pre>
+                                    <pre>#............................................</pre>
+                                    <pre># 愿所有人能够坚持自己的理想, 在满是荆棘的世界里奋斗</pre>
+                                    <pre>#============================================</pre>
+                                    <pre>#                                          </pre>
+                                    <pre>#===================通  知====================</pre>
+                                    <pre>#                                          </pre>
+                                    <pre>#     本服务器将于2017.05.20日左右遁入黑暗。    </pre>
+                                    <pre>#     请在此之前做好备份，再次开启日期未知，     </pre>
+                                    <pre>#     请做好永不开启的思想觉悟                 </pre>
+                                    <pre>#............................................</pre>
+                                    <pre># 原未来的探索者发现我们的遗迹, 重启我们未完成的征程</pre>
+                                    <pre>#=================删 档 维 护=================</pre>
+                                    <pre>#                                          </pre>
+                                    <pre># 嘿！我是l。                                 </pre>
+                                    <pre># 现在是公元2017年6月27日, 本服务器c4r马上将停机维</pre>
+                                    <pre># 护。再开时间待定。                           </pre>
+                                    <pre># 管理员bs再过几个小时就要上天了。祝他一路顺风。   </pre>
+                                    <pre># 其他的曾经的用户们，大概还没来得及看到本通知。    </pre>
+                                    <pre># 但是管不了了。                              </pre>
+                                    <pre># 相信c4r还会回来的，毕竟他还有未完成的使命       </pre>
+                                    <pre># （星辰大海什么的，不明所以）                   </pre>
+                                    <pre>#                                            </pre>
+                                    <pre>#............................................</pre>
+                                    <pre># 但愿人长久，千里共婵娟                         </pre>
+                                    <pre>#############################################</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
