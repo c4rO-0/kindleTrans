@@ -270,9 +270,11 @@ DEPENDENCES
 
 pre {
     font-family: SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace, Consolas, 'Microsoft YaHei','黑体';
-    font-size: 1rem;
+    font-size: 1vw;
     color: white;
     margin-bottom: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 p.c4r {
