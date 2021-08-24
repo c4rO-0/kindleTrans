@@ -20,11 +20,10 @@
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
 
 
-    <link href="{{ url_for('static', filename='css/AboutUsPage.v2.css') }}?v={{ jsV }}" rel="stylesheet"
-        type="text/css">
+    <link href="{{ url_for('static', filename='css/AboutUsPage.v2.css') }}?v={{ jsV }}" rel="stylesheet" type="text/css">
 
     <!-- our own scripts -->
-    <!-- <script src="{{ url_for('static', filename='Scripts/AboutUsPage.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='Scripts/AboutUsPage.v2.js') }}?v={{ jsV }}"></script>
     <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script> -->
     {# 广告 #}
     <!-- Begin BidVertiser code -->
@@ -107,22 +106,22 @@
 
                         <div class="card__content">
                             <p>
-                                简单概括一下时隔半年的进展: 没有进展. 
+                                简单概括一下时隔半年的进展: 没有进展.
                             </p>
                             <p>
-                                看着周围人飞速向qian, 仿佛C4r被按了暂停键. 
+                                看着周围人飞速向qian, 仿佛C4r被按了暂停键.
                             </p>
                             <p>
                                 GrepWave已经稳定, 但是不出意外的效果不理想.
                             </p>
                         </div>
-                        <div class="card__footer">
+                        <div class="card__footer" id='living_in_the_Shadows'>
                             <p>
-                                <a style="color:rgb(0, 0, 0)" href="https://www.youtube.com/watch?v=dLB42B08N5k">
+                                <a title='music link' style="color:rgb(0, 0, 0)">
                                     我们会永远"活在阴影中"吗?</a>
                             </p>
                             <p>
-                                <a style="color:rgb(0, 0, 0)" href="https://www.youtube.com/watch?v=dLB42B08N5k">
+                                <a title='music link' style="color:rgb(0, 0, 0)">
                                     Will we be "Living in the Shadows" forever?</a>
                             </p>
                         </div>
@@ -146,7 +145,7 @@
                                 width="100%">
                         </div>
                         <div class="card__footer">
-                            <p>
+                            <p title='超前一步是先烈；落后一步是顽固'>
                                 <!-- 超前一步是先烈；落后一步是顽固 -->
                                 世界以痛吻我, 要我报之以歌.
                             </p>
