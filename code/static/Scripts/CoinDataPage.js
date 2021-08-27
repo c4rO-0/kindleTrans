@@ -554,9 +554,9 @@ function refreshData(){
 
             list_symbol.forEach((symbol)=>{
                 refreshTrade(symbol.substring(symbol.lastIndexOf('-')+1)).then((data)=>{
-                    if(showBar(data)){
-                        runStatus(data);
-                    }
+                    // if(showBar(data)){
+                    //     runStatus(data);
+                    // }
                 })
             })
 
