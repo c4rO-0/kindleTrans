@@ -489,10 +489,26 @@ function updateList(list_symbol){
 
 }
 
-function refreshTrade(){
+function refreshTrade(symbol = undefined){
     
     return new Promise((resolve, reject)=>{
-        symbol = $('#symbolList').val()
+
+        if(symbol == undefined){
+            symbol = $('#symbolList').val()
+        }
+
+        if(window.coinDataAll == undefined){
+            window.coinDataAll = {}
+        }
+
+        if( window.coinDataAll[user+'-'+symbol]){
+            window.coinData = window.coinDataAll[user+'-'+symbol] 
+
+            if(showBar(window.coinData )){
+                runStatus(window.coinData);
+            }
+        }
+
 
         // console.log('ask symbol', symbol)
         $.getJSON("/_getCoinData/"+user+'-'+symbol, (data) => {
@@ -536,11 +552,18 @@ function refreshData(){
             console.log('refrssh list ',list_symbol )
             updateList(list_symbol)
 
+            list_symbol.forEach((symbol)=>{
+                refreshTrade(symbol.substring(symbol.lastIndexOf('-')+1)).then((data)=>{
+                    if(showBar(data)){
+                        runStatus(data);
+                    }
+                })
+            })
+
             refreshTrade().then((data)=>{
                 if(showBar(data)){
                     runStatus(data);
                 }
-                
                 resolve()
             })
         })
