@@ -19,6 +19,7 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='Scripts/socket.io.js') }}"></script>
+    <script src="{{ url_for('static', filename='Scripts/csi.min.js') }}"></script>
 
     <!-- our own scripts -->
     <script src="{{ url_for('static', filename='Scripts/TransformEbook.js') }}?v={{ jsV }}"></script>
@@ -117,11 +118,12 @@
             <div class="row justify-content-center">
                 <div class="col-auto">
                     <div class="input-group mb-3">
-                        {{ form.upload(class="btn btn-outline-primary btn-lg", value="提交") }}
+                        {{ form.upload(class="btn btn-outline-primary btn-lg", value="我已阅读用户协议并同意, 开始上传") }}
                         <!-- <input class="btn btn-outline-primary btn-lg" type="submit" value="Submit"> -->
                     </div>
                 </div>
             </div>
+
             {% else %}
             <div class="alert alert-danger" role="alert">
                 [该服务器目前不可用, 请稍后再试或使用其他服务器]
@@ -133,9 +135,9 @@
             </div>
             {% endfor %}
             {% if error %}
-                <div class="alert alert-danger" role="alert">
-                    [{{error}}]
-                </div>
+            <div class="alert alert-danger" role="alert">
+                [{{error}}]
+            </div>
             {% endif %}
         </form>
         <!-- <form id="formUpload" method="POST" enctype="multipart/form-data">
@@ -165,14 +167,39 @@
             </div>
 
         </div>
-        
+
         <div class="row justify-content-center my-4">
             <div class="col-md-9 bg-light">
-                <p style="color:rgb(129, 3, 3)">电子书只支持utf-8的txt文本, 如果提交后弹出错误, 请先手动转化为utf-8. 
-                    <a target="_blank"
-                        href="https://subtitletools.com/convert-text-files-to-utf8-online">-->点我进行跳转<--</a>
-                    </p>
-                <p>电子书将会在服务器上保留4小时后删除</p>
+                <p>
+                    电子书将会在服务器上保留4小时后删除. 
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal"
+                        data-target="#TermsOfService">
+                        >>完整用户协议<<
+                    </button>
+                </p>
+                <!-- Modal -->
+                <div class="modal fade" id="TermsOfService" tabindex="-1" role="dialog"
+                    aria-labelledby="TermsOfServiceTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <!-- <h5 class="modal-title" id="TermsOfServiceTitle">TermsOfService</h5> -->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body"
+                                data-include="{{ url_for('static', filename='html/TermsOfService.html') }}">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p style="color:rgb(129, 3, 3)">电子书只支持utf-8的txt文本, 如果提交后弹出错误, 请先手动转化为utf-8.
+                    <a target="_blank" href="https://subtitletools.com/convert-text-files-to-utf8-online">-->点我进行跳转<--</a>
+                </p>
                 <div class="w-100"></div>
                 <p style="color:#b36b01">随着用户增多, 最近服务器有些不堪重负, 请大家善待它.</p>
                 <!-- <div id='hard-disk' class="progress">
