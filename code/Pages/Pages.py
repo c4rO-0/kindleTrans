@@ -34,3 +34,7 @@ from MonkeyPage import *
 #----------------------------------------------------
 #  about us   
 from AboutUsPage import *
+
+#----------------------------------------------------
+#  Count Down   
+from CountDownPage import *
