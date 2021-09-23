@@ -46,6 +46,7 @@ import subprocess
 
 class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
+    cover = FileField(validators=[FileRequired(message=gettext("请选择封面."))])
     author = StringField('作者')
     upload = SubmitField('upload')
     # share = BooleanField('agreed to share',default="checked")
@@ -58,6 +59,14 @@ class UploadForm(FlaskForm):
            str_filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
            print("格式不对", file=sys.stderr)
            raise ValidationError(gettext('文件格式不对'))
+
+    def validate_cover(self, field):
+        # print("file check", file=sys.stderr)
+        str_filename = field.data.filename
+        if not ('.' in str_filename and \
+           str_filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
+        #    print("格式不对", file=sys.stderr)
+           raise ValidationError(gettext('封面格式不对'))
 
 
 @app.route('/TransformEbook' , methods = ['GET', 'POST']  )
