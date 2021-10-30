@@ -113,6 +113,17 @@
                         {{ form.author(class="form-control", placeholder=gettext("作者(选填)")) }}
                         <!-- <input type="text" class="form-control" placeholder="选填" aria-label="Recipient's username" aria-describedby="basic-addon2"> -->
                     </div>
+                    <div class="input-group mb-3 border border-primary rounded">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">上传</span>
+                        </div>
+                        <div class="custom-file">
+                            {{ form.cover(id="coverUpload", class="custom-file-input", accept='image/png' ) }}
+                            <!-- <input type="file" class="custom-file-input" id="fileUpload"> -->
+                            <label class="custom-file-label" id="" for="coverUpload">封面(选填)</label>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -137,6 +148,12 @@
                 [{{error}}]
             </div>
             {% endfor %}
+            {% for error in form.cover.errors %}
+            <div class="alert alert-danger" role="alert">
+                [{{error}}]
+            </div>
+            {% endfor %}
+
             {% if error %}
             <div class="alert alert-danger" role="alert">
                 [{{error}}]

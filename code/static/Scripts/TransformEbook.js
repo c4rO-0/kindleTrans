@@ -34,6 +34,30 @@ function httpGetAsync(theUrl, callback) {
     xmlHttp.send(null);
 }
 
+function getImageSize(imgFile){
+
+    return new Promise((resolve, reject) => {
+
+        var reader = new FileReader();
+
+        //Read the contents of Image File.
+        reader.readAsDataURL(imgFile);
+        reader.onload = function (e) {
+        
+          //Initiate the JavaScript Image object.
+          var image = new Image();
+        
+          //Set the Base64 string return from FileReader as source.
+          image.src = e.target.result;
+        
+          //Validate the File Height and Width.
+          image.onload = function () {
+            resolve({'height':this.height, 'width':this.width})
+          };
+        };
+    })
+}
+
 
 $(document).ready(function () {
 
@@ -49,6 +73,23 @@ $(document).ready(function () {
     $("#fileUpload").on("change", function (e) {
         let fileName = e.target.files[0].name
         $(this).next(".custom-file-label").html(fileName)
+    })
+
+    $("#coverUpload").on("change", function (e) {
+        let fileName = e.target.files[0].name
+        $(this).next(".custom-file-label").html(fileName)
+
+        getImageSize(e.target.files[0]).then((size)=>{
+            console.log('cover : ', size.height, size.width)
+            if(size.height >100 || size.width > 100){
+                $('#formUpload').append(
+                    "<div class='alert alert-danger' role='alert'>"
+                    + "封面尺寸要求 XXxXX" + ", 上传的封面尺寸为 " + String(size.height)+'x'+String(size.width) +
+                    "</div>"
+                )
+            }
+        })
+
     })
 
     // current

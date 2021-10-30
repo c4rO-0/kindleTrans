@@ -61,12 +61,16 @@ class UploadForm(FlaskForm):
            raise ValidationError(gettext('文件格式不对'))
 
     def validate_cover(self, field):
-        # print("file check", file=sys.stderr)
+        print("cover check", file=sys.stderr)
         str_filename = field.data.filename
-        if not ('.' in str_filename and \
-           str_filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
-        #    print("格式不对", file=sys.stderr)
-           raise ValidationError(gettext('封面格式不对'))
+        if field.data :
+            # print(field.data)
+            #  check name
+            if not ('.' in str_filename and \
+                str_filename.rsplit('.', 1)[1].lower() in ALLOWED_COVER_EXTENSIONS) :
+
+                print("cover not right",str_filename, ALLOWED_COVER_EXTENSIONS, file=sys.stderr)
+                raise ValidationError(gettext('封面格式不对'))
 
 
 @app.route('/TransformEbook' , methods = ['GET', 'POST']  )
