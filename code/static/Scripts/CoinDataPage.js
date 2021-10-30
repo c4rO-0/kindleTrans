@@ -456,7 +456,7 @@ function refreshList(){
         $.getJSON("/_getCoinDataList/"+user, (data) => {
 
             console.log('get list : ', data)
-            list = data.list_symbol.sort()
+            list = data.list_symbol.reverse().sort()
             window.coinDataList = list
             resolve(list)
         });  
