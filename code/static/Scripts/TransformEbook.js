@@ -81,11 +81,11 @@ $(document).ready(function () {
         $('.alert-cover').remove()
         getImageSize(e.target.files[0]).then((size)=>{
             console.log('cover : ', size.height, size.width)
-            if(size.height >100 || size.width > 100){
+            if(size.height/size.width != 960/640){
 
                 $('#formUpload').append(
                     "<div class='alert alert-danger alert-cover' role='alert'>"
-                    + "封面尺寸要求 XXxXX" + ", 上传的封面尺寸为 " + String(size.height)+'x'+String(size.width) +"."
+                    + "封面尺寸要求长宽比 3:2" + ", 上传的封面比例为" +String(size.height/size.width)+ ":1 尺寸为 " + String(size.height)+'x'+String(size.width) +"."
                     + "请重新上传."
                     + "</div>"
                 )
