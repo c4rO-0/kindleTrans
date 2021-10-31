@@ -113,6 +113,17 @@
                         {{ form.author(class="form-control", placeholder=gettext("作者(选填)")) }}
                         <!-- <input type="text" class="form-control" placeholder="选填" aria-label="Recipient's username" aria-describedby="basic-addon2"> -->
                     </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">上传封面</span>
+                        </div>
+                        <div class="custom-file">
+                            {{ form.cover(id="coverUpload", class="custom-file-input", accept='image/png' ) }}
+                            <!-- <input type="file" class="custom-file-input" id="fileUpload"> -->
+                            <label class="custom-file-label" id="" for="coverUpload">(选填)png格式</label>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -121,7 +132,7 @@
             <div class="row justify-content-center">
                 <div class="col-auto">
                     <div class="input-group mb-3">
-                        {{ form.upload(class="btn btn-outline-primary btn-lg", value="我已阅读用户协议并同意, 开始上传") }}
+                        {{ form.upload(id="buttonUpload", class="btn btn-outline-primary btn-lg", value="我已阅读用户协议并同意, 开始上传") }}
                         <!-- <input class="btn btn-outline-primary btn-lg" type="submit" value="Submit"> -->
                     </div>
                 </div>
@@ -137,6 +148,12 @@
                 [{{error}}]
             </div>
             {% endfor %}
+            {% for error in form.cover.errors %}
+            <div class="alert alert-danger" role="alert">
+                [{{error}}]
+            </div>
+            {% endfor %}
+
             {% if error %}
             <div class="alert alert-danger" role="alert">
                 [{{error}}]
@@ -200,9 +217,18 @@
                         </div>
                     </div>
                 </div>
-                <p style="color:rgb(129, 3, 3)">电子书只支持utf-8的txt文本, 如果提交后弹出错误, 请先手动转化为utf-8.
-                    <a target="_blank" href="https://subtitletools.com/convert-text-files-to-utf8-online">-->点我进行跳转<--</a>
-                </p>
+
+                <div class="col-md-9 bg-light">
+                    <p style="color:rgb(129, 3, 3)">电子书只支持utf-8的txt文本, 如果提交后弹出错误, 请先手动转化为utf-8.
+                        <a target="_blank" href="https://subtitletools.com/convert-text-files-to-utf8-online">-->点我进行跳转<--</a>
+                    </p>
+    
+                    <p style="color:rgb(129, 3, 3)">封面只支持长宽比为3:2的png格式图片, 推荐长宽为960:640(像素). 请先手动转化格式和尺寸
+                        <a target="" href="">-->目前没有推荐的在线工具<--</a>
+                    </p>
+                </div>
+
+
                 <div class="w-100"></div>
                 <p style="color:#b36b01">随着用户增多, 最近服务器有些不堪重负, 请大家善待它.</p>
                 <!-- <div id='hard-disk' class="progress">

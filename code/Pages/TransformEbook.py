@@ -46,18 +46,31 @@ import subprocess
 
 class UploadForm(FlaskForm):
     file = FileField(validators=[FileRequired(message=gettext("请选择文件"))])
+    cover = FileField()
     author = StringField('作者')
     upload = SubmitField('upload')
     # share = BooleanField('agreed to share',default="checked")
 
 
     def validate_file(self, field):
-        print("file check", file=sys.stderr)
+        print("|-file check", file=sys.stderr)
         str_filename = field.data.filename
         if not ('.' in str_filename and \
            str_filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
-           print("格式不对", file=sys.stderr)
+           print("|-file wrong extension", file=sys.stderr)
            raise ValidationError(gettext('文件格式不对'))
+
+    def validate_cover(self, field):
+        print("|-cover check", file=sys.stderr)
+        if field.data :
+            str_filename = field.data.filename
+            # print(field.data)
+            #  check name
+            if not ('.' in str_filename and \
+                str_filename.rsplit('.', 1)[1].lower() in ALLOWED_COVER_EXTENSIONS) :
+
+                print("|-cover wrong extension",str_filename, ALLOWED_COVER_EXTENSIONS, file=sys.stderr)
+                raise ValidationError(gettext('封面格式不对'))
 
 
 @app.route('/TransformEbook' , methods = ['GET', 'POST']  )
@@ -65,19 +78,8 @@ def TransformEbook():
     #....
     error = None
 
-    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
-        print("访问ip : ",request.environ['REMOTE_ADDR'], file=sys.stderr)
-        visitIP = request.environ['REMOTE_ADDR']
-    else:
-        print("访问ip : ",request.environ['HTTP_X_FORWARDED_FOR'], file=sys.stderr) # if behind a proxy
-        visitIP = request.environ['HTTP_X_FORWARDED_FOR']
-
-    visitIP = ''.join(visitIP.split())
-
-    #上传文件
-    form = UploadForm()
-    TOC = None
-
+    # -----------------------
+    # check disk usage status
     diskAvailInfo = subprocess.check_output("df  / | tail -n1 | awk '{print $4, $5}'", shell=True)
     diskAvailInfo_list = diskAvailInfo.decode("utf-8") .split(" ")
     diskAvail  = int(diskAvailInfo_list[0])
@@ -85,49 +87,73 @@ def TransformEbook():
     
     diskTotal = diskAvail/(1.-diskUsage)
 
-    print(diskAvail/1048576. , diskTotal/1048576., diskUsage)
-    if(diskTotal > 1048576*20):
-        diskTotal = 1048576*20
+    maxHardDisk=20
+    toGb=1./1048576.
+
+    if(diskTotal*toGb > maxHardDisk):
+        diskTotal = maxHardDisk/toGb
     
-    if(diskAvail > 1048576*20):
-        diskAvail = 1048576*20
+    if(diskAvail*toGb > maxHardDisk):
+        diskAvail = maxHardDisk/toGb
 
     diskUsage = 1.- float(diskAvail)/float(diskTotal)
 
-    print(diskAvail/1048576. , diskTotal/1048576., diskUsage)
+    print(
+        '|-disk info | avail:', format(diskAvail*toGb, '.2f'), 
+        'Gb total:', format(diskTotal*toGb, '.2f'),
+        'Gb usage:', format(diskUsage*100., '.2f') +'%' )
 
+    # -----------------------
+    # check visit ip address
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        print("|-visit ip address : ",request.environ['REMOTE_ADDR'], file=sys.stderr)
+        visitIP = request.environ['REMOTE_ADDR']
+    else:
+        print("|-visit ip address : ",request.environ['HTTP_X_FORWARDED_FOR'], file=sys.stderr) # if behind a proxy
+        visitIP = request.environ['HTTP_X_FORWARDED_FOR']
+
+    visitIP = ''.join(visitIP.split())
+
+
+    # -----------------------
+    # start to process upload files
+    form = UploadForm()
+    TOC = None
 
     if form.validate_on_submit():
         print("-------------------------", file=sys.stderr)
         if(form.upload.data):
             
-            # print("共享 : ", form.share.data, file=sys.stderr)
             filename = ''.join(form.file.data.filename.split()) 
-            # secureFilename = secure_filename(filename)
             saveFileName = str(time.time()) + '-' + visitIP +'.txt'
             filePath = os.path.join(app.config['UPLOAD_FOLDER'],saveFileName)
-            # print("-------------------------------")
-            # print("file name : " + filename)
 
             # 储存
             if (not os.path.exists(filePath) ):
                 os.makedirs(filePath) 
             form.file.data.save(os.path.join(filePath , saveFileName))
 
+            # 储存封面
+            isCoverUpload = False
+            if(form.cover.data):
+                isCoverUpload = True
+                saveCoverName = 'cover.png'
+                form.cover.data.save(os.path.join(filePath , saveCoverName))
+
 
             # 保存session
             sessionDelFileUpload()
-            print(filename, file=sys.stderr)
-            info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath} )
+            print('|-filename ', filename, file=sys.stderr)
+            info = sessionSaveFileUpload({'filename':filename, 'saveFileName':saveFileName, 'filePath':filePath, 'isCoverUpload':isCoverUpload} )
             if info != 0:
-                print("储存文件错误 : ", info, file=sys.stderr)
+                print("|-储存文件错误 : ", info, file=sys.stderr)
                 return redirect("/TransformEbook")
             else:
                             
                 #==================
                 #-----------------
                 # 统一文件编码
-                print("--------coding---------", file=sys.stderr)
+                print("|--------coding---------", file=sys.stderr)
                 # info_o = os.system('cd ' + filePath + ';' + 'enca -L chinese -x UTF-8 ' + saveFileName)
                 # if(info_o == 512):
                     # print("----自动转码失败, 转用遍历匹配")
@@ -154,20 +180,27 @@ def TransformEbook():
                         # return redirect("/TransformEbook")
                 #-----------------              
                 if(not error):
+                    # ********************
+                    # --------------------
                     # 初始化图书
-                    init_project(filePath, filename, form.author.data)
-                    # 储存是否保存
-                    # print("========准备写入==========")
+                    init_project(filePath, filename, form.author.data, isCoverUpload)
+
+
+                    # --------------------
+                    # 添加其他配置信息
                     with open(os.path.abspath(os.path.join(filePath, '.project.ini')), 'a+', encoding='UTF-8') as f:
-                        # print(os.path.abspath(os.path.join(filePath, '.project.ini')))
-                        # print("========写入==========")
+
                         f.write("\nshare="+str(False)+"\n")
+                        if(form.cover.data):
+                            f.write("\nisCoverUpload="+str(True)+"\n")
+                        else:
+                            f.write("\nisCoverUpload="+str(False)+"\n")
                         f.close()
                 
                 
                 
         else:
-            print("unknown submit", file=sys.stderr)
+            print("|-unknown submit", file=sys.stderr)
             error = "unknown submit"
 
         if(not error):
