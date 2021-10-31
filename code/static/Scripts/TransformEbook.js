@@ -77,20 +77,43 @@ $(document).ready(function () {
 
     $("#coverUpload").on("change", function (e) {
         let fileName = e.target.files[0].name
-        $(this).next(".custom-file-label").html(fileName)
 
+        $('.alert-cover').remove()
         getImageSize(e.target.files[0]).then((size)=>{
             console.log('cover : ', size.height, size.width)
             if(size.height >100 || size.width > 100){
+
                 $('#formUpload').append(
-                    "<div class='alert alert-danger' role='alert'>"
-                    + "封面尺寸要求 XXxXX" + ", 上传的封面尺寸为 " + String(size.height)+'x'+String(size.width) +
-                    "</div>"
+                    "<div class='alert alert-danger alert-cover' role='alert'>"
+                    + "封面尺寸要求 XXxXX" + ", 上传的封面尺寸为 " + String(size.height)+'x'+String(size.width) +"."
+                    + "请重新上传."
+                    + "</div>"
                 )
+                $("#coverUpload").get(0).value = '';
+            }else{
+                $(this).next(".custom-file-label").html(fileName)
             }
         })
 
     })
+
+    // $("#buttonUpload").on("click", function (e) {
+    //     let fileName = e.target.files[0].name
+    //     $(this).next(".custom-file-label").html(fileName)
+
+    //     getImageSize(e.target.files[0]).then((size)=>{
+    //         console.log('cover : ', size.height, size.width)
+    //         if(size.height >100 || size.width > 100){
+    //             $('#formUpload').append(
+    //                 "<div class='alert alert-danger' role='alert'>"
+    //                 + "封面尺寸要求 XXxXX" + ", 上传的封面尺寸为 " + String(size.height)+'x'+String(size.width) +
+    //                 "</div>"
+    //             )
+    //         }
+    //     })
+
+    // })
+
 
     // current
     let host = location.hostname
