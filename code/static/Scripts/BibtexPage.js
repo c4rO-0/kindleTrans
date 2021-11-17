@@ -1030,6 +1030,7 @@ let specialCharacterList ={
     '\\b{o}'	 : 'o'  ,	// bar under the letter
     '\\.{o}'	 : 'ȯ'  ,	// dot over the letter
     '\\d{u}'	 : 'ụ'  ,	// dot under the letter
+    '\\\"{u}'    : 'ü'  ,   // two-dot u
     '\\r{a}'	 : 'å'  ,	// ring over the letter (for å there is also the special command \aa)
     '\\u{o}'	 : 'ŏ'  ,	// breve over the letter
     '\\v{s}'	 : 'š'  ,	// caron/háček ("v") over the letter
@@ -1050,6 +1051,7 @@ let specialCharacterList ={
     '\\bo'	 : 'o'  ,	// bar under the letter
     '\\.o'	 : 'ȯ'  ,	// dot over the letter
     '\\du'	 : 'ụ'  ,	// dot under the letter
+    '\\\"u'  : 'ü'  ,   // two-dot u
     '\\ra'	 : 'å'  ,	// ring over the letter (for å there is also the special command \aa)
     '\\uo'	 : 'ŏ'  ,	// breve over the letter
     '\\vs'	 : 'š'  ,	// caron/háček ("v") over the letter
