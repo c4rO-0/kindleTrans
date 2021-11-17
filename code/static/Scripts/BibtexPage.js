@@ -49,19 +49,17 @@ function splitAllBibtex(allBibtex) {
 
 }
 
-function journalAbbreviationDict(journal) {
+function journalAbbreviationDict(journal, similarity = 0.8) {
 
     if (journal.split(" ").length == 1) {
         return journal
     }
 
 
-    let similarity = 0.8
+    // let similarity = 0.8
     let reName = journal
     let fuzzy = FuzzySet();
     fuzzy.add(journal)
-
-
 
     for (let FullName in AbbList) {
 
@@ -73,7 +71,8 @@ function journalAbbreviationDict(journal) {
 
         if (scoreGet != null) {
             score = scoreGet[0][0]
-            if (score > similarity) {
+            if (score >= similarity) {
+                console.log('found ', FullName, similarity, score)
                 console.log(FullName, similarity, score)
                 similarity = score
                 reName = abbName
@@ -83,8 +82,8 @@ function journalAbbreviationDict(journal) {
         scoreGet = fuzzy.get(abbName)
         if (scoreGet != null) {
             score = scoreGet[0][0]
-            if (score > similarity) {
-                console.log(FullName, similarity, score)
+            if (score >= similarity) {
+                console.log('found ', FullName, similarity, score)
                 similarity = score
                 reName = abbName
             }
@@ -112,26 +111,41 @@ function journalAbbreviation(journal) {
 
     let abbreviation = ''
     let fullName = ''
-    $('#journal-list tr').each((index, element) =>{
-        let obj = $(element).find("td").get(0)
+    let found = false
 
-        if($(element).find("td").length == 1){
-            fullName = $(obj).contents().get(0).textContent.trim().toLowerCase()
-        }else{
-            abbreviation = $(obj).contents().get(0).textContent.trim()
-            if($(obj).contents().length == 3){
-                fullName = $(obj).contents().get(2).textContent.trim().toLowerCase()
+    if(!found){
+        $('#journal-list tr').each((index, element) =>{
+            let obj = $(element).find("td").get(0)
+    
+            if($(element).find("td").length == 1){
+                fullName = $(obj).contents().get(0).textContent.trim().toLowerCase()
             }else{
-                fullName = abbreviation.toLowerCase()
-            }            
-        }
-        // console.log(fullName)
+                abbreviation = $(obj).contents().get(0).textContent.trim()
+                if($(obj).contents().length == 3){
+                    fullName = $(obj).contents().get(2).textContent.trim().toLowerCase()
+                }else{
+                    fullName = abbreviation.toLowerCase()
+                }            
+            }
+            // console.log(fullName)
+    
+            if(fullName == searchJournal){
+                // found = true
+                console.log("found! ", abbreviation)
+                reName = abbreviation
+            }
+        })
+    
+    }
 
-        if(fullName == searchJournal){
-            console.log("found! ", abbreviation)
-            reName = abbreviation
+    if(!found){
+        if(document.getElementById("fuzzy_similarity_val")){
+            reName = journalAbbreviationDict(journal, parseFloat(document.getElementById("fuzzy_similarity_val").innerHTML))
+        }else{
+            reName = journalAbbreviationDict(journal, 1.)
         }
-    })
+        
+    }
 
     return reName;
 }
@@ -1011,6 +1025,12 @@ $(document).ready(function () {
 
 
     })
+
+    $('#fuzzy_similarity').on('change', function(e){
+        var value = e.target.value;            
+        document.getElementById("fuzzy_similarity_val").innerHTML = value;
+    });
+    $('#fuzzy_similarity').change();
 
 })
 

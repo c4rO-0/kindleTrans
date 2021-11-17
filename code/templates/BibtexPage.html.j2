@@ -164,8 +164,22 @@
                         <button id="confirm" class="btn btn-primary"> confirm </button>
                         <button id="clearBibtex" class="btn btn-outline-secondary"> clear Bibtex </button>
                     </div>
+
+                </div>
+                <div class="input-group">    
+                    <div class="input-group-append">
+                        <label class="input-group-text">Fuzzy search </span> </label> 
+                        <label class="input-group-text">Similarity : <span id="fuzzy_similarity_val"></span> </label> 
+                        <input type="range" class="custom-range" min="0" max="1.0" step="0.1" id="fuzzy_similarity" value="1.0">
+                        
+                        <!-- <span>Current Value: <span id="fuzzy_similarity_val"></span></span> -->
+                    </div>
+
                 </div>
             </div>
+        </div>
+
+        <div class="row mb-3">
             <div class="col">
                 <a class="btn btn-link" href="https://cassi.cas.org/search.jsp"> CAS Source Index (CASSI) Search Tool
                 </a>
