@@ -167,6 +167,59 @@ function delBrace(line) {
 
 }
 
+function getCiteMark(strRaw){
+
+    let SlideBibtex = "";
+    let foundStart = false
+    let foundEnd =false
+    strRaw.trim().split('\n').forEach(function (lineRaw, i) {
+
+
+        line = lineRaw.trim();
+
+        if (line[0] != "%") {
+            // console.log(line);
+            if (line[0] == "@") {
+                foundStart = true
+            }
+
+            if(foundStart && (! foundEnd) ){
+                SlideBibtex = SlideBibtex + line
+            }
+
+            if (line.includes(',') ) {
+                foundEnd = true
+            }
+        }
+
+    })
+    let indexStart = SlideBibtex.indexOf('{')+1
+    let indexEnd = SlideBibtex.indexOf(',')
+    let subStrL = indexEnd - indexStart
+
+    let mark = (SlideBibtex.substr(indexStart, subStrL)).trim()
+
+    return mark
+}
+
+
+function getComment(strRaw){
+
+    let SlideBibtex = "";
+    strRaw.trim().split('\n').forEach(function (lineRaw, i) {
+
+
+        line = lineRaw.trim();
+
+        if (line[0] == "%") {
+            SlideBibtex = SlideBibtex + line + "\n"
+        }
+
+    })
+
+    return SlideBibtex
+}
+
 function encodeCharacter(strRaw) {
 
     let strReplace = strRaw
@@ -796,23 +849,31 @@ $(document).ready(function () {
                 strSlide = convertCustomization(arrayItemUsed, slideBibtex);
             }
 
+            let citeMark = getCiteMark(slideBibtex)
+            // let comment = getComment(slideBibtex)
+            // let citeTitle = citeMark + '\n' +"%test" + comment
+            // console.log('citeTitle : ', citeTitle)
+
             // 插入
             if (strSlide.indexOf("<b> Not Supported</b>") > -1) {
                 // $("#refError").prepend(
                 //     "<p style='color:red'>" + strSlide + "</p>"
                 // );
-                insertStr = insertStr + "<p style='color:red' name='error'>" + strSlide + "</p>"
+                insertStr = insertStr + "<p style='color:red' name='error' title='"+citeMark+"'>" + strSlide + "</p>"
             } else {
 
                 // $("#refList").prepend(
                 //     "<p name='cite'>" +strSlide+  "</p>"
                 // );
-                insertStr = insertStr + "<p name='cite-slide'>" + strSlide + "</p>"
+                insertStr = insertStr + "<p name='cite-slide' title='"+citeMark+"'>" + strSlide + "</p>"
             }
 
         })
         insertStr = "<div name='cite-all'>" + insertStr + "</div>"
         insertStr = insertStr + "<div name='rawCite' style='display: none;'>" + allBibtex + "</div>"
+
+
+
         if (format == "customization") {
             insertStr = insertStr + "<div name='settings' style='display: none;'>" +  storeCusSettings(arrayItemUsed, arrayItemAbandon) + "</div>"
         }
