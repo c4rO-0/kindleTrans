@@ -191,4 +191,15 @@ $(document).ready(function () {
     // }else{
     //     $('#hard-disk .progress-bar:eq(1)').addClass("bg-success")
     // }
+
+    let countDown = new IOWA.CountdownTimer.Core(
+        new Date('2022-04-01T00:00:01'),
+        document.querySelector('countdown-timer')
+    );
+
+    // window.countDown =countDown
+    countDown.attachEvents();
+    console.log('start count...')
+    countDown.setUp(false);
+    countDown.play(false);
 })
