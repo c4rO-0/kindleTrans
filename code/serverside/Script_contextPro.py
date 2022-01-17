@@ -28,6 +28,7 @@ def sessionUtilityProcessor():
                             filename        : str
                             saveFileName    : str
                             filePath        : str
+                            isCoverUpload   : bool
                             }
         """
         return sessionQueryFileUpload()

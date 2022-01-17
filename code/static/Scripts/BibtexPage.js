@@ -49,19 +49,17 @@ function splitAllBibtex(allBibtex) {
 
 }
 
-function journalAbbreviationDict(journal) {
+function journalAbbreviationDict(journal, similarity = 0.8) {
 
     if (journal.split(" ").length == 1) {
         return journal
     }
 
 
-    let similarity = 0.8
+    // let similarity = 0.8
     let reName = journal
     let fuzzy = FuzzySet();
     fuzzy.add(journal)
-
-
 
     for (let FullName in AbbList) {
 
@@ -73,7 +71,8 @@ function journalAbbreviationDict(journal) {
 
         if (scoreGet != null) {
             score = scoreGet[0][0]
-            if (score > similarity) {
+            if (score >= similarity) {
+                console.log('found ', FullName, similarity, score)
                 console.log(FullName, similarity, score)
                 similarity = score
                 reName = abbName
@@ -83,8 +82,8 @@ function journalAbbreviationDict(journal) {
         scoreGet = fuzzy.get(abbName)
         if (scoreGet != null) {
             score = scoreGet[0][0]
-            if (score > similarity) {
-                console.log(FullName, similarity, score)
+            if (score >= similarity) {
+                console.log('found ', FullName, similarity, score)
                 similarity = score
                 reName = abbName
             }
@@ -112,26 +111,41 @@ function journalAbbreviation(journal) {
 
     let abbreviation = ''
     let fullName = ''
-    $('#journal-list tr').each((index, element) =>{
-        let obj = $(element).find("td").get(0)
+    let found = false
 
-        if($(element).find("td").length == 1){
-            fullName = $(obj).contents().get(0).textContent.trim().toLowerCase()
-        }else{
-            abbreviation = $(obj).contents().get(0).textContent.trim()
-            if($(obj).contents().length == 3){
-                fullName = $(obj).contents().get(2).textContent.trim().toLowerCase()
+    if(!found){
+        $('#journal-list tr').each((index, element) =>{
+            let obj = $(element).find("td").get(0)
+    
+            if($(element).find("td").length == 1){
+                fullName = $(obj).contents().get(0).textContent.trim().toLowerCase()
             }else{
-                fullName = abbreviation.toLowerCase()
-            }            
-        }
-        // console.log(fullName)
+                abbreviation = $(obj).contents().get(0).textContent.trim()
+                if($(obj).contents().length == 3){
+                    fullName = $(obj).contents().get(2).textContent.trim().toLowerCase()
+                }else{
+                    fullName = abbreviation.toLowerCase()
+                }            
+            }
+            // console.log(fullName)
+    
+            if(fullName == searchJournal){
+                // found = true
+                console.log("found! ", abbreviation)
+                reName = abbreviation
+            }
+        })
+    
+    }
 
-        if(fullName == searchJournal){
-            console.log("found! ", abbreviation)
-            reName = abbreviation
+    if(!found){
+        if(document.getElementById("fuzzy_similarity_val")){
+            reName = journalAbbreviationDict(journal, parseFloat(document.getElementById("fuzzy_similarity_val").innerHTML))
+        }else{
+            reName = journalAbbreviationDict(journal, 1.)
         }
-    })
+        
+    }
 
     return reName;
 }
@@ -151,6 +165,59 @@ function delBrace(line) {
 
     return localLine;
 
+}
+
+function getCiteMark(strRaw){
+
+    let SlideBibtex = "";
+    let foundStart = false
+    let foundEnd =false
+    strRaw.trim().split('\n').forEach(function (lineRaw, i) {
+
+
+        line = lineRaw.trim();
+
+        if (line[0] != "%") {
+            // console.log(line);
+            if (line[0] == "@") {
+                foundStart = true
+            }
+
+            if(foundStart && (! foundEnd) ){
+                SlideBibtex = SlideBibtex + line
+            }
+
+            if (line.includes(',') ) {
+                foundEnd = true
+            }
+        }
+
+    })
+    let indexStart = SlideBibtex.indexOf('{')+1
+    let indexEnd = SlideBibtex.indexOf(',')
+    let subStrL = indexEnd - indexStart
+
+    let mark = (SlideBibtex.substr(indexStart, subStrL)).trim()
+
+    return mark
+}
+
+
+function getComment(strRaw){
+
+    let SlideBibtex = "";
+    strRaw.trim().split('\n').forEach(function (lineRaw, i) {
+
+
+        line = lineRaw.trim();
+
+        if (line[0] == "%") {
+            SlideBibtex = SlideBibtex + line + "\n"
+        }
+
+    })
+
+    return SlideBibtex
 }
 
 function encodeCharacter(strRaw) {
@@ -782,23 +849,31 @@ $(document).ready(function () {
                 strSlide = convertCustomization(arrayItemUsed, slideBibtex);
             }
 
+            let citeMark = getCiteMark(slideBibtex)
+            // let comment = getComment(slideBibtex)
+            // let citeTitle = citeMark + '\n' +"%test" + comment
+            // console.log('citeTitle : ', citeTitle)
+
             // 插入
             if (strSlide.indexOf("<b> Not Supported</b>") > -1) {
                 // $("#refError").prepend(
                 //     "<p style='color:red'>" + strSlide + "</p>"
                 // );
-                insertStr = insertStr + "<p style='color:red' name='error'>" + strSlide + "</p>"
+                insertStr = insertStr + "<p style='color:red' name='error' title='"+citeMark+"'>" + strSlide + "</p>"
             } else {
 
                 // $("#refList").prepend(
                 //     "<p name='cite'>" +strSlide+  "</p>"
                 // );
-                insertStr = insertStr + "<p name='cite-slide'>" + strSlide + "</p>"
+                insertStr = insertStr + "<p name='cite-slide' title='"+citeMark+"'>" + strSlide + "</p>"
             }
 
         })
         insertStr = "<div name='cite-all'>" + insertStr + "</div>"
         insertStr = insertStr + "<div name='rawCite' style='display: none;'>" + allBibtex + "</div>"
+
+
+
         if (format == "customization") {
             insertStr = insertStr + "<div name='settings' style='display: none;'>" +  storeCusSettings(arrayItemUsed, arrayItemAbandon) + "</div>"
         }
@@ -1012,6 +1087,12 @@ $(document).ready(function () {
 
     })
 
+    $('#fuzzy_similarity').on('change', function(e){
+        var value = e.target.value;            
+        document.getElementById("fuzzy_similarity_val").innerHTML = value;
+    });
+    $('#fuzzy_similarity').change();
+
 })
 
 
@@ -1030,6 +1111,7 @@ let specialCharacterList ={
     '\\b{o}'	 : 'o'  ,	// bar under the letter
     '\\.{o}'	 : 'ȯ'  ,	// dot over the letter
     '\\d{u}'	 : 'ụ'  ,	// dot under the letter
+    '\\\"{u}'    : 'ü'  ,   // two-dot u
     '\\r{a}'	 : 'å'  ,	// ring over the letter (for å there is also the special command \aa)
     '\\u{o}'	 : 'ŏ'  ,	// breve over the letter
     '\\v{s}'	 : 'š'  ,	// caron/háček ("v") over the letter
@@ -1050,6 +1132,7 @@ let specialCharacterList ={
     '\\bo'	 : 'o'  ,	// bar under the letter
     '\\.o'	 : 'ȯ'  ,	// dot over the letter
     '\\du'	 : 'ụ'  ,	// dot under the letter
+    '\\\"u'  : 'ü'  ,   // two-dot u
     '\\ra'	 : 'å'  ,	// ring over the letter (for å there is also the special command \aa)
     '\\uo'	 : 'ŏ'  ,	// breve over the letter
     '\\vs'	 : 'š'  ,	// caron/háček ("v") over the letter

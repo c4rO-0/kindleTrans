@@ -98,6 +98,7 @@ def ConfirmTransformEbook():
     #....
 
     fileDict = sessionQueryFileUpload()
+    # print('fileDict:', fileDict)
 
     if (fileDict == None):
         return redirect("/TransformEbook")
@@ -114,7 +115,7 @@ def ConfirmTransformEbook():
         return redirect("/404/没有检测到上传的书.")
 
 
-    print("----formTran----", file=sys.stderr)
+    print("|----formTran----", file=sys.stderr)
     if formTran.validate_on_submit():
 
         if(formTran.confirmtitleFilter.data):
@@ -148,12 +149,12 @@ def ConfirmTransformEbook():
 
         else:
 
-            print("----submit----", file=sys.stderr)
+            print("|----submit----", file=sys.stderr)
             # print(formTran.confirmTOC.data)
             # if(formTran.confirmTOC.data):
-            print("确认目录", file=sys.stderr)
+            print("|-确认目录", file=sys.stderr)
             fileDict = sessionQueryFileUpload()
-            print('---------index----------', file=sys.stderr)
+            print('|---------index----------', file=sys.stderr)
             print(formTran.TOClistindex.data, file=sys.stderr)
 
             titleFilter = sessionQueryTitleFilter()
@@ -179,24 +180,40 @@ def ConfirmTransformEbook():
             fileDict['bookCount'] = book.book_count()
 
             # 转化封面
-            coverFontFlag = ' -font \'' + os.path.join(Txt2mobiPath,'resources','STHeiti.ttf') + '\''
-            # 添加乞讨语
-            coverFlag = coverFontFlag + ' -gravity South -pointsize 30 -annotate +0+100 '
-            coverName = readSlogan()
-            info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\' ' +os.path.join(fileDict['filePath'] , "cover.png"))
-            # 书名
-            coverFlag = coverFontFlag + ' -gravity North -pointsize 50 -annotate +0+100 '
-            coverName = (fileDict['filename'].rsplit('.',1)[0]).replace('\'','').replace('\\','').replace('\"','')
+            if(not fileDict['isCoverUpload']):
+                coverFontFlag = ' -font \'' + os.path.join(Txt2mobiPath,'resources','STHeiti.ttf') + '\''
+                # 添加乞讨语
+                coverFlag = coverFontFlag + ' -gravity South -pointsize 30 -annotate +0+100 '
+                coverName = readSlogan()
+                info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\' ' +os.path.join(fileDict['filePath'] , "cover.png"))
+                # 书名
+                coverFlag = coverFontFlag + ' -gravity North -pointsize 50 -annotate +0+100 '
+                coverName = (fileDict['filename'].rsplit('.',1)[0]).replace('\'','').replace('\\','').replace('\"','')
             
-            if(fileDict['bookCount'] == 1):
-                info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\' ' +os.path.join(fileDict['filePath'] , "cover-1.png"))
-                # print("convert " + os.path.join(filePath , "cover.png") + coverFlag + '\'' + coverName + '\' ' +os.path.join(filePath , "cover.png"))
-                print("转化 : ", info_o, file=sys.stderr) 
+                if(fileDict['bookCount'] == 1):
+                    info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\' ' +os.path.join(fileDict['filePath'] , "cover-1.png"))
+                    # print("convert " + os.path.join(filePath , "cover.png") + coverFlag + '\'' + coverName + '\' ' +os.path.join(filePath , "cover.png"))
+                    print("|-转化封面 : ", info_o, file=sys.stderr) 
+                else:
+                    for idx in range(1, fileDict['bookCount']+1):
+                        info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\n P-%s\' ' % idx +os.path.join(fileDict['filePath'] , "cover-%s.png" % idx))
+                        print("|-转化封面 : ", info_o, file=sys.stderr) 
             else:
-                for idx in range(1, fileDict['bookCount']+1):
-                    info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\''  + coverName + '\n P-%s\' ' % idx +os.path.join(fileDict['filePath'] , "cover-%s.png" % idx))
-                    print("转化 : ", info_o, file=sys.stderr) 
-                    
+
+                coverFlag = ' -resize 960x640 '
+                if(fileDict['bookCount'] == 1):
+                    info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag +os.path.join(fileDict['filePath'] , "cover-1.png"))
+
+                    print("|-转化封面 : ", info_o, file=sys.stderr) 
+                else:
+                    coverFontFlag = ' -font \'' + os.path.join(Txt2mobiPath,'resources','STHeiti.ttf') + '\''
+                    # 上传书籍仅需要添加 'Part-xx'
+                    coverFlag = coverFontFlag + ' -resize 960x640 -gravity North -pointsize 50 -annotate +0+0 '
+
+                    for idx in range(1, fileDict['bookCount']+1):
+                        info_o = os.system("convert " + os.path.join(fileDict['filePath'] , "cover.png") + coverFlag + '\'P-%s\' ' % idx +os.path.join(fileDict['filePath'] , "cover-%s.png" % idx))
+                        print("|-转化封面 : ", info_o, file=sys.stderr) 
+
 
 
             # 生成项目文件        
