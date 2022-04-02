@@ -44,14 +44,13 @@
     <script src="{{ url_for('static', filename='js/googleCountDown/TweenMax.js') }}"></script>
     <script src="{{ url_for('static', filename='js/googleCountDown/countdown.js') }}"></script>
     <script>
-        // let countDown = new IOWA.CountdownTimer.Core(
-        //     new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
-        //     document.querySelector('countdown-timer')
-        // );
-        // console.log('start count...')
-        // countDown.setUp(false);
-        // countDown.attachEvents();
-        // countDown.play(false);
+        var countDown = new IOWA.CountdownTimer.Core(
+            new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+            document.querySelector('countdown-timer')
+        );
+        countDown.setUp(false);
+        countDown.attachEvents();
+        countDown.play(false);
 
         // refresh
         //$('#countdown-container canvas').remove(); 

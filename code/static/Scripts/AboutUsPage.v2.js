@@ -52,7 +52,6 @@ $(document).ready(function () {
         }
         window.minPingKey = minPingKey
         console.log('SERVER:', minPingKey)
-
     })
 
 
@@ -66,32 +65,4 @@ $(document).ready(function () {
         }
         window.open(url, '_blank').focus();
     })
-
-    $(document).on('click', '#gu_yong_zhe', ()=>{
-
-        let url = ''
-        if(minPingKey == 'music163'){
-            url = 'https://music.163.com/#/song?id=1901371647'
-        }else{
-            url = 'https://www.youtube.com/watch?v=Hlp8XD0R5qo'
-        }
-        window.open(url, '_blank').focus();
-    })
-
-    // let countDown = new IOWA.CountdownTimer.Core(
-    //     new Date(Date.now() + 300*24*60*60*1000),
-    //     document.querySelector('countdown-timer')
-    // );
-    let countDown = new IOWA.CountdownTimer.Core(
-        new Date('2022-04-01T00:00:01'),
-        document.querySelector('countdown-timer')
-    );
-
-    // window.countDown =countDown
-    countDown.attachEvents();
-    console.log('start count...')
-    countDown.setUp(false);
-    countDown.play(false);
-
-
 })
